@@ -1,36 +1,9 @@
+import axios from "axios";
 import type { User } from "./users.types";
 
-const users: User[] = [
-  {
-    id: 1,
-    name: "Alice Johnson",
-    email: "alice@adminjualan.com",
-    role: "Administrator",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Ben Williams",
-    email: "ben@adminjualan.com",
-    role: "Sales",
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Citra Sari",
-    email: "citra@adminjualan.com",
-    role: "Inventory",
-    status: "inactive",
-  },
-  {
-    id: 4,
-    name: "Dimas Hartono",
-    email: "dimas@adminjualan.com",
-    role: "Finance",
-    status: "active",
-  },
-];
+const API_BASE_URL = "http://localhost:8080";
 
 export async function fetchUsers(): Promise<User[]> {
-  return new Promise((resolve) => setTimeout(() => resolve(users), 400));
+  const response = await axios.get<User[]>(`${API_BASE_URL}/users`);
+  return response.data;
 }

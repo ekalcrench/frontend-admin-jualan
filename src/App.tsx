@@ -1,32 +1,19 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import { AdminLayout } from "./layouts/AdminLayout";
-import { LoginPage } from "./pages/LoginPage";
-import { UsersPage } from "./pages/UsersPage";
-import { useAuthStore } from "./store/authStore";
+import RouteLayout from "./layouts/RouteLayout";
+import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "@mui/material";
+import theme from "@/theme/muiTheme";
+
+const queryClient = new QueryClient();
 
 export default function App() {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
   return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/" element={<AdminLayout />}>
-        <Route
-          index
-          element={
-            isAuthenticated ? (
-              <Navigate to="users" replace />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route path="users" element={<UsersPage />} />
-      </Route>
-      <Route
-        path="*"
-        element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />}
-      />
-    </Routes>
+    <ThemeProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <RouteLayout />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }

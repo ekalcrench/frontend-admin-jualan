@@ -1,13 +1,7 @@
 import { create } from "zustand";
+import { AuthState } from "./authStore.types";
 
-type AuthState = {
-  isAuthenticated: boolean;
-  user: { name: string; email: string } | null;
-  login: (email: string) => Promise<void>;
-  logout: () => void;
-};
-
-export const useAuthStore = create<AuthState>((set) => ({
+const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   user: null,
   login: async (email) => {
@@ -15,3 +9,5 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   logout: () => set({ isAuthenticated: false, user: null }),
 }));
+
+export default useAuthStore;
