@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LoginFormValues } from "./LoginPage.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "./LoginPage.contants";
+import { useState } from "react";
 
 export default function useLoginPage() {
   const navigate = useNavigate();
@@ -15,11 +16,10 @@ export default function useLoginPage() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    mode: "onBlur",
   });
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const onSubmit = async (values: LoginFormValues) => {
     console.log(">>> values di onSubmit : ", values);
@@ -31,7 +31,9 @@ export default function useLoginPage() {
     control,
     errors,
     isSubmitting,
+    showPassword,
     handleSubmit,
     onSubmit,
+    setShowPassword,
   };
 }

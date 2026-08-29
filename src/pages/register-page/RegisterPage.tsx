@@ -8,33 +8,44 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { CustomInput } from "@/components/custom-input";
-import useLoginPage from "./LoginPage.hooks";
-import { LoginPageContainer } from "./LoginPage.styles";
+import useRegisterPage from "./RegisterPage.hooks";
+import { RegisterPageContainer } from "./RegisterPage.styles";
 import { TypographyCenter } from "@/styled/CustomTypography";
 import { Link } from "react-router-dom";
 import { paths } from "@/constants/path";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const {
     control,
     errors,
     isSubmitting,
     showPassword,
+    showPasswordConfirmation,
     handleSubmit,
     onSubmit,
     setShowPassword,
-  } = useLoginPage();
+    setShowPasswordConfirmation,
+  } = useRegisterPage();
 
   return (
-    <LoginPageContainer>
+    <RegisterPageContainer>
       <Card elevation={2} sx={{ width: "440px", maxWidth: "90vw" }}>
         <CardContent>
-          <TypographyCenter variant="h4">Admin Login</TypographyCenter>
+          <TypographyCenter variant="h4">Register</TypographyCenter>
           <TypographyCenter sx={{ marginBottom: "32px", marginTop: "12px" }}>
-            Masuk ke dashboard untuk mengelola bisnis Anda dengan mudah
+            Isi formulir registrasi agar dapat masuk ke halaman dashboard
           </TypographyCenter>
 
           <form onSubmit={handleSubmit(onSubmit)}>
+            <CustomInput
+              name="name"
+              control={control}
+              errors={errors}
+              label="Name"
+              placeholder="John Doe"
+              renderErrorMessage
+            />
+
             <CustomInput
               name="email"
               control={control}
@@ -49,7 +60,7 @@ export default function LoginPage() {
               control={control}
               errors={errors}
               label="Password"
-              placeholder="Masukkan password"
+              placeholder="••••••••"
               type={showPassword ? "text" : "password"}
               renderErrorMessage
               textFieldProps={{
@@ -77,6 +88,40 @@ export default function LoginPage() {
               }}
             />
 
+            <CustomInput
+              name="passwordConfirmation"
+              control={control}
+              errors={errors}
+              label="Password Confirmation"
+              placeholder="••••••••"
+              type={showPasswordConfirmation ? "text" : "password"}
+              renderErrorMessage
+              textFieldProps={{
+                slotProps: {
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          onClick={() =>
+                            setShowPasswordConfirmation(
+                              (prevState) => !prevState,
+                            )
+                          }
+                        >
+                          {showPasswordConfirmation ? (
+                            <VisibilityOff color="primary" />
+                          ) : (
+                            <Visibility color="primary" />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                },
+              }}
+            />
+
             <Button
               sx={{ marginTop: "20px" }}
               type="submit"
@@ -84,23 +129,23 @@ export default function LoginPage() {
               fullWidth
               // disabled={isSubmitting}
             >
-              Sign In
+              Register
             </Button>
           </form>
 
           <TypographyCenter sx={{ marginTop: "20px" }}>
-            Tidak punya akun?{" "}
+            Sudah punya akun?{" "}
             <Link
-              to={paths.register}
+              to={paths.login}
               style={{ textDecoration: "none", color: "inherit" }}
             >
               <Typography component="span" sx={{ color: "secondary.main" }}>
-                Daftar Sekarang
+                Log in
               </Typography>
             </Link>
           </TypographyCenter>
         </CardContent>
       </Card>
-    </LoginPageContainer>
+    </RegisterPageContainer>
   );
 }

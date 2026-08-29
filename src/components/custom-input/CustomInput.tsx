@@ -18,13 +18,11 @@ export default function CustomInput<TFieldValues extends FieldValues>({
   disabled = false,
   boxFieldWrapperProps,
   renderErrorMessage,
+  textFieldProps,
 }: CustomInputProps<TFieldValues>) {
   const error = errors?.[name];
   const errorMessage =
     typeof error?.message === "string" ? error.message : undefined;
-
-  console.log(">>> error : ", error);
-  console.log(">>> errorMessage : ", errorMessage);
 
   return (
     <BoxFieldWrapper
@@ -45,6 +43,7 @@ export default function CustomInput<TFieldValues extends FieldValues>({
           <Fragment>
             <TextField
               {...field}
+              {...textFieldProps}
               fullWidth
               placeholder={placeholder}
               type={type}
