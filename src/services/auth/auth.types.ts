@@ -1,18 +1,25 @@
+import { BaseApiResponse } from "@/types/api";
+import { UserStatus } from "@/types/user";
+
 export interface AuthRegister {
   email: string;
   password: string;
   name: string;
 }
 
-export interface AuthRegisterResponse {
+export interface AuthRegisterResponse extends BaseApiResponse {
   id: string;
   email: string;
   name: string;
-  token?: string;
-  message?: string;
+  status: UserStatus;
+  emailVerifiedAt?: string;
 }
 
-export interface ApiErrorResponse {
-  message: string;
-  statusCode: number;
+export interface AuthRegisterVerify {
+  email: string;
+  code: string;
+}
+
+export interface AuthResendOtp {
+  email: string;
 }

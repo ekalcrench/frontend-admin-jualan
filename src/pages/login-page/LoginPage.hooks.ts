@@ -23,6 +23,11 @@ export default function useLoginPage() {
 
   const onSubmit = async (values: LoginFormValues) => {
     console.log(">>> values di onSubmit : ", values);
+
+    // Optional: auto-login after successful registration
+    // if (response.token) {
+    //   await login(response.token);
+    // }
     await login(values.email);
     navigate("/users");
   };

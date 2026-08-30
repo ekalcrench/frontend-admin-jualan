@@ -1,6 +1,8 @@
 export const api = {
   auth: {
     register: "/auth/register",
+    registerVerify: "/auth/register/verify",
+    resendOtp: "/auth/resend-otp",
   },
 };
 

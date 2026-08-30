@@ -5,6 +5,7 @@ import { LoginPage } from "@/pages/login-page";
 import { UsersPage } from "@/pages/UsersPage";
 import { paths } from "@/constants/path";
 import { RegisterPage } from "@/pages/register-page";
+import { RegisterPageVerify } from "@/pages/register-verify-page";
 
 export default function RouteLayout() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -13,6 +14,7 @@ export default function RouteLayout() {
     <Routes>
       <Route path={paths.login} element={<LoginPage />} />
       <Route path={paths.register} element={<RegisterPage />} />
+      <Route path={paths.registerVerify} element={<RegisterPageVerify />} />
       <Route path="/" element={<AdminLayout />}>
         <Route
           index
