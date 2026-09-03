@@ -1,5 +1,14 @@
-import { BaseApiResponse } from "@/types/api";
-import { UserStatus } from "@/types/user";
+import { User } from "@/types/user";
+
+export interface AuthLogin {
+  email: string;
+  password: string;
+}
+
+export interface AuthLoginResponse {
+  user: User;
+  accessToken: string;
+}
 
 export interface AuthRegister {
   email: string;
@@ -7,13 +16,7 @@ export interface AuthRegister {
   name: string;
 }
 
-export interface AuthRegisterResponse extends BaseApiResponse {
-  id: string;
-  email: string;
-  name: string;
-  status: UserStatus;
-  emailVerifiedAt?: string;
-}
+export interface AuthRegisterResponse extends User {}
 
 export interface AuthRegisterVerify {
   email: string;

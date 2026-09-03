@@ -1,5 +1,7 @@
 import axios from "axios";
 import {
+  AuthLogin,
+  AuthLoginResponse,
   AuthRegister,
   AuthRegisterResponse,
   AuthRegisterVerify,
@@ -49,7 +51,14 @@ export async function resendOtp(
     data,
   );
 
-  console.log(">>> response : ", response);
+  return response.data;
+}
+
+export async function login(data: AuthLogin): Promise<AuthLoginResponse> {
+  const response = await axios.post<AuthLoginResponse>(
+    `${baseApiUrl}${api.auth.login}`,
+    data,
+  );
 
   return response.data;
 }

@@ -18,7 +18,7 @@ export default function RegisterPage() {
   const {
     control,
     errors,
-    isSubmitting,
+    isLoading,
     showPassword,
     showPasswordConfirmation,
     handleSubmit,
@@ -44,6 +44,7 @@ export default function RegisterPage() {
               label="Name"
               placeholder="John Doe"
               renderErrorMessage
+              disabled={isLoading}
             />
 
             <CustomInput
@@ -53,6 +54,7 @@ export default function RegisterPage() {
               label="Email"
               placeholder="contoh@gmail.com"
               renderErrorMessage
+              disabled={isLoading}
             />
 
             <CustomInput
@@ -63,6 +65,7 @@ export default function RegisterPage() {
               placeholder="••••••••"
               type={showPassword ? "text" : "password"}
               renderErrorMessage
+              disabled={isLoading}
               textFieldProps={{
                 type: showPassword ? "text" : "password",
                 slotProps: {
@@ -96,6 +99,7 @@ export default function RegisterPage() {
               placeholder="••••••••"
               type={showPasswordConfirmation ? "text" : "password"}
               renderErrorMessage
+              disabled={isLoading}
               textFieldProps={{
                 slotProps: {
                   input: {
@@ -127,7 +131,7 @@ export default function RegisterPage() {
               type="submit"
               variant="contained"
               fullWidth
-              // disabled={isSubmitting}
+              loading={isLoading}
             >
               Register
             </Button>

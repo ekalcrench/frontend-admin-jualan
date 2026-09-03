@@ -5,8 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "./RegisterPage.contants";
 import { useState } from "react";
 import { useRegisterMutation } from "@/services/auth";
-import { toast } from "sonner"; // or your toast library
+import { toast } from "sonner";
 import { paths } from "@/constants/path";
+import { apiErrorHandler } from "@/utils/api";
 
 export default function useRegisterPage() {
   const navigate = useNavigate();
@@ -29,28 +30,28 @@ export default function useRegisterPage() {
     useState<boolean>(false);
 
   const onSubmit = async (values: RegisterFormValues) => {
+    const toastId = toast.loading("Loading...");
     try {
-      const response = await registerMutation.mutateAsync({
+      await registerMutation.mutateAsync({
         email: values.email,
         password: values.password,
         name: values.name,
       });
 
-      console.log(">>> response : ", response);
-
       toast.success("Cek email Anda untuk melihat OTP");
 
       navigate(`${paths.registerVerify}?email=${values.email}`);
     } catch (error) {
-      console.log(">>> error onSubmit : ", error);
-      toast.error("Failed to create account. Please try again.");
+      apiErrorHandler(error);
+    } finally {
+      toast.dismiss(toastId);
     }
   };
 
   return {
     control,
     errors,
-    isSubmitting: isLoading,
+    isLoading,
     showPassword,
     showPasswordConfirmation,
     handleSubmit,
