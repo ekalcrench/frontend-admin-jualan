@@ -7,6 +7,7 @@ import {
   AuthRegisterResponse,
   AuthRegisterVerify,
   AuthResendOtp,
+  AuthResendOtpResponse,
 } from "./auth.types";
 
 export function useLoginMutation() {
@@ -34,10 +35,12 @@ export function useRegisterVerifyMutation() {
 }
 
 export function useResendOtpMutation() {
-  return useMutation<AuthRegisterResponse, Error, AuthResendOtp>({
+  return useMutation<AuthResendOtpResponse, Error, AuthResendOtp>({
     mutationFn: resendOtp,
     onSuccess: (result, variables, onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: ["users", result.email] });
+      context.client.invalidateQueries({
+        queryKey: ["users", result.user.email],
+      });
     },
   });
 }

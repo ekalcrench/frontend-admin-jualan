@@ -11,11 +11,22 @@ export default function useResendOtpTimer({
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    // Start countdown immediately on mount
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    if (delaySeconds <= 0) {
+      setSecondsLeft(0);
+      setShowResend(true);
+      return;
+    }
+
+    setSecondsLeft(delaySeconds);
+    setShowResend(false);
+
     timerRef.current = setInterval(() => {
       setSecondsLeft((prev) => {
         if (prev <= 1) {
-          // Reached zero — show resend and clear timer
           setShowResend(true);
           if (timerRef.current) clearInterval(timerRef.current);
           return 0;
@@ -27,25 +38,11 @@ export default function useResendOtpTimer({
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, []);
+  }, [delaySeconds]);
 
   const handleResend = () => {
     if (!showResend) return;
     onResend?.();
-
-    // Restart the timer after resend
-    setShowResend(false);
-    setSecondsLeft(delaySeconds);
-    timerRef.current = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          setShowResend(true);
-          if (timerRef.current) clearInterval(timerRef.current);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
   };
 
   return { containerRef, secondsLeft, showResend, handleResend };

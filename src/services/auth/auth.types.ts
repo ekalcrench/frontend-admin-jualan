@@ -26,3 +26,8 @@ export interface AuthRegisterVerify {
 export interface AuthResendOtp {
   email: string;
 }
+
+export interface AuthResendOtpResponse {
+  user: User;
+  otpValidResendTime: string;
+}

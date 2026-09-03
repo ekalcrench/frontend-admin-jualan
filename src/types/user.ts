@@ -1,7 +1,6 @@
-import { userStatus } from "@/constants/user";
 import { BaseApiResponse } from "./api";
 
-export type UserStatus = typeof userStatus;
+export type UserStatus = "PENDING_EMAIL" | "ACTIVE" | "SUSPENDED";
 export type UserRole = "USER" | "ADMIN" | "SUPER_ADMIN";
 
 export interface User extends BaseApiResponse {

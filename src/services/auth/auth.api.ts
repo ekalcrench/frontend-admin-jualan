@@ -6,6 +6,7 @@ import {
   AuthRegisterResponse,
   AuthRegisterVerify,
   AuthResendOtp,
+  AuthResendOtpResponse,
 } from "./auth.types";
 import { api, baseApiUrl } from "@/constants/api";
 
@@ -28,15 +29,13 @@ export async function registerVerify(
     data,
   );
 
-  console.log(">>> response : ", response);
-
   return response.data;
 }
 
 export async function registerVerifyCheck(
   email: string,
-): Promise<AuthRegisterResponse> {
-  const response = await axios.get<AuthRegisterResponse>(
+): Promise<AuthResendOtpResponse> {
+  const response = await axios.get<AuthResendOtpResponse>(
     `${baseApiUrl}${api.auth.registerVerify}?email=${email}`,
   );
 
@@ -45,8 +44,8 @@ export async function registerVerifyCheck(
 
 export async function resendOtp(
   data: AuthResendOtp,
-): Promise<AuthRegisterResponse> {
-  const response = await axios.post<AuthRegisterResponse>(
+): Promise<AuthResendOtpResponse> {
+  const response = await axios.post<AuthResendOtpResponse>(
     `${baseApiUrl}${api.auth.resendOtp}`,
     data,
   );

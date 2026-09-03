@@ -1,12 +1,4 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  IconButton,
-  InputAdornment,
-  Typography,
-} from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Button, Card, CardContent, Typography } from "@mui/material";
 import { CustomInput } from "@/components/custom-input";
 import useRegisterPageVerify from "./RegisterPageVerify.hooks";
 import { RegisterPageVerifyContainer } from "./RegisterPageVerify.styles";
@@ -15,10 +7,23 @@ import { Link } from "react-router-dom";
 import { paths } from "@/constants/path";
 import { CustomOtp } from "@/components/custom-otp";
 import { ResendOtpTimer } from "./components/resend-otp-timer";
+import LoadingPage from "@/components/loading-page/LoadingPage";
 
 export default function RegisterPageVerify() {
-  const { control, errors, isSubmitting, handleSubmit, onResendOtp, onSubmit } =
-    useRegisterPageVerify();
+  const {
+    control,
+    errors,
+    isLoading,
+    isLoadingSubmit,
+    resendOtpDelay,
+    handleSubmit,
+    onResendOtp,
+    onSubmit,
+  } = useRegisterPageVerify();
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <RegisterPageVerifyContainer>
@@ -40,16 +45,24 @@ export default function RegisterPageVerify() {
               disabled
             />
 
-            <CustomOtp name="code" control={control} label="Kode OTP" />
+            <CustomOtp
+              name="code"
+              control={control}
+              label="Kode OTP"
+              disabled={isLoadingSubmit}
+            />
 
-            <ResendOtpTimer delaySeconds={5} onResend={onResendOtp} />
+            <ResendOtpTimer
+              delaySeconds={resendOtpDelay}
+              onResend={onResendOtp}
+            />
 
             <Button
               sx={{ marginTop: "24px" }}
               type="submit"
               variant="contained"
               fullWidth
-              // disabled={isSubmitting}
+              loading={isLoadingSubmit}
             >
               Register
             </Button>

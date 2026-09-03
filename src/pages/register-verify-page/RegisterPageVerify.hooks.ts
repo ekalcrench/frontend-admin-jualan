@@ -1,4 +1,3 @@
-import useAuthStore from "@/store/auth-store";
 import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { RegisterFormValues } from "./RegisterPageVerify.types";
@@ -14,6 +13,7 @@ import { toast } from "sonner";
 import { paths } from "@/constants/path";
 import { userStatus } from "@/constants/user";
 import { apiErrorHandler } from "@/utils/api";
+import { resendOtpDelaySeconds } from "@/constants/time";
 
 export default function useRegisterPageVerify() {
   const navigate = useNavigate();
@@ -22,7 +22,9 @@ export default function useRegisterPageVerify() {
 
   const registerVerifyMutation = useRegisterVerifyMutation();
   const resendOtpMutation = useResendOtpMutation();
-  const { data, isError } = useRegisterVerifyQuery(email ?? "");
+  const { data, error, isError, isLoading } = useRegisterVerifyQuery(
+    email ?? "",
+  );
 
   const {
     control,
@@ -38,10 +40,23 @@ export default function useRegisterPageVerify() {
     },
   });
 
-  // Use combined loading state: form submitting OR mutation pending
-  const isLoading = isSubmitting || registerVerifyMutation.isPending;
+  const [resendOtpDelay, setResendOtpDelay] = useState<number>(
+    resendOtpDelaySeconds,
+  );
+
+  const isLoadingSubmit = isSubmitting || registerVerifyMutation.isPending;
+
+  const getResendSeconds = (otpValidResendTime: string): number => {
+    const targetTime = new Date(otpValidResendTime).getTime();
+    const now = Date.now();
+
+    const resendSeconds = Math.max(0, Math.ceil((targetTime - now) / 1000));
+
+    return resendSeconds;
+  };
 
   const onResendOtp = async () => {
+    const toastId = toast.loading("Resending OTP...");
     try {
       const values = getValues();
 
@@ -49,50 +64,60 @@ export default function useRegisterPageVerify() {
         email: values.email,
       });
 
-      console.log(">>> response di onResendOtp: ", response);
+      if (response?.otpValidResendTime) {
+        setResendOtpDelay(getResendSeconds(response.otpValidResendTime));
+      } else {
+        setResendOtpDelay(resendOtpDelaySeconds);
+      }
 
       toast.success("Berhasil Resend OTP");
     } catch (error: any) {
       apiErrorHandler(error);
+    } finally {
+      toast.dismiss(toastId);
     }
   };
 
   const onSubmit = async (values: RegisterFormValues) => {
-    console.log(">>> values : ", values);
+    const toastId = toast.loading("Verifying OTP...");
     try {
-      const response = await registerVerifyMutation.mutateAsync({
+      await registerVerifyMutation.mutateAsync({
         email: values.email,
         code: values.code,
       });
 
-      console.log(">>> response di onSubmit: ", response);
-
-      toast.success("Account created successfully!");
+      toast.success("Akun berhasil diverifikasi, silakan login");
       navigate(paths.login);
     } catch (error: any) {
       apiErrorHandler(error);
+    } finally {
+      toast.dismiss(toastId);
     }
   };
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
-    console.log(">>> data : ", data);
-    if (!data) return;
+    if (!data?.user || !data?.otpValidResendTime) return;
 
-    // if (data.status !== userStatus.PENDING_EMAIL) {
-    //   navigate(paths.login);
-    // }
+    if (data.user.status !== userStatus.PENDING_EMAIL) {
+      navigate(paths.login);
+    } else {
+      setResendOtpDelay(getResendSeconds(data.otpValidResendTime));
+    }
   }, [data]);
 
   useEffect(() => {
-    if (isError) navigate(paths.login);
-  }, [isError]);
+    if (isError && error) {
+      apiErrorHandler(error);
+      navigate(paths.login);
+    }
+  }, [isError, error]);
 
   return {
     control,
     errors,
-    isSubmitting: isLoading,
+    isLoading,
+    isLoadingSubmit,
+    resendOtpDelay,
     handleSubmit,
     onResendOtp,
     onSubmit,
