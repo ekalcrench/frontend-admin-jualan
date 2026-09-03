@@ -1,6 +1,8 @@
+import { User } from "@/types/user";
+
 export interface AuthState {
-  isAuthenticated: boolean;
-  user: { name: string; email: string } | null;
-  login: (email: string) => Promise<void>;
+  accessToken: string | null;
+  user: User | null;
+  login: (user: User, accessToken: string) => Promise<void>;
   logout: () => void;
 }

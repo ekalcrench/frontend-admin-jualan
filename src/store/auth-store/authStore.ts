@@ -1,13 +1,21 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { AuthState } from "./authStore.types";
 
-const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: false,
-  user: null,
-  login: async (email) => {
-    set({ isAuthenticated: true, user: { name: "Admin", email } });
-  },
-  logout: () => set({ isAuthenticated: false, user: null }),
-}));
+const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      accessToken: null,
+      user: null,
+      login: async (user, accessToken) => {
+        set({ accessToken, user });
+      },
+      logout: () => set({ accessToken: null, user: null }),
+    }),
+    {
+      name: "admin-jualan-auth",
+    },
+  ),
+);
 
 export default useAuthStore;

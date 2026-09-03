@@ -26,6 +26,8 @@ export default function useLoginPage() {
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
+  const isLoading = isSubmitting || loginMutation.isPending;
+
   const onSubmit = async (values: LoginFormValues) => {
     const toastId = toast.loading("Signing  in...");
     try {
@@ -36,11 +38,10 @@ export default function useLoginPage() {
 
       console.log(">>> response di onSubmit : ", response);
       // Optional: auto-login after successful registration
-      // if (response.token) {
-      //   await login(response.token);
-      // }
-      // await login(values.email);
-      // navigate("/users");
+      if (response.accessToken) {
+        await login(response.user, response.accessToken);
+      }
+      navigate("/users");
     } catch (error) {
       apiErrorHandler(error);
     } finally {
@@ -51,7 +52,7 @@ export default function useLoginPage() {
   return {
     control,
     errors,
-    isSubmitting,
+    isLoading,
     showPassword,
     handleSubmit,
     onSubmit,

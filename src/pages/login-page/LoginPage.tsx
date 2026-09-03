@@ -18,7 +18,7 @@ export default function LoginPage() {
   const {
     control,
     errors,
-    isSubmitting,
+    isLoading,
     showPassword,
     handleSubmit,
     onSubmit,
@@ -42,6 +42,7 @@ export default function LoginPage() {
               label="Email"
               placeholder="contoh@gmail.com"
               renderErrorMessage
+              disabled={isLoading}
             />
 
             <CustomInput
@@ -52,6 +53,7 @@ export default function LoginPage() {
               placeholder="Masukkan password"
               type={showPassword ? "text" : "password"}
               renderErrorMessage
+              disabled={isLoading}
               textFieldProps={{
                 type: showPassword ? "text" : "password",
                 slotProps: {
@@ -82,7 +84,7 @@ export default function LoginPage() {
               type="submit"
               variant="contained"
               fullWidth
-              // disabled={isSubmitting}
+              loading={isLoading}
             >
               Sign In
             </Button>
