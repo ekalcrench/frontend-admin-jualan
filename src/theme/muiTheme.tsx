@@ -1,36 +1,56 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, type PaletteColor } from "@mui/material/styles";
 // import type {} from "@mui/x-date-pickers/themeAugmentation";
 
 let theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#62AD9E",
+      main: "#5B9F91",
+      light: "#7DB8AC",
+      dark: "#467D72",
+      contrastText: "#FFFFFF",
     },
     secondary: {
-      main: "#79A8D7",
+      main: "#6B8FC4",
+      light: "#8DA8D2",
+      dark: "#526F9C",
+      contrastText: "#FFFFFF",
     },
     success: {
-      main: "#16A34A",
+      main: "#22A06B",
+      light: "#4DBF8A",
+      dark: "#167A50",
+      contrastText: "#FFFFFF",
     },
     warning: {
-      main: "#D97706",
+      main: "#D9901A",
+      light: "#E5AA4D",
+      dark: "#A96D0D",
+      contrastText: "#FFFFFF",
     },
     error: {
-      main: "#DC2626",
+      main: "#D64545",
+      light: "#E06A6A",
+      dark: "#B33232",
+      contrastText: "#FFFFFF",
+    },
+    text: {
+      primary: "#18181B",
+      secondary: "#71717A",
+    },
+    info: {
+      main: "#4F7FC4",
+      light: "#759BD0",
+      dark: "#3B639B",
+      contrastText: "#FFFFFF",
     },
     common: {
       white: "#FFFFFF",
-    },
-    text: {
-      primary: "#0F172A",
-      secondary: "#64748B",
-    },
-    info: {
-      main: "#2563EB",
+      black: "#0F172A",
     },
     background: {
       default: "#F8FAFC",
+      paper: "#FFFFFF",
     },
   },
   typography: {
@@ -179,6 +199,65 @@ let theme = createTheme({
         }),
         notchedOutline: ({ ownerState: { error }, theme: { palette } }) => ({
           borderColor: `${error ? palette.error.main : palette.border.main}`,
+        }),
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: ({ theme: { palette } }) => ({
+          backgroundColor: palette.background.sidebar,
+          color: palette.text.sidebar,
+          borderColor: palette.border.sidebar,
+        }),
+      },
+    },
+    MuiList: {
+      styleOverrides: {
+        root: () => ({
+          paddingTop: "12px",
+          paddingBottom: "12px",
+        }),
+      },
+    },
+    MuiListItemButton: {
+      styleOverrides: {
+        root: ({ theme: { palette } }) => ({
+          "&.active-sidebar": {
+            backgroundColor: palette.background.sidebarActive,
+            pointerEvents: "none",
+          },
+        }),
+      },
+    },
+    MuiListItemIcon: {
+      styleOverrides: {
+        root: ({ theme: { palette } }) => ({
+          color: palette.icon.sidebar,
+        }),
+      },
+    },
+    MuiListItemText: {
+      styleOverrides: {
+        root: ({ theme: { palette } }) => ({
+          "&.active-item-text": {
+            color: palette.text.sidebarActive,
+          },
+          color: palette.text.sidebar,
+        }),
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: ({ theme: { palette, breakpoints } }) => ({
+          paddingTop: "16px",
+          paddingBottom: "8px",
+          minHeight: "40px !important",
+          color: palette.text.sidebarActive,
+          [breakpoints.down(600)]: {
+            paddingTop: "8px",
+            paddingBottom: "8px",
+            minHeight: "40px",
+          },
         }),
       },
     },
@@ -340,19 +419,32 @@ declare module "@mui/material/styles" {
   interface TypeBackground {
     card?: string;
     sidebar?: string;
+    sidebarActive?: string;
     disabled?: string;
   }
 
   interface TypeText {
     placeholder?: string;
+    sidebar?: string;
+    sidebarActive?: string;
+  }
+
+  interface TypeIcon extends PaletteColor {
+    sidebar?: string;
+  }
+
+  interface TypeBorder extends PaletteColor {
+    sidebar?: string;
   }
 
   interface Palette {
-    border: Palette["primary"];
+    border: TypeBorder;
+    icon: TypeIcon;
   }
 
   interface PaletteOptions {
     border?: PaletteOptions["primary"];
+    icon?: PaletteOptions["primary"];
   }
 }
 
@@ -360,14 +452,21 @@ theme = createTheme(theme, {
   palette: {
     border: {
       main: "#E2E8F0",
+      sidebar: "rgba(255, 255, 255, 0.08)",
     },
     background: {
       card: "#FFFFFF",
       sidebar: "#3F3F46",
-      disabled: "#E2E8F0",
+      sidebarActive: "#52525B",
+      disabled: "#F1F1F3",
     },
     text: {
-      placeholder: "#B8B8B8",
+      placeholder: "#A1A1AA",
+      sidebar: "#A1A1AA",
+      sidebarActive: "#F4F4F5",
+    },
+    icon: {
+      sidebar: "#D4D4D8",
     },
   },
 });

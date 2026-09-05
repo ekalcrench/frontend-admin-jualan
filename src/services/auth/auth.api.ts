@@ -1,4 +1,4 @@
-import axios from "axios";
+import { apiClient } from "@/config/api";
 import {
   AuthLogin,
   AuthLoginResponse,
@@ -8,13 +8,13 @@ import {
   AuthResendOtp,
   AuthResendOtpResponse,
 } from "./auth.types";
-import { api, baseApiUrl } from "@/constants/api";
+import { api } from "@/constants/api";
 
 export async function register(
   data: AuthRegister,
 ): Promise<AuthRegisterResponse> {
-  const response = await axios.post<AuthRegisterResponse>(
-    `${baseApiUrl}${api.auth.register}`,
+  const response = await apiClient.post<AuthRegisterResponse>(
+    api.auth.register,
     data,
   );
 
@@ -24,8 +24,8 @@ export async function register(
 export async function registerVerify(
   data: AuthRegisterVerify,
 ): Promise<AuthRegisterResponse> {
-  const response = await axios.put<AuthRegisterResponse>(
-    `${baseApiUrl}${api.auth.registerVerify}`,
+  const response = await apiClient.put<AuthRegisterResponse>(
+    api.auth.registerVerify,
     data,
   );
 
@@ -35,8 +35,9 @@ export async function registerVerify(
 export async function registerVerifyCheck(
   email: string,
 ): Promise<AuthResendOtpResponse> {
-  const response = await axios.get<AuthResendOtpResponse>(
-    `${baseApiUrl}${api.auth.registerVerify}?email=${email}`,
+  const response = await apiClient.get<AuthResendOtpResponse>(
+    api.auth.registerVerify,
+    { params: { email } },
   );
 
   return response.data;
@@ -45,8 +46,8 @@ export async function registerVerifyCheck(
 export async function resendOtp(
   data: AuthResendOtp,
 ): Promise<AuthResendOtpResponse> {
-  const response = await axios.post<AuthResendOtpResponse>(
-    `${baseApiUrl}${api.auth.resendOtp}`,
+  const response = await apiClient.post<AuthResendOtpResponse>(
+    api.auth.resendOtp,
     data,
   );
 
@@ -54,8 +55,8 @@ export async function resendOtp(
 }
 
 export async function login(data: AuthLogin): Promise<AuthLoginResponse> {
-  const response = await axios.post<AuthLoginResponse>(
-    `${baseApiUrl}${api.auth.login}`,
+  const response = await apiClient.post<AuthLoginResponse>(
+    api.auth.login,
     data,
   );
 

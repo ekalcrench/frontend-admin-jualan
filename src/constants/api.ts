@@ -5,6 +5,9 @@ export const api = {
     registerVerify: "/auth/register/verify",
     resendOtp: "/auth/resend-otp",
   },
+  users: {
+    base: "/users",
+  },
 };
 
 export const baseApiUrl = import.meta.env.VITE_API_BASE_URL;

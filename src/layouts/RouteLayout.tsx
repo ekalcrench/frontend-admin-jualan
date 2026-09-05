@@ -2,7 +2,7 @@ import useAuthStore from "@/store/auth-store";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { AdminLayout } from "./AdminLayout";
 import { LoginPage } from "@/pages/login-page";
-import { UsersPage } from "@/pages/UsersPage";
+import { UsersPage } from "@/pages/users-page";
 import { paths } from "@/constants/path";
 import { RegisterPage } from "@/pages/register-page";
 import { RegisterPageVerify } from "@/pages/register-verify-page";

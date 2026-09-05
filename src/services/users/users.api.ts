@@ -1,9 +1,8 @@
-import axios from "axios";
+import { apiClient } from "@/config/api";
 import type { User } from "./users.types";
-
-const API_BASE_URL = "http://localhost:8080";
+import { api } from "@/constants/api";
 
 export async function fetchUsers(): Promise<User[]> {
-  const response = await axios.get<User[]>(`${API_BASE_URL}/users`);
+  const response = await apiClient.get<User[]>(api.users.base);
   return response.data;
 }
