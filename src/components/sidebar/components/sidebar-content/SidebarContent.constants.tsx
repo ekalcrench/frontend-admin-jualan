@@ -13,13 +13,15 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import { paths } from "@/constants/path";
 import { SidebarListItem } from "./SidebarContent.types";
+import { userRole } from "@/constants/user";
+import { organizationRole } from "@/constants/organization";
 
 export const sidebarList: SidebarListItem[] = [
-  {
-    title: "Analytics",
-    url: paths.analytics,
-    icon: <AnalyticsIcon />,
-  },
+  // {
+  //   title: "Analytics",
+  //   url: paths.analytics,
+  //   icon: <AnalyticsIcon />,
+  // },
   // {
   //   title: "Stream Monitoring",
   //   url: paths.streamMonitoring,
@@ -106,25 +108,6 @@ export const sidebarList: SidebarListItem[] = [
   //   url: paths.autoSettlement,
   //   icon: <FlashOnIcon />,
   // },
-  {
-    title: "User",
-    url: paths.users,
-    icon: <GroupIcon />,
-    // child: [
-    //   {
-    //     title: "User",
-    //     url: paths.users,
-    //     params: "page=1&size=10&sortBy=-lastModifiedDate",
-    //     icon: <ListIcon />,
-    //   },
-    //   {
-    //     title: "User Register",
-    //     url: paths.userRegister,
-    //     params: "page=1&size=10&sortBy=-createdDate",
-    //     icon: <ListIcon />,
-    //   },
-    // ],
-  },
   // {
   //   title: "Admin",
   //   url: paths.admin,
@@ -143,4 +126,25 @@ export const sidebarList: SidebarListItem[] = [
   //   params: "page=1&size=10&sortBy=-createdDate",
   //   icon: <CampaignIcon />,
   // },
+  {
+    title: "User",
+    url: paths.users,
+    icon: <GroupIcon />,
+    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
+    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
+    // child: [
+    //   {
+    //     title: "User",
+    //     url: paths.users,
+    //     params: "page=1&size=10&sortBy=-lastModifiedDate",
+    //     icon: <ListIcon />,
+    //   },
+    //   {
+    //     title: "User Register",
+    //     url: paths.userRegister,
+    //     params: "page=1&size=10&sortBy=-createdDate",
+    //     icon: <ListIcon />,
+    //   },
+    // ],
+  },
 ];

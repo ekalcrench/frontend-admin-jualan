@@ -7,10 +7,10 @@ const useAuthStore = create<AuthState>()(
     (set) => ({
       accessToken: null,
       user: null,
-      login: async (user, accessToken) => {
-        set({ accessToken, user });
-      },
-      logout: () => set({ accessToken: null, user: null }),
+      organization: null,
+      login: (user, accessToken) => set({ accessToken, user }),
+      loginOrganization: (organization) => set({ organization }),
+      logout: () => set({ accessToken: null, user: null, organization: null }),
     }),
     {
       name: "admin-jualan-auth",

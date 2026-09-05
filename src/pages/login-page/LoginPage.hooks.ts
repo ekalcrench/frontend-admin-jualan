@@ -39,7 +39,7 @@ export default function useLoginPage() {
       console.log(">>> response di onSubmit : ", response);
       // Optional: auto-login after successful registration
       if (response.accessToken) {
-        await login(response.user, response.accessToken);
+        login(response.user, response.accessToken);
       }
       navigate("/users");
     } catch (error) {

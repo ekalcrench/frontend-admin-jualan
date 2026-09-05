@@ -95,7 +95,7 @@ let theme = createTheme({
       styleOverrides: {
         root: ({ ownerState, theme: { palette, breakpoints } }) => ({
           textTransform: "none",
-          minHeight: "48px",
+          minHeight: "40px",
           padding: "8px 20px",
           minWidth: "0px",
           lineHeight: 1.4,
@@ -118,7 +118,7 @@ let theme = createTheme({
           }),
 
           [breakpoints.down(600)]: {
-            minHeight: "40px",
+            minHeight: "36px",
             padding: "6px 16px",
 
             ...(ownerState.size === "small" && {

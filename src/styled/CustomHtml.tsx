@@ -1,7 +1,7 @@
 import { styled } from "@mui/material";
 
 export const CustomMain = styled("main")(() => ({
-  padding: "16px",
+  padding: "32px 24px",
   boxSizing: "border-box",
   flex: "1 1 0",
   minWidth: 0,

@@ -59,22 +59,18 @@ export default function UsersPage() {
           flexDirection: { xs: "column", md: "row" },
           alignItems: { xs: "stretch", md: "center" },
           justifyContent: "space-between",
-          gap: 2,
-          backgroundColor: "background.paper",
-          borderRadius: 3,
-          boxShadow: 1,
-          p: { xs: 3, md: 4 },
+          gap: "16px",
+          padding: "16px 12px",
         }}
       >
         <Box>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            Users
-          </Typography>
+          <Typography variant="h5">Users</Typography>
           <Typography variant="body2" color="text.secondary">
             Manage user accounts, roles, and status for the admin portal.
           </Typography>
         </Box>
-        <Button variant="contained">Add user</Button>
+
+        {/* <Button variant="contained">Add user</Button> */}
       </Box>
 
       <Card
