@@ -1,11 +1,11 @@
-import { Organization } from "@/types/organization";
+import { UserOrganization } from "@/types/organization";
 import { User } from "@/types/user";
 
 export interface AuthState {
   accessToken: string | null;
   user: User | null;
-  organization: Organization | null;
+  organization: UserOrganization | null;
   login: (user: User, accessToken: string) => void;
-  loginOrganization: (organization: Organization) => void;
+  loginOrganization: (organization: UserOrganization) => void;
   logout: () => void;
 }

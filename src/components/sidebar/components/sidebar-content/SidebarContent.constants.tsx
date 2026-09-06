@@ -15,6 +15,7 @@ import { paths } from "@/constants/path";
 import { SidebarListItem } from "./SidebarContent.types";
 import { userRole } from "@/constants/user";
 import { organizationRole } from "@/constants/organization";
+import StoreIcon from "@mui/icons-material/Store";
 
 export const sidebarList: SidebarListItem[] = [
   // {
@@ -146,5 +147,12 @@ export const sidebarList: SidebarListItem[] = [
     //     icon: <ListIcon />,
     //   },
     // ],
+  },
+  {
+    title: "UMKM",
+    url: paths.umkm,
+    icon: <StoreIcon />,
+    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
+    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
   },
 ];

@@ -11,3 +11,19 @@ export interface User extends BaseApiResponse {
   status: UserStatus;
   emailVerifiedAt: string | null;
 }
+
+export type UserOrganizationRole = "MEMBER" | "ADMIN" | "OWNER";
+export type UserOrganizationStatus =
+  | "PENDING_APPROVAL"
+  | "APPROVED"
+  | "REJECTED"
+  | "SUSPENDED";
+
+export interface UserOrganization extends BaseApiResponse {
+  organizationId: string;
+  role: UserOrganizationRole;
+  approvedAt: string;
+  approvedById: string;
+  updatedById: string;
+  status: UserOrganizationStatus;
+}

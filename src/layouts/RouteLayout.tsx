@@ -6,6 +6,7 @@ import { UsersPage } from "@/pages/users-page";
 import { paths } from "@/constants/path";
 import { RegisterPage } from "@/pages/register-page";
 import { RegisterPageVerify } from "@/pages/register-verify-page";
+import { UmkmPage } from "@/pages/umkm-page";
 
 function ProtectedRoute() {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -31,6 +32,7 @@ export default function RouteLayout() {
         <Route path="/" element={<AdminLayout />}>
           <Route index element={<Navigate to={paths.users} replace />} />
           <Route path={paths.users} element={<UsersPage />} />
+          <Route path={paths.umkm} element={<UmkmPage />} />
         </Route>
         <Route path="*" element={<Navigate to={paths.users} replace />} />
       </Route>

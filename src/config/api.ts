@@ -24,8 +24,8 @@ apiClient.interceptors.response.use(
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
       const responseData = error.response?.data;
       const isUnauthorized =
-        error.response?.status === 403 ||
-        responseData?.statusCode === 403 ||
+        error.response?.status === 401 ||
+        responseData?.statusCode === 401 ||
         responseData?.message === "Unauthorized";
 
       if (isUnauthorized) {

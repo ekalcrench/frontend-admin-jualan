@@ -1,5 +1,6 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import {
+  Avatar,
   Box,
   Button,
   Card,
@@ -9,44 +10,32 @@ import {
   Typography,
 } from "@mui/material";
 import { useMemo } from "react";
-import { useUsersQuery } from "@/services/users/users.query";
-import { User } from "@/types/user";
+import { Organization } from "@/types/organization";
+import { useOrganizationsQuery } from "@/services/organizations/organizations.query";
+import { storageBaseUrl } from "@/constants/api";
+import AddIcon from "@mui/icons-material/Add";
 
-export default function UsersPage() {
-  const { data, isLoading, isError } = useUsersQuery();
+export default function UmkmPage() {
+  const { data, isLoading, isError } = useOrganizationsQuery();
 
-  const columns = useMemo<GridColDef<User>[]>(
+  const columns = useMemo<GridColDef<Organization>[]>(
     () => [
-      { field: "id", headerName: "ID", width: 90 },
-      { field: "name", headerName: "Name", flex: 1, minWidth: 160 },
-      { field: "email", headerName: "Email", flex: 1, minWidth: 220 },
+      { field: "id", headerName: "ID", width: 80 },
       {
-        field: "role",
-        headerName: "Role",
-        width: 140,
+        field: "logoUrl",
+        headerName: "Logo",
+        width: 80,
         renderCell: (params) => (
-          <Chip
-            label={params.value}
-            size="small"
-            sx={{
-              backgroundColor: "action.hover",
-              color: "text.secondary",
-              fontWeight: 600,
-            }}
-          />
+          <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
+            <Avatar
+              src={`${storageBaseUrl}${params.value}`}
+              alt={params.row.name}
+              sx={{ width: 32, height: 32 }}
+            />
+          </Box>
         ),
       },
-      {
-        field: "status",
-        headerName: "Status",
-        width: 120,
-        valueFormatter: (value) =>
-          value === "ACTIVE"
-            ? "Active"
-            : value === "PENDING_EMAIL"
-              ? "Pending"
-              : "Suspended",
-      },
+      { field: "name", headerName: "Name", flex: 1, minWidth: 160 },
     ],
     [],
   );
@@ -64,13 +53,15 @@ export default function UsersPage() {
         }}
       >
         <Box>
-          <Typography variant="h5">Users</Typography>
+          <Typography variant="h5">UMKM</Typography>
           <Typography variant="body2" color="text.secondary">
-            Manage user accounts, roles, and status for the admin portal.
+            Mengatur UMKM yang sudah, maupun akan terdaftar dalam sistem
           </Typography>
         </Box>
 
-        {/* <Button variant="contained">Add user</Button> */}
+        <Button variant="contained" startIcon={<AddIcon />}>
+          Add UMKM
+        </Button>
       </Box>
 
       <Card
