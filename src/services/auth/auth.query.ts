@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fiveSeconds, thirtyMinutes } from "@/constants/time";
+import { thirtyMinutes } from "@/constants/time";
 import { registerVerifyCheck } from "./auth.api";
 import { AuthResendOtpResponse } from "./auth.types";
 

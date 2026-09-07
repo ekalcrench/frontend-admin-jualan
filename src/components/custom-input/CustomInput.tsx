@@ -19,6 +19,7 @@ export default function CustomInput<TFieldValues extends FieldValues>({
   boxFieldWrapperProps,
   renderErrorMessage,
   textFieldProps,
+  numeric,
 }: CustomInputProps<TFieldValues>) {
   const error = errors?.[name];
   const errorMessage =
@@ -44,6 +45,15 @@ export default function CustomInput<TFieldValues extends FieldValues>({
             <TextField
               {...field}
               {...textFieldProps}
+              onKeyDown={(e) => {
+                const regex = new RegExp(
+                  /[0-9]|(Backspace|Tab|Enter|Delete|ArrowLeft|ArrowRight|ArrowUp|ArrowDown)/,
+                );
+                const inputNonNumeric = !e.key.match(regex);
+                if (numeric && inputNonNumeric) e.preventDefault();
+
+                textFieldProps?.onKeyDown?.(e);
+              }}
               fullWidth
               placeholder={placeholder}
               type={type}

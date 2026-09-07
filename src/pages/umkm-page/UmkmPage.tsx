@@ -1,47 +1,29 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import {
-  Avatar,
   Box,
   Button,
   Card,
   CardContent,
-  Chip,
   Stack,
   Typography,
 } from "@mui/material";
-import { useMemo } from "react";
-import { Organization } from "@/types/organization";
-import { useOrganizationsQuery } from "@/services/organizations/organizations.query";
-import { storageBaseUrl } from "@/constants/api";
 import AddIcon from "@mui/icons-material/Add";
+import useUmkmPage from "./UmkmPage.hooks";
+import { UmkmForm } from "./components/umkm-form";
 
 export default function UmkmPage() {
-  const { data, isLoading, isError } = useOrganizationsQuery();
-
-  const columns = useMemo<GridColDef<Organization>[]>(
-    () => [
-      { field: "id", headerName: "ID", width: 80 },
-      {
-        field: "logoUrl",
-        headerName: "Logo",
-        width: 80,
-        renderCell: (params) => (
-          <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
-            <Avatar
-              src={`${storageBaseUrl}${params.value}`}
-              alt={params.row.name}
-              sx={{ width: 32, height: 32 }}
-            />
-          </Box>
-        ),
-      },
-      { field: "name", headerName: "Name", flex: 1, minWidth: 160 },
-    ],
-    [],
-  );
+  const { columns, data, isFormOpen, isLoading, isError, setIsFormOpen } =
+    useUmkmPage();
 
   return (
     <Stack spacing={3}>
+      <UmkmForm
+        open={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onOpen={() => setIsFormOpen(true)}
+        setIsFormOpen={setIsFormOpen}
+      />
+
       <Box
         sx={{
           display: "flex",
@@ -59,7 +41,11 @@ export default function UmkmPage() {
           </Typography>
         </Box>
 
-        <Button variant="contained" startIcon={<AddIcon />}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setIsFormOpen(true)}
+        >
           Add UMKM
         </Button>
       </Box>
