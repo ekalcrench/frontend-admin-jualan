@@ -14,3 +14,20 @@ export const BoxFieldWrapper = styled(Box, {
     }),
   }),
 );
+
+export const BoxCenter = styled(Box)<BoxProps>(() => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+}));
+
+export const BoxFlex = styled(Box)<BoxProps>(() => ({
+  display: "flex",
+  alignItems: "center",
+}));
+
+export const BoxFlexSpaceBetween = styled(Box)<BoxProps>(() => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+}));

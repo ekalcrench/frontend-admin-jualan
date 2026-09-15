@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   IconButton,
-  InputAdornment,
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -71,20 +70,18 @@ export default function RegisterPage() {
                 slotProps: {
                   input: {
                     endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          edge="end"
-                          onClick={() =>
-                            setShowPassword((prevState) => !prevState)
-                          }
-                        >
-                          {showPassword ? (
-                            <VisibilityOff color="primary" />
-                          ) : (
-                            <Visibility color="primary" />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
+                      <IconButton
+                        edge="end"
+                        onClick={() =>
+                          setShowPassword((prevState) => !prevState)
+                        }
+                      >
+                        {showPassword ? (
+                          <VisibilityOff color="primary" />
+                        ) : (
+                          <Visibility color="primary" />
+                        )}
+                      </IconButton>
                     ),
                   },
                 },
@@ -104,22 +101,18 @@ export default function RegisterPage() {
                 slotProps: {
                   input: {
                     endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          edge="end"
-                          onClick={() =>
-                            setShowPasswordConfirmation(
-                              (prevState) => !prevState,
-                            )
-                          }
-                        >
-                          {showPasswordConfirmation ? (
-                            <VisibilityOff color="primary" />
-                          ) : (
-                            <Visibility color="primary" />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
+                      <IconButton
+                        edge="end"
+                        onClick={() =>
+                          setShowPasswordConfirmation((prevState) => !prevState)
+                        }
+                      >
+                        {showPasswordConfirmation ? (
+                          <VisibilityOff color="primary" />
+                        ) : (
+                          <Visibility color="primary" />
+                        )}
+                      </IconButton>
                     ),
                   },
                 },

@@ -151,6 +151,7 @@ export const sidebarList: SidebarListItem[] = [
   {
     title: "UMKM",
     url: paths.umkm,
+    params: "page=1&size=20&sortBy=-createdAt",
     icon: <StoreIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
     organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],

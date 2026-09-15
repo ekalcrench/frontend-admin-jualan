@@ -1,10 +1,16 @@
 import { apiClient } from "@/config/api";
 import { api } from "@/constants/api";
-import { Organization } from "@/types/organization";
+import { Organization, OrganizationFilterPayload } from "@/types/organization";
 import { CreateOrganization } from "./organizations.types";
+import { PaginatedData } from "@/types/table";
 
-export async function fetchOrganizations(): Promise<Organization[]> {
-  const response = await apiClient.get<Organization[]>(api.organizations.base);
+export async function fetchOrganizations(
+  payload: OrganizationFilterPayload,
+): Promise<PaginatedData<Organization>> {
+  const response = await apiClient.get<PaginatedData<Organization>>(
+    api.organizations.base,
+    { params: payload },
+  );
   return response.data;
 }
 

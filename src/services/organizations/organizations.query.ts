@@ -1,12 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { fiveMinutes } from "@/constants/time";
-import { Organization } from "@/types/organization";
+import { Organization, OrganizationFilterPayload } from "@/types/organization";
 import { fetchOrganizations } from "./organizations.api";
+import { PaginatedData } from "@/types/table";
 
-export function useOrganizationsQuery() {
-  return useQuery<Organization[]>({
-    queryKey: ["organizations"],
-    queryFn: fetchOrganizations,
+export function useOrganizationsQuery(payload: OrganizationFilterPayload) {
+  return useQuery<PaginatedData<Organization>>({
+    queryKey: ["organizations", payload],
+    queryFn: () => fetchOrganizations(payload),
     staleTime: fiveMinutes,
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 }

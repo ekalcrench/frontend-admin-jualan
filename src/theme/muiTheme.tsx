@@ -95,7 +95,7 @@ let theme = createTheme({
       styleOverrides: {
         root: ({ ownerState, theme: { palette, breakpoints } }) => ({
           textTransform: "none",
-          minHeight: "40px",
+          minHeight: "48px",
           padding: "8px 20px",
           minWidth: "0px",
           lineHeight: 1.4,
@@ -113,12 +113,12 @@ let theme = createTheme({
             },
           }),
           ...(ownerState.size === "small" && {
-            minHeight: "36px",
+            minHeight: "40px",
             padding: "6px 16px",
           }),
 
           [breakpoints.down(600)]: {
-            minHeight: "36px",
+            minHeight: "40px",
             padding: "6px 16px",
 
             ...(ownerState.size === "small" && {
@@ -176,7 +176,8 @@ let theme = createTheme({
           ownerState: { error },
           theme: { breakpoints, palette },
         }) => ({
-          padding: "0px 20px",
+          paddingTop: "0px",
+          paddingBottom: "0px",
           height: "54px",
           color: error ? palette.error.main : palette.primary.main,
           fontWeight: 500,
@@ -190,7 +191,6 @@ let theme = createTheme({
             borderRadius: "12px",
           },
           [breakpoints.down(600)]: {
-            padding: "0px 16px",
             height: "48px",
           },
         }),
@@ -258,6 +258,14 @@ let theme = createTheme({
             paddingBottom: "8px",
             minHeight: "40px",
           },
+        }),
+      },
+    },
+    MuiPaginationItem: {
+      styleOverrides: {
+        root: ({ theme: { palette, breakpoints } }) => ({
+          borderRadius: "8px",
+          borderColor: palette.border.main,
         }),
       },
     },
