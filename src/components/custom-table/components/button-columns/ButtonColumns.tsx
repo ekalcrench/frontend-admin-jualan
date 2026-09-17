@@ -9,6 +9,7 @@ import {
 import { MRT_ColumnDef, MRT_RowData } from "material-react-table";
 import { useState } from "react";
 import { ButtonColumnsProps } from "./ButtonColumns.types";
+import { boxShadowDialog } from "@/constants/styled";
 
 export default function ButtonColumns<TData extends MRT_RowData>({
   columns,
@@ -53,7 +54,7 @@ export default function ButtonColumns<TData extends MRT_RowData>({
               boxSizing: "border-box",
               padding: "16px 20px",
               marginTop: "12px",
-              boxShadow: 1,
+              boxShadow: boxShadowDialog,
               borderRadius: "12px",
             },
           },

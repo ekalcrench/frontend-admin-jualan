@@ -1,12 +1,13 @@
 import { Button } from "@mui/material";
 import { UmkmFormProps } from "./UmkmForm.types";
-import { FormDrawer } from "@/components/form-drawer";
+import FormDrawer from "@/components/form-drawer";
 import useUmkmForm from "./UmkmForm.hooks";
 import { CustomInput } from "@/components/custom-input";
 import { CustomImageSelect } from "@/components/custom-image-select";
+import { storageBaseUrl } from "@/constants/api";
 
 export default function UmkmForm(props: UmkmFormProps) {
-  const { control, errors, isLoading, handleSubmit, onSubmit } =
+  const { control, errors, isLoading, handleSubmit, onSubmit, logoUrl } =
     useUmkmForm(props);
 
   return (
@@ -60,15 +61,6 @@ export default function UmkmForm(props: UmkmFormProps) {
             multiline: true,
             minRows: 3,
             maxRows: 5,
-            sx: {
-              "& .MuiInputBase-root": {
-                padding: "0px !important",
-              },
-              "& .MuiInputBase-input": {
-                paddingTop: "12px",
-                paddingBottom: "12px",
-              },
-            },
           }}
         />
 
@@ -79,6 +71,7 @@ export default function UmkmForm(props: UmkmFormProps) {
           label="Logo"
           renderErrorMessage
           disabled={isLoading}
+          existingImageUrl={logoUrl ? `${storageBaseUrl}${logoUrl}` : undefined}
         />
 
         <Button

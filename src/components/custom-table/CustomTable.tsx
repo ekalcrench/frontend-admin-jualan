@@ -11,6 +11,7 @@ import { defaultPage, defaultPageSize, descDirection } from "@/constants/table";
 import { BoxCenter } from "@/styled/CustomBox";
 import CustomTopToolbar from "./components/custom-top-toolbar";
 import { Collapse } from "@mui/material";
+import { boxShadowMain } from "@/constants/styled";
 
 export default function CustomTable<TData extends MRT_RowData>({
   // Required
@@ -26,6 +27,8 @@ export default function CustomTable<TData extends MRT_RowData>({
   emptyMessage = "Data tidak ditemukan.",
   onRowSelectionChange,
   filterComponents,
+  enableRowActions,
+  columnRowActionsSize,
 
   // Custom Top Toolbar
   addButton,
@@ -118,6 +121,14 @@ export default function CustomTable<TData extends MRT_RowData>({
 
           onSort(updaterOrValue(sorting));
         }}
+        initialState={{
+          ...tableOptions.initialState,
+          ...(enableRowActions && {
+            columnPinning: {
+              right: ["mrt-row-actions"],
+            },
+          }),
+        }}
         state={{
           ...tableOptions.state,
           ...(sortBy
@@ -140,6 +151,7 @@ export default function CustomTable<TData extends MRT_RowData>({
           isLoading: isLoading,
           columnVisibility,
         }}
+        enableRowActions={enableRowActions}
         enableBottomToolbar={false}
         enableColumnActions={false}
         enableColumnDragging={false}
@@ -153,6 +165,14 @@ export default function CustomTable<TData extends MRT_RowData>({
         manualFiltering
         manualPagination
         manualSorting
+        displayColumnDefOptions={{
+          ...(columnRowActionsSize && {
+            "mrt-row-actions": {
+              size: columnRowActionsSize,
+              grow: false,
+            },
+          }),
+        }}
         renderEmptyRowsFallback={() => (
           <BoxCenter sx={{ height: "100%", minHeight: "100px" }}>
             {isError ? errorMessage : emptyMessage}
@@ -161,7 +181,8 @@ export default function CustomTable<TData extends MRT_RowData>({
         muiTablePaperProps={{
           sx: {
             borderRadius: "16px",
-            overflow: "hidden",
+            boxShadow: boxShadowMain,
+            // overflow: "hidden",
           },
         }}
         muiSkeletonProps={{ height: 24 }}

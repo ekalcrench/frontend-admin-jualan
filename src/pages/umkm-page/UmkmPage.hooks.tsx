@@ -1,6 +1,8 @@
 import { storageBaseUrl } from "@/constants/api";
 import { defaultParameter } from "@/constants/table";
+import { useDeleteOrganizationMutation } from "@/services/organizations/organizations.mutation";
 import { useOrganizationsQuery } from "@/services/organizations/organizations.query";
+import useConfirmationStore from "@/store/confirmation-store";
 import { Organization } from "@/types/organization";
 import { ColumnSort } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
@@ -9,6 +11,7 @@ import { Box, Avatar } from "@mui/material";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function useUmkmPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -147,19 +150,61 @@ export default function useUmkmPage() {
   }, [isError, error]);
 
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const [editFormId, setEditFormId] = useState<string | undefined>();
+
+  const handleClickAddForm = () => {
+    setIsFormOpen(true);
+    setEditFormId(undefined);
+  };
+
+  const handleClickEditForm = (id: string) => {
+    setIsFormOpen(true);
+    setEditFormId(id);
+  };
+
+  const deleteOrganization = useDeleteOrganizationMutation();
+  const confirm = useConfirmationStore((state) => state.confirm);
+
+  const handleClickDelete = async (id: string) => {
+    const confirmed = await confirm({
+      title: "Hapus UMKM",
+      message: "Apakah Anda yakin ingin menghapus UMKM ini?",
+    });
+
+    if (!confirmed) return;
+
+    onConfirmDelete(id);
+  };
+
+  const onConfirmDelete = async (id: string) => {
+    const toastId = toast.loading("Sedang mengahpus...");
+    try {
+      await deleteOrganization.mutateAsync(id);
+      toast.success("Berhasil Menghapus");
+    } catch (error) {
+      apiErrorHandler(error);
+    } finally {
+      toast.dismiss(toastId);
+    }
+  };
 
   return {
     columns,
+    deleteOrganization,
     data,
+    editFormId,
     isFormOpen,
     isLoading,
     isError,
+    search: search ?? "",
     sortBy,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleClickAddForm,
+    handleClickDelete,
+    handleClickEditForm,
     handleResetFilter,
-    search: search ?? "",
     setIsFormOpen,
   };
 }

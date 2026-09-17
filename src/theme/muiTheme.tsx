@@ -137,7 +137,7 @@ let theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: ({ ownerState, theme: { palette } }) => ({
-          borderRadius: "20px",
+          borderRadius: "16px",
           boxSizing: "border-box",
           backgroundColor: palette.background.card,
           ...(ownerState.variant === "outlined" && {

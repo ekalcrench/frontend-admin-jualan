@@ -13,6 +13,7 @@ export interface CustomImageSelectProps<TFieldValues extends FieldValues> {
   label?: string;
   disabled?: boolean;
   renderErrorMessage?: boolean;
+  existingImageUrl?: string;
 }
 
 export interface ImagePickerProps {
@@ -20,4 +21,5 @@ export interface ImagePickerProps {
   onChange: (file: File | null) => void;
   inputRef: (element: HTMLInputElement | null) => void;
   disabled: boolean;
+  existingImageUrl?: string;
 }

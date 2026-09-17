@@ -10,6 +10,7 @@ export const api = {
   },
   organizations: {
     base: "/organizations",
+    byId: (id: string) => `/organizations/${id}`,
   },
 };
 

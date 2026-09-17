@@ -5,3 +5,7 @@ export interface CreateOrganization {
   phone: string;
   file: File;
 }
+
+export interface EditOrganization extends Partial<CreateOrganization> {
+  logoUrl?: string;
+}

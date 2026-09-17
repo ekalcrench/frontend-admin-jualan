@@ -1,1 +1,1 @@
-export { default as FormDrawer } from "./FormDrawer";
+export { default } from "./FormDrawer";

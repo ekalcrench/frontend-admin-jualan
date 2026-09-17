@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 
-function LoadingPage() {
+export default function LoadingPage() {
   return (
     <Box
       sx={{
@@ -17,5 +17,3 @@ function LoadingPage() {
     </Box>
   );
 }
-
-export default LoadingPage;

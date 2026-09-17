@@ -5,6 +5,7 @@ import { Dispatch } from "react";
 
 export interface UmkmFormProps extends SwipeableDrawerProps {
   setIsFormOpen: Dispatch<boolean>;
+  id?: string;
 }
 
 export type UmkmFormValues = z.infer<typeof umkmFormSchema>;

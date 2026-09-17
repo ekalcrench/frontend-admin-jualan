@@ -11,6 +11,7 @@ import {
 import { useMemo } from "react";
 import { useUsersQuery } from "@/services/users/users.query";
 import { User } from "@/types/user";
+import { boxShadowCard } from "@/constants/styled";
 
 export default function UsersPage() {
   const { data, isLoading, isError } = useUsersQuery();
@@ -79,7 +80,7 @@ export default function UsersPage() {
           border: 1,
           borderColor: "divider",
           backgroundColor: "background.paper",
-          boxShadow: 1,
+          boxShadow: boxShadowCard,
         }}
       >
         <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>

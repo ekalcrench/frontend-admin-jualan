@@ -16,20 +16,20 @@ function ImagePicker({
   onChange,
   inputRef,
   disabled,
+  existingImageUrl,
 }: ImagePickerProps) {
   const [previewUrl, setPreviewUrl] = useState<string>();
 
   useEffect(() => {
-    if (!(value instanceof File)) {
-      setPreviewUrl(undefined);
-      return;
+    if (value instanceof File) {
+      const url = URL.createObjectURL(value);
+      setPreviewUrl(url);
+
+      return () => URL.revokeObjectURL(url);
     }
 
-    const url = URL.createObjectURL(value);
-    setPreviewUrl(url);
-
-    return () => URL.revokeObjectURL(url);
-  }, [value]);
+    setPreviewUrl(existingImageUrl);
+  }, [value, existingImageUrl]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.files?.[0] ?? null);
@@ -91,6 +91,7 @@ export default function CustomImageSelect<TFieldValues extends FieldValues>({
   label,
   disabled = false,
   renderErrorMessage,
+  existingImageUrl,
 }: CustomImageSelectProps<TFieldValues>) {
   const error = errors?.[name];
   const errorMessage =
@@ -109,6 +110,7 @@ export default function CustomImageSelect<TFieldValues extends FieldValues>({
             onChange={onChange}
             inputRef={ref}
             disabled={disabled}
+            existingImageUrl={existingImageUrl}
           />
         )}
       />

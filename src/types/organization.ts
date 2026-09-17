@@ -15,3 +15,8 @@ export interface OrganizationFilterPayload extends DefaultFilter {
   email?: string;
   name?: string;
 }
+
+export interface UserOrganization extends Organization {
+  role: string;
+  status: string;
+}

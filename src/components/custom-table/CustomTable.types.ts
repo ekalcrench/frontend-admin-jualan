@@ -11,7 +11,11 @@ export interface CustomTableProps<TData extends MRT_RowData>
   extends
     Omit<
       MRT_TableOptions<TData>,
-      "columns" | "data" | "onSortingChange" | "renderEmptyRowsFallback"
+      | "columns"
+      | "data"
+      | "onSortingChange"
+      | "renderEmptyRowsFallback"
+      | "enableRowActions"
     >,
     Partial<CustomPaginationProps>,
     Omit<
@@ -30,4 +34,6 @@ export interface CustomTableProps<TData extends MRT_RowData>
   errorMessage?: string;
   emptyMessage?: string;
   filterComponents?: React.ReactNode;
+  enableRowActions?: boolean;
+  columnRowActionsSize?: number;
 }

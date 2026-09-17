@@ -1,26 +1,65 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import useUmkmPage from "./UmkmPage.hooks";
 import { UmkmForm } from "./components/umkm-form";
 import CustomTable from "@/components/custom-table";
 import { Organization } from "@/types/organization";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
+import { BoxFlex } from "@/styled/CustomBox";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function UmkmPage() {
   const {
     columns,
+    deleteOrganization,
     data,
+    editFormId,
     isFormOpen,
     isLoading,
     isError,
+    search,
     sortBy,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleClickAddForm,
+    handleClickDelete,
+    handleClickEditForm,
     handleResetFilter,
-    search,
     setIsFormOpen,
   } = useUmkmPage();
+
+  const addButton = () => {
+    return (
+      <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={handleClickAddForm}
+      >
+        Add UMKM
+      </Button>
+    );
+  };
+
+  const renderRowActions = (id: string) => {
+    return (
+      <BoxFlex>
+        <IconButton onClick={() => handleClickEditForm(id)} color="secondary">
+          <EditIcon />
+        </IconButton>
+        <IconButton
+          onClick={() => handleClickDelete(id)}
+          color="error"
+          loading={
+            deleteOrganization.isPending && deleteOrganization.variables === id
+          }
+        >
+          <DeleteIcon />
+        </IconButton>
+      </BoxFlex>
+    );
+  };
 
   return (
     <Box>
@@ -29,6 +68,7 @@ export default function UmkmPage() {
         onClose={() => setIsFormOpen(false)}
         onOpen={() => setIsFormOpen(true)}
         setIsFormOpen={setIsFormOpen}
+        id={editFormId}
       />
 
       <Stack spacing={3}>
@@ -71,15 +111,10 @@ export default function UmkmPage() {
           handleResetFilter={handleResetFilter}
           search={search}
           handleSearch={handleChangeSearch}
-          addButton={
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => setIsFormOpen(true)}
-            >
-              Add UMKM
-            </Button>
-          }
+          addButton={addButton()}
+          columnRowActionsSize={100}
+          enableRowActions
+          renderRowActions={({ row }) => renderRowActions(row.original.id)}
         />
       </Stack>
     </Box>

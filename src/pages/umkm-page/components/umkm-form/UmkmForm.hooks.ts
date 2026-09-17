@@ -1,31 +1,82 @@
-import { useOrganizationsMutation } from "@/services/organizations/organizations.mutation";
+import {
+  useCreateOrganizationMutation,
+  useEditOrganizationMutation,
+} from "@/services/organizations/organizations.mutation";
 import { UmkmFormProps, UmkmFormValues } from "./UmkmForm.types";
-import { emptyUmkmFormValues, umkmFormSchema } from "./UmkmForm.constants";
+import {
+  emptyUmkmFormValues,
+  umkmEditFormSchema,
+  umkmFormSchema,
+} from "./UmkmForm.constants";
 import { apiErrorHandler } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useOrganizationByIdQuery } from "@/services/organizations/organizations.query";
+import { useEffect } from "react";
 
 export default function useUmkmForm(props: UmkmFormProps) {
-  const createOrganization = useOrganizationsMutation();
+  const createOrganization = useCreateOrganizationMutation();
+  const editOrganization = useEditOrganizationMutation(props.id);
+  const getOrganizationById = useOrganizationByIdQuery(props.id);
 
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, dirtyFields },
   } = useForm<UmkmFormValues>({
-    resolver: zodResolver(umkmFormSchema),
+    resolver: zodResolver(
+      props.id ? umkmEditFormSchema : umkmFormSchema,
+    ) as Resolver<UmkmFormValues>,
     mode: "onBlur",
     defaultValues: emptyUmkmFormValues,
   });
 
-  const isLoading = isSubmitting || createOrganization.isPending;
+  useEffect(() => {
+    if (!getOrganizationById.data) {
+      reset(emptyUmkmFormValues);
+      return;
+    }
+
+    reset({
+      name: getOrganizationById.data.name,
+      email: getOrganizationById.data.email,
+      address: getOrganizationById.data.address,
+      phone: getOrganizationById.data.phone,
+      file: undefined as unknown as File,
+      logoUrl: getOrganizationById.data.logoUrl,
+    });
+  }, [getOrganizationById.data, reset]);
+
+  const isLoadingGetData =
+    (props.id &&
+      (getOrganizationById.isPending || getOrganizationById.isFetching)) ||
+    false;
+
+  const isLoading =
+    isSubmitting ||
+    createOrganization.isPending ||
+    editOrganization.isPending ||
+    isLoadingGetData;
 
   const onSubmit = async (values: UmkmFormValues) => {
-    const toastId = toast.loading("Creating UMKM...");
+    const toastId = toast.loading(
+      props.id ? "Updating UMKM..." : "Creating UMKM...",
+    );
     try {
-      await createOrganization.mutateAsync(values);
+      if (props.id) {
+        const changedValues = Object.fromEntries(
+          Object.keys(dirtyFields).map((field) => [
+            field,
+            values[field as keyof UmkmFormValues],
+          ]),
+        );
+
+        await editOrganization.mutateAsync(changedValues);
+      } else {
+        await createOrganization.mutateAsync(values);
+      }
 
       reset();
       props.setIsFormOpen(false);
@@ -36,5 +87,12 @@ export default function useUmkmForm(props: UmkmFormProps) {
     }
   };
 
-  return { control, errors, isLoading, handleSubmit, onSubmit };
+  return {
+    control,
+    errors,
+    isLoading,
+    handleSubmit,
+    onSubmit,
+    logoUrl: getOrganizationById.data?.logoUrl,
+  };
 }
