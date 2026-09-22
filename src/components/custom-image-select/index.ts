@@ -1,1 +1,1 @@
-export { default as CustomImageSelect } from "./CustomImageSelect";
+export { default } from "./CustomImageSelect";

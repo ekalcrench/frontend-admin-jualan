@@ -7,6 +7,9 @@ export const api = {
   },
   users: {
     base: "/users",
+    byId: (id: string) => `/users/${id}`,
+    activate: (id: string) => `/users/${id}/activate`,
+    suspend: (id: string) => `/users/${id}/suspend`,
   },
   organizations: {
     base: "/organizations",

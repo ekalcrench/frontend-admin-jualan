@@ -1,7 +1,7 @@
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import useUmkmPage from "./UmkmPage.hooks";
-import { UmkmForm } from "./components/umkm-form";
+import UmkmForm from "./components/umkm-form";
 import CustomTable from "@/components/custom-table";
 import { Organization } from "@/types/organization";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
@@ -115,6 +115,7 @@ export default function UmkmPage() {
           columnRowActionsSize={100}
           enableRowActions
           renderRowActions={({ row }) => renderRowActions(row.original.id)}
+          searchPlaceholder={"Cari berdasarkan Nama, Email, Nomor HP, & Alamat"}
         />
       </Stack>
     </Box>

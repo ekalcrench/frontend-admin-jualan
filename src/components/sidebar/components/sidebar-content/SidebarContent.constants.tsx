@@ -9,6 +9,7 @@ import FolderIcon from "@mui/icons-material/Folder";
 import ListIcon from "@mui/icons-material/List";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import GroupIcon from "@mui/icons-material/Group";
+import PaidIcon from "@mui/icons-material/Paid";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import { paths } from "@/constants/path";
@@ -16,50 +17,9 @@ import { SidebarListItem } from "./SidebarContent.types";
 import { userRole } from "@/constants/user";
 import { organizationRole } from "@/constants/organization";
 import StoreIcon from "@mui/icons-material/Store";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 export const sidebarList: SidebarListItem[] = [
-  // {
-  //   title: "Analytics",
-  //   url: paths.analytics,
-  //   icon: <AnalyticsIcon />,
-  // },
-  // {
-  //   title: "Stream Monitoring",
-  //   url: paths.streamMonitoring,
-  //   params: "page=1&size=10&sortBy=-createdDate",
-  //   icon: <CastConnectedIcon />,
-  // },
-  // {
-  //   title: "Gift",
-  //   url: paths.base,
-  //   icon: <CardGiftcardIcon />,
-  //   child: [
-  //     {
-  //       title: "Config & List",
-  //       url: paths.gift,
-  //       params: "page=1&size=10&sortBy=-lastModifiedDate",
-  //       icon: <ListIcon />,
-  //     },
-  //     {
-  //       title: "Overlay Template",
-  //       url: paths.overlayTemplate,
-  //       params: "page=1&size=10&sortBy=-lastModifiedDate",
-  //       icon: <ListIcon />,
-  //     },
-  //   ],
-  // },
-  // {
-  //   title: "Q&Me",
-  //   url: paths.qme,
-  //   params: "page=1&size=10&sortBy=-createdDate",
-  //   icon: <QuestionAnswerIcon />,
-  // },
-  // {
-  //   title: "Chitchat",
-  //   url: paths.chitchat,
-  //   params: "page=1&size=10&sortBy=-createdDate",
-  //   icon: <CardGiftcardIcon />,
-  // },
   // {
   //   title: "Balance",
   //   url: paths.base,
@@ -110,43 +70,54 @@ export const sidebarList: SidebarListItem[] = [
   //   icon: <FlashOnIcon />,
   // },
   // {
-  //   title: "Admin",
-  //   url: paths.admin,
-  //   params: "page=1&size=10&sortBy=-lastModifiedDate",
-  //   icon: <AdminPanelSettingsIcon />,
-  // },
-  // {
   //   title: "Media Library",
   //   url: paths.mediaLibrary,
   //   params: "page=1&size=10&sortBy=-lastModifiedDate",
   //   icon: <FolderIcon />,
   // },
-  // {
-  //   title: "Announcement",
-  //   url: paths.announcement,
-  //   params: "page=1&size=10&sortBy=-createdDate",
-  //   icon: <CampaignIcon />,
-  // },
+  {
+    title: "Dashboard",
+    url: paths.analytics,
+    params: "page=1&size=20&sortBy=-createdAt",
+    icon: <DashboardIcon />,
+    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
+    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
+  },
+  {
+    title: "Analytics",
+    url: paths.analytics,
+    params: "page=1&size=20&sortBy=-createdAt",
+    icon: <AnalyticsIcon />,
+    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
+    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
+  },
+  {
+    title: "Sales",
+    url: paths.analytics,
+    params: "page=1&size=20&sortBy=-createdAt",
+    icon: <PaidIcon />,
+    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
+    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
+  },
+  {
+    groupName: "Organizations",
+  },
   {
     title: "User",
     url: paths.users,
+    params: "page=1&size=20&sortBy=-createdAt",
     icon: <GroupIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
     organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
-    // child: [
-    //   {
-    //     title: "User",
-    //     url: paths.users,
-    //     params: "page=1&size=10&sortBy=-lastModifiedDate",
-    //     icon: <ListIcon />,
-    //   },
-    //   {
-    //     title: "User Register",
-    //     url: paths.userRegister,
-    //     params: "page=1&size=10&sortBy=-createdDate",
-    //     icon: <ListIcon />,
-    //   },
-    // ],
+  },
+  { groupName: "Systems" },
+  {
+    title: "Semua User",
+    url: paths.allUsers,
+    params: "page=1&size=20&sortBy=-createdAt",
+    icon: <GroupIcon />,
+    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
+    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
   },
   {
     title: "UMKM",

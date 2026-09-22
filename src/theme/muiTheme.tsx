@@ -1,4 +1,5 @@
 import { createTheme, type PaletteColor } from "@mui/material/styles";
+import { boxShadowDialog, borderRadiusCard } from "@/constants/styled";
 // import type {} from "@mui/x-date-pickers/themeAugmentation";
 
 let theme = createTheme({
@@ -160,6 +161,7 @@ let theme = createTheme({
       styleOverrides: {
         root: ({ theme: { palette } }) => ({
           borderRadius: "12px",
+          backgroundColor: palette.background.paper,
         }),
       },
     },
@@ -202,6 +204,65 @@ let theme = createTheme({
         }),
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          padding: 0,
+          "& .MuiOutlinedInput-root": {
+            padding: 0,
+          },
+        },
+        input: ({ theme: { breakpoints } }) => ({
+          height: "54px",
+          // padding: "0px !important",
+          paddingLeft: "14px !important",
+          boxSizing: "border-box",
+        }),
+        inputRoot: ({ theme: { breakpoints } }) => ({
+          // paddingTop: "0px",
+          // paddingBottom: "0px",
+          height: "54px",
+          [breakpoints.down(600)]: {
+            height: "48px",
+          },
+        }),
+        endAdornment: {
+          right: "1rem !important",
+        },
+        clearIndicator: ({ theme: { palette } }) => ({
+          visibility: "visible",
+          marginRight: "0.5rem",
+          color: palette.text.placeholder,
+        }),
+        listbox: {
+          width: "100%",
+          maxHeight: "186px",
+          padding: "0px",
+          borderRadius: "8px",
+        },
+        option: ({ theme: { palette } }) => ({
+          minHeight: "44px !important",
+          ":hover": {
+            backgroundColor: `${palette.primary.main} !important`,
+            color: `${palette.common.white} !important`,
+          },
+        }),
+        paper: ({ theme: { palette } }) => ({
+          marginTop: "8px",
+          marginBottom: "8px",
+          boxShadow: boxShadowDialog,
+          borderRadius: borderRadiusCard,
+        }),
+        noOptions: {
+          // fontSize: defaultFontSize,
+          // color: appColors.yankeesBlue,
+        },
+        loading: {
+          // fontSize: defaultFontSize,
+          // color: appColors.yankeesBlue,
+        },
+      },
+    },
     MuiDrawer: {
       styleOverrides: {
         paper: ({ theme: { palette } }) => ({
@@ -217,6 +278,22 @@ let theme = createTheme({
           paddingTop: "12px",
           paddingBottom: "12px",
         }),
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          width: "auto",
+          maxWidth: "200px",
+          boxSizing: "border-box",
+          padding: "16px 20px",
+          marginTop: "8px",
+          boxShadow: boxShadowDialog,
+          borderRadius: borderRadiusCard,
+        },
+        list: {
+          padding: "0px",
+        },
       },
     },
     MuiListItemButton: {
@@ -269,66 +346,6 @@ let theme = createTheme({
         }),
       },
     },
-    // MuiAutocomplete: {
-    //   styleOverrides: {
-    //     root: {
-    //       padding: 0,
-    //       "& .MuiOutlinedInput-root": {
-    //         padding: 0,
-    //       },
-    //     },
-    //     input: ({ theme: { breakpoints } }) => ({
-    //       padding: "0px 20px !important",
-    //       [breakpoints.down(600)]: {
-    //         padding: "0px 16px !important",
-    //       },
-    //     }),
-    //     inputRoot: ({ theme: { breakpoints } }) => ({
-    //       paddingTop: "0px !important",
-    //       paddingBottom: "0px !important",
-    //       paddingLeft: "0px !important",
-    //       height: "54px !important",
-    //       [breakpoints.down(600)]: {
-    //         height: "48px !important",
-    //       },
-    //     }),
-    //     endAdornment: {
-    //       right: "1rem !important",
-    //     },
-    //     clearIndicator: ({ theme: { palette } }) => ({
-    //       visibility: "visible",
-    //       marginRight: "0.5rem",
-    //       color: palette.input.placeholder,
-    //     }),
-    //     listbox: {
-    //       width: "100%",
-    //       maxHeight: "186px",
-    //       padding: "0px",
-    //       borderRadius: "8px",
-    //     },
-    //     option: ({ theme: { palette } }) => ({
-    //       minHeight: "44px !important",
-    //       ":hover": {
-    //         backgroundColor: `${palette.primary.main} !important`,
-    //         color: `${palette.common.white} !important`,
-    //       },
-    //     }),
-    //     paper: ({ theme: { palette } }) => ({
-    //       marginTop: "8px",
-    //       marginBottom: "8px",
-    //       boxShadow: `0px 4px 10px ${palette.card.boxShadow}`,
-    //       borderRadius: "8px",
-    //     }),
-    //     noOptions: {
-    //       // fontSize: defaultFontSize,
-    //       // color: appColors.yankeesBlue,
-    //     },
-    //     loading: {
-    //       // fontSize: defaultFontSize,
-    //       // color: appColors.yankeesBlue,
-    //     },
-    //   },
-    // },
     // MuiPopover: {
     //   styleOverrides: {
     //     paper: {

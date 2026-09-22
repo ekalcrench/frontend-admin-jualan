@@ -20,8 +20,6 @@ export default function useUmkmPage() {
   const size = Number(searchParams.get("size") ?? defaultParameter.size);
   const sortBy = searchParams.get("sortBy") ?? defaultParameter.sortBy;
   const search = searchParams.get("search") ?? undefined;
-  const email = searchParams.get("email") ?? undefined;
-  const name = searchParams.get("name") ?? undefined;
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -53,8 +51,6 @@ export default function useUmkmPage() {
     size,
     sortBy,
     search,
-    email,
-    name,
   });
 
   const handleChangePage = (value: number) => {

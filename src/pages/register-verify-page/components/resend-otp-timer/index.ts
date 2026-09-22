@@ -1,1 +1,1 @@
-export { default as ResendOtpTimer } from "./ResendOtpTimer";
+export { default } from "./ResendOtpTimer";

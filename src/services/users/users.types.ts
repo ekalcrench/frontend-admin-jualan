@@ -1,10 +1,14 @@
 import { UserRole, UserStatus } from "@/types/user";
 
-// export type User = {
-//   id: number;
-//   name: string;
-//   email: string;
-//   role: UserRole;
-//   status: UserStatus;
-//   emailVerifiedAt: string | null;
-// };
+export interface CreateUser {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+  status: UserStatus;
+}
+
+export interface EditUser extends Partial<Omit<CreateUser, "password">> {
+  id: string;
+  password?: string;
+}

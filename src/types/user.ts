@@ -1,4 +1,5 @@
 import { BaseApiResponse } from "./api";
+import { DefaultFilter } from "./table";
 
 export type UserStatus = "PENDING_EMAIL" | "ACTIVE" | "SUSPENDED";
 export type UserRole = "USER" | "ADMIN" | "SUPER_ADMIN";
@@ -20,10 +21,16 @@ export type UserOrganizationStatus =
   | "SUSPENDED";
 
 export interface UserOrganization extends BaseApiResponse {
+  id: string;
+  userId: string;
   organizationId: string;
   role: UserOrganizationRole;
   approvedAt: string;
   approvedById: string;
   updatedById: string;
   status: UserOrganizationStatus;
+}
+
+export interface UserFilterPayload extends DefaultFilter {
+  search?: string;
 }

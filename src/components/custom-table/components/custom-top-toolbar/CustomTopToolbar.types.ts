@@ -1,7 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 import { MRT_ColumnDef, MRT_RowData } from "material-react-table";
+import { CustomSearchInputProps } from "../custom-search-input/CustomSearchInput.types";
 
-export interface CustomTopToolbarProps<TData extends MRT_RowData> {
+export interface CustomTopToolbarProps<
+  TData extends MRT_RowData,
+> extends Partial<CustomSearchInputProps> {
   // Search
   search: string;
   handleSearch: (value: string) => void;

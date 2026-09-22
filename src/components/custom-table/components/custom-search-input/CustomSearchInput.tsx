@@ -7,6 +7,7 @@ export default function CustomSearchInput({
   value,
   onSearch,
   debounceMs = 3000,
+  searchPlaceholder = "Search",
 }: CustomSearchInputProps) {
   const [inputValue, setInputValue] = useState<string>(value);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -48,7 +49,7 @@ export default function CustomSearchInput({
       value={inputValue}
       onChange={(event) => setInputValue(event.target.value)}
       onKeyDown={handleKeyDown}
-      placeholder="Search"
+      placeholder={searchPlaceholder}
       size="small"
       variant="outlined"
       slotProps={{
@@ -60,7 +61,7 @@ export default function CustomSearchInput({
           ),
         },
       }}
-      sx={{ minWidth: "320px", "& input": { height: "48px" } }}
+      sx={{ minWidth: "360px", "& input": { height: "48px" } }}
     />
   );
 }

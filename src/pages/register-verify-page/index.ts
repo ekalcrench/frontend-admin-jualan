@@ -1,1 +1,1 @@
-export { default as RegisterPageVerify } from "./RegisterPageVerify";
+export { default } from "./RegisterPageVerify";

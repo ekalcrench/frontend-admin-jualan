@@ -12,11 +12,6 @@ export interface Organization extends BaseApiResponse {
 
 export interface OrganizationFilterPayload extends DefaultFilter {
   search?: string;
-  email?: string;
-  name?: string;
 }
 
-export interface UserOrganization extends Organization {
-  role: string;
-  status: string;
-}
+export type OrganizationRole = "ADMIN" | "MEMBER" | "OWNER";

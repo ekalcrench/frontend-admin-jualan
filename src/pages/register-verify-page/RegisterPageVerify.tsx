@@ -1,12 +1,12 @@
 import { Button, Card, CardContent, Typography } from "@mui/material";
-import { CustomInput } from "@/components/custom-input";
+import CustomInput from "@/components/custom-input";
 import useRegisterPageVerify from "./RegisterPageVerify.hooks";
 import { RegisterPageVerifyContainer } from "./RegisterPageVerify.styles";
 import { TypographyCenter } from "@/styled/CustomTypography";
 import { Link } from "react-router-dom";
 import { paths } from "@/constants/path";
-import { CustomOtp } from "@/components/custom-otp";
-import { ResendOtpTimer } from "./components/resend-otp-timer";
+import CustomOtp from "@/components/custom-otp";
+import ResendOtpTimer from "./components/resend-otp-timer";
 import LoadingPage from "@/components/loading-page";
 
 export default function RegisterPageVerify() {

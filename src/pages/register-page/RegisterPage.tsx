@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { CustomInput } from "@/components/custom-input";
+import CustomInput from "@/components/custom-input";
 import useRegisterPage from "./RegisterPage.hooks";
 import { RegisterPageContainer } from "./RegisterPage.styles";
 import { TypographyCenter } from "@/styled/CustomTypography";

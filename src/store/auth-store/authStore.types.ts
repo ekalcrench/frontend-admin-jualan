@@ -1,5 +1,4 @@
-import { UserOrganization } from "@/types/organization";
-import { User } from "@/types/user";
+import { User, UserOrganization } from "@/types/user";
 
 export interface AuthState {
   accessToken: string | null;

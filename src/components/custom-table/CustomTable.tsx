@@ -3,14 +3,14 @@ import {
   MRT_RowData,
   MRT_SortingState,
 } from "material-react-table";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { CustomTableProps } from "./CustomTable.types";
 import CustomPagination from "../custom-pagination";
 import { emptyFunc } from "@/utils/generalUtils";
 import { defaultPage, defaultPageSize, descDirection } from "@/constants/table";
 import { BoxCenter } from "@/styled/CustomBox";
 import CustomTopToolbar from "./components/custom-top-toolbar";
-import { Collapse } from "@mui/material";
+import { Collapse, Stack } from "@mui/material";
 import { boxShadowMain } from "@/constants/styled";
 
 export default function CustomTable<TData extends MRT_RowData>({
@@ -33,6 +33,7 @@ export default function CustomTable<TData extends MRT_RowData>({
   // Custom Top Toolbar
   addButton,
   search,
+  searchPlaceholder,
   handleResetFilter,
   handleSearch,
 
@@ -90,12 +91,13 @@ export default function CustomTable<TData extends MRT_RowData>({
   };
 
   return (
-    <Fragment>
+    <Stack spacing={3}>
       <CustomTopToolbar<TData>
         handleClickFilters={hasFilters ? handleClickFilters : undefined}
         handleResetFilter={handleReset}
         addButton={addButton}
         search={search}
+        searchPlaceholder={searchPlaceholder}
         handleSearch={handleSearch}
         columns={columns}
         columnVisibility={columnVisibility}
@@ -182,7 +184,16 @@ export default function CustomTable<TData extends MRT_RowData>({
           sx: {
             borderRadius: "16px",
             boxShadow: boxShadowMain,
-            // overflow: "hidden",
+          },
+        }}
+        muiTableHeadRowProps={{
+          sx: {
+            backgroundColor: "white",
+          },
+        }}
+        muiTableBodyRowProps={{
+          sx: {
+            backgroundColor: "white",
           },
         }}
         muiSkeletonProps={{ height: 24 }}
@@ -197,6 +208,6 @@ export default function CustomTable<TData extends MRT_RowData>({
         totalPages={totalPages}
         isLoading={isLoading ?? false}
       />
-    </Fragment>
+    </Stack>
   );
 }

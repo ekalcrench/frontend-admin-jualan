@@ -9,7 +9,6 @@ import {
 import { MRT_ColumnDef, MRT_RowData } from "material-react-table";
 import { useState } from "react";
 import { ButtonColumnsProps } from "./ButtonColumns.types";
-import { boxShadowDialog } from "@/constants/styled";
 
 export default function ButtonColumns<TData extends MRT_RowData>({
   columns,
@@ -46,24 +45,6 @@ export default function ButtonColumns<TData extends MRT_RowData>({
         keepMounted
         transformOrigin={{ horizontal: "left", vertical: "top" }}
         anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
-        slotProps={{
-          paper: {
-            sx: {
-              width: "auto",
-              maxWidth: "200px",
-              boxSizing: "border-box",
-              padding: "16px 20px",
-              marginTop: "12px",
-              boxShadow: boxShadowDialog,
-              borderRadius: "12px",
-            },
-          },
-          list: {
-            sx: {
-              padding: "0px",
-            },
-          },
-        }}
       >
         <Box>
           <Typography sx={{ marginBottom: "8px" }}>

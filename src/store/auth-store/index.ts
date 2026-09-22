@@ -1,3 +1,1 @@
-import useAuthStore from "./authStore";
-
-export default useAuthStore;
+export { default } from "./authStore";

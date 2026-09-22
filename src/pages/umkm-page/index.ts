@@ -1,1 +1,1 @@
-export { default as UmkmPage } from "./UmkmPage";
+export { default } from "./UmkmPage";

@@ -12,9 +12,10 @@ import { useMemo } from "react";
 import { useUsersQuery } from "@/services/users/users.query";
 import { User } from "@/types/user";
 import { boxShadowCard } from "@/constants/styled";
+import { defaultParameter } from "@/constants/table";
 
 export default function UsersPage() {
-  const { data, isLoading, isError } = useUsersQuery();
+  const { data, isLoading, isError } = useUsersQuery(defaultParameter);
 
   const columns = useMemo<GridColDef<User>[]>(
     () => [
@@ -86,7 +87,7 @@ export default function UsersPage() {
         <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
           <Box sx={{ height: 560, width: "100%" }}>
             <DataGrid
-              rows={data ?? []}
+              rows={data?.items ?? []}
               columns={columns}
               loading={isLoading}
               checkboxSelection

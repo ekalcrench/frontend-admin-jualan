@@ -1,1 +1,1 @@
-export { default as CustomOtp } from "./CustomOtp";
+export { default } from "./CustomOtp";

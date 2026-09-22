@@ -15,11 +15,16 @@ export default function CustomTopToolbar<TData extends MRT_RowData>({
   columns,
   columnVisibility,
   setColumnVisibility,
+  searchPlaceholder,
 }: CustomTopToolbarProps<TData>) {
   return (
     <BoxFlexSpaceBetween>
       <BoxFlex sx={{ gap: "12px" }}>
-        <CustomSearchInput value={search} onSearch={handleSearch} />
+        <CustomSearchInput
+          value={search}
+          onSearch={handleSearch}
+          searchPlaceholder={searchPlaceholder}
+        />
         {handleClickFilters && (
           <Button onClick={handleClickFilters}>Filters</Button>
         )}

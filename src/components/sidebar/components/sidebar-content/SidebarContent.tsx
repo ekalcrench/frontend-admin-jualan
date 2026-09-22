@@ -10,7 +10,7 @@ import { Collapse } from "@mui/material";
 import { SidebarListItem } from "./SidebarContent.types";
 import useSidebarContent from "./SidebarContent.hooks";
 import { CustomLink } from "@/styled/CustomLink";
-import { LogoutButton } from "../logout-button";
+import LogoutButton from "../logout-button";
 
 export default function SidebarContent() {
   const {
@@ -24,7 +24,7 @@ export default function SidebarContent() {
     let isActive = false;
     if (menuActive === sidebarItem.url) isActive = true;
 
-    let href = sidebarItem.url;
+    let href = sidebarItem.url ?? "";
     if (sidebarItem.params) {
       href = `${href}?${sidebarItem.params}`;
     }
@@ -52,6 +52,14 @@ export default function SidebarContent() {
     );
   };
 
+  const renderGroupname = (groupName: string) => {
+    return (
+      <ListItem sx={{ marginTop: "16px" }}>
+        <Typography sx={{ fontWeight: 700 }}>{groupName}</Typography>
+      </ListItem>
+    );
+  };
+
   return (
     <Box>
       <Toolbar>
@@ -62,6 +70,10 @@ export default function SidebarContent() {
       <List>
         {accessibleSidebarItems.map(
           (sidebarItem: SidebarListItem, index: number) => {
+            if (sidebarItem.groupName) {
+              return renderGroupname(sidebarItem.groupName);
+            }
+
             if (sidebarItem.child === undefined) {
               return childMenu(sidebarItem, index);
             }
