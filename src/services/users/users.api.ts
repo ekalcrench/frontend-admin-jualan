@@ -1,7 +1,11 @@
 import { apiClient } from "@/config/api";
 import { api } from "@/constants/api";
 import { PaginatedData } from "@/types/table";
-import { User, UserFilterPayload } from "@/types/user";
+import {
+  SelectedUserOrganization,
+  User,
+  UserFilterPayload,
+} from "@/types/user";
 import { EditUser } from "./users.types";
 
 export async function fetchUsers(
@@ -15,6 +19,15 @@ export async function fetchUsers(
 
 export async function fetchUserById(id: string): Promise<User> {
   const response = await apiClient.get<User>(api.users.byId(id));
+  return response.data;
+}
+
+export async function fetchOrganizationsById(
+  id: string,
+): Promise<SelectedUserOrganization[]> {
+  const response = await apiClient.get<SelectedUserOrganization[]>(
+    api.users.organizations(id),
+  );
   return response.data;
 }
 

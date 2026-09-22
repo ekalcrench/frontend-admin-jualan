@@ -77,7 +77,7 @@ export const sidebarList: SidebarListItem[] = [
   // },
   {
     title: "Dashboard",
-    url: paths.analytics,
+    url: paths.dashboard,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <DashboardIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
@@ -93,7 +93,7 @@ export const sidebarList: SidebarListItem[] = [
   },
   {
     title: "Sales",
-    url: paths.analytics,
+    url: paths.sales,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <PaidIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],

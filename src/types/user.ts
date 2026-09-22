@@ -34,3 +34,11 @@ export interface UserOrganization extends BaseApiResponse {
 export interface UserFilterPayload extends DefaultFilter {
   search?: string;
 }
+
+export interface SelectedUserOrganization extends Pick<
+  UserOrganization,
+  "id" | "role" | "status"
+> {
+  name: string;
+  logoUrl: string;
+}

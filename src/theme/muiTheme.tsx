@@ -226,12 +226,8 @@ let theme = createTheme({
             height: "48px",
           },
         }),
-        endAdornment: {
-          right: "1rem !important",
-        },
         clearIndicator: ({ theme: { palette } }) => ({
           visibility: "visible",
-          marginRight: "0.5rem",
           color: palette.text.placeholder,
         }),
         listbox: {

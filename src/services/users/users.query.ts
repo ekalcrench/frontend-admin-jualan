@@ -1,9 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchUserById, fetchUsers } from "./users.api";
+import { fetchOrganizationsById, fetchUserById, fetchUsers } from "./users.api";
 import { fiveMinutes } from "@/constants/time";
-import { User, UserFilterPayload } from "@/types/user";
+import {
+  SelectedUserOrganization,
+  User,
+  UserFilterPayload,
+} from "@/types/user";
 import { PaginatedData } from "@/types/table";
 import { userKeys } from "./users.constants";
+import { Organization } from "@/types/organization";
 
 export function useUsersQuery(payload: UserFilterPayload) {
   return useQuery<PaginatedData<User>>({
@@ -22,6 +27,18 @@ export function useUserByIdQuery(id?: string) {
     queryFn: () => {
       if (!id) throw new Error("User id is required");
       return fetchUserById(id);
+    },
+    enabled: Boolean(id),
+    staleTime: fiveMinutes,
+  });
+}
+
+export function useOrganizationsByUserIdQuery(id?: string) {
+  return useQuery<SelectedUserOrganization[]>({
+    queryKey: userKeys.organizations(id),
+    queryFn: () => {
+      if (!id) throw new Error("User id is required");
+      return fetchOrganizationsById(id);
     },
     enabled: Boolean(id),
     staleTime: fiveMinutes,

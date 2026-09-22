@@ -75,7 +75,8 @@ export default function useUmkmForm(props: UmkmFormProps) {
 
         await editOrganization.mutateAsync(changedValues);
       } else {
-        await createOrganization.mutateAsync(values);
+        const organization = await createOrganization.mutateAsync(values);
+        props.onSuccess?.(organization);
       }
 
       reset();

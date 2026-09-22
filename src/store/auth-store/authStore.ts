@@ -8,7 +8,8 @@ const useAuthStore = create<AuthState>()(
       accessToken: null,
       user: null,
       organization: null,
-      login: (user, accessToken) => set({ accessToken, user }),
+      login: (user, accessToken) =>
+        set({ accessToken, user, organization: null }),
       loginOrganization: (organization) => set({ organization }),
       logout: () => set({ accessToken: null, user: null, organization: null }),
     }),

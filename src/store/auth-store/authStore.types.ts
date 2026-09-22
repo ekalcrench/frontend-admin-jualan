@@ -1,10 +1,10 @@
-import { User, UserOrganization } from "@/types/user";
+import { SelectedUserOrganization, User } from "@/types/user";
 
 export interface AuthState {
   accessToken: string | null;
   user: User | null;
-  organization: UserOrganization | null;
+  organization: SelectedUserOrganization | null;
   login: (user: User, accessToken: string) => void;
-  loginOrganization: (organization: UserOrganization) => void;
+  loginOrganization: (organization: SelectedUserOrganization) => void;
   logout: () => void;
 }

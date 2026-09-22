@@ -9,6 +9,7 @@ import RegisterPageVerify from "@/pages/register-verify-page";
 import UmkmPage from "@/pages/umkm-page";
 import AllUsersPage from "@/pages/all-users-page";
 import DashboardPage from "@/pages/dashboard-page";
+import SelectOrganizationsPage from "@/pages/select-organizations-page";
 
 function ProtectedRoute() {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -18,8 +19,23 @@ function ProtectedRoute() {
 
 function GuestRoute() {
   const accessToken = useAuthStore((state) => state.accessToken);
+  const organization = useAuthStore((state) => state.organization);
 
-  return accessToken ? <Navigate to={paths.users} replace /> : <Outlet />;
+  return accessToken ? (
+    <Navigate to={organization ? paths.dashboard : paths.login} replace />
+  ) : (
+    <Outlet />
+  );
+}
+
+function OrganizationRoute() {
+  const organization = useAuthStore((state) => state.organization);
+
+  return organization ? (
+    <Outlet />
+  ) : (
+    <Navigate to={paths.selectOrganizations} replace />
+  );
 }
 
 export default function RouteLayout() {
@@ -31,12 +47,19 @@ export default function RouteLayout() {
         <Route path={paths.registerVerify} element={<RegisterPageVerify />} />
       </Route>
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<AdminLayout />}>
-          <Route index element={<Navigate to={paths.dashboard} replace />} />
-          <Route path={paths.dashboard} element={<DashboardPage />} />
-          <Route path={paths.users} element={<UsersPage />} />
-          <Route path={paths.allUsers} element={<AllUsersPage />} />
-          <Route path={paths.umkm} element={<UmkmPage />} />
+        <Route
+          path={paths.selectOrganizations}
+          element={<SelectOrganizationsPage />}
+        />
+
+        <Route element={<OrganizationRoute />}>
+          <Route path="/" element={<AdminLayout />}>
+            <Route index element={<Navigate to={paths.dashboard} replace />} />
+            <Route path={paths.dashboard} element={<DashboardPage />} />
+            <Route path={paths.users} element={<UsersPage />} />
+            <Route path={paths.allUsers} element={<AllUsersPage />} />
+            <Route path={paths.umkm} element={<UmkmPage />} />
+          </Route>
         </Route>
         <Route path="*" element={<Navigate to={paths.users} replace />} />
       </Route>
