@@ -73,10 +73,13 @@ export default function useSidebarContent() {
     setMenuActive(location.pathname);
   }, [location]);
 
+  console.log(">>> organization: ", organization);
+
   return {
     accessibleSidebarItems,
     isChildrenOpen,
     menuActive,
+    organization,
     handleParentOnClick,
   };
 }

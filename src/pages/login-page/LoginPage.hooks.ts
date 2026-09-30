@@ -5,13 +5,17 @@ import { LoginFormValues } from "./LoginPage.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "./LoginPage.contants";
 import { useState } from "react";
-import { useLoginMutation } from "@/services/auth/auth.mutation";
+import {
+  useLoginMutation,
+  useLoginOrganizationMutation,
+} from "@/services/auth/auth.mutation";
 import { apiErrorHandler } from "@/utils/api";
 import { toast } from "sonner";
 import { paths } from "@/constants/path";
 import { fetchOrganizationsById } from "@/services/users/users.api";
 import { userKeys } from "@/services/users/users.constants";
 import { useQueryClient } from "@tanstack/react-query";
+import { SelectedUserOrganization } from "@/types/user";
 
 export default function useLoginPage() {
   const navigate = useNavigate();
@@ -21,6 +25,7 @@ export default function useLoginPage() {
   const queryClient = useQueryClient();
 
   const loginMutation = useLoginMutation();
+  const loginOrganizationMutation = useLoginOrganizationMutation();
 
   const {
     control,
@@ -34,6 +39,19 @@ export default function useLoginPage() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const isLoading = isSubmitting || loginMutation.isPending;
+
+  const onLoginOrganization = async (
+    organization: SelectedUserOrganization,
+  ) => {
+    const response = await loginOrganizationMutation.mutateAsync({
+      organizationId: organization.id,
+    });
+
+    if (response.accessToken) {
+      loginOrganization(organization, response.accessToken);
+      navigate(paths.dashboard, { replace: true });
+    }
+  };
 
   const onSubmit = async (values: LoginFormValues) => {
     const toastId = toast.loading("Signing  in...");
@@ -56,8 +74,7 @@ export default function useLoginPage() {
         );
 
         if (organizations.length === 1) {
-          loginOrganization(organizations[0]);
-          navigate(paths.dashboard, { replace: true });
+          await onLoginOrganization(organizations[0]);
           return;
         }
 

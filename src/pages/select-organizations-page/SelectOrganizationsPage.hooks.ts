@@ -7,12 +7,17 @@ import { SelectOrganizationFormValues } from "./SelectOrganizationsPage.types";
 import { selectOrganizationSchema } from "./SelectOrganizationsPage.constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectedUserOrganization } from "@/types/user";
+import { useLoginOrganizationMutation } from "@/services/auth";
+import { toast } from "sonner";
+import { apiErrorHandler } from "@/utils/api";
 
 export default function useSelectOrganizationsPage() {
   const user = useAuthStore((state) => state.user);
   const loginOrganization = useAuthStore((state) => state.loginOrganization);
 
   const navigate = useNavigate();
+
+  const loginOrganizationMutation = useLoginOrganizationMutation();
 
   const {
     control,
@@ -24,18 +29,23 @@ export default function useSelectOrganizationsPage() {
   });
   const organizationsQuery = useOrganizationsByUserIdQuery(user?.id);
 
-  const selectOrganization = (
-    organization: SelectedUserOrganization | null,
-  ) => {
-    if (!organization) return;
-
-    loginOrganization(organization);
-    navigate(paths.dashboard, { replace: true });
-  };
-
-  const onSubmit = (values: SelectOrganizationFormValues) => {
+  const onSubmit = async (values: SelectOrganizationFormValues) => {
     console.log(">>> values : ", values);
-    selectOrganization(values.organization);
+    const toastId = toast.loading("Signing  in...");
+    try {
+      const response = await loginOrganizationMutation.mutateAsync({
+        organizationId: values.organization.id,
+      });
+
+      if (response.accessToken) {
+        loginOrganization(values.organization, response.accessToken);
+        navigate(paths.dashboard, { replace: true });
+      }
+    } catch (error) {
+      apiErrorHandler(error);
+    } finally {
+      toast.dismiss(toastId);
+    }
   };
 
   return {

@@ -1,6 +1,8 @@
 import { apiClient } from "@/config/api";
 import {
   AuthLogin,
+  AuthLoginOrganization,
+  AuthLoginOrganizationResponse,
   AuthLoginResponse,
   AuthRegister,
   AuthRegisterResponse,
@@ -57,6 +59,17 @@ export async function resendOtp(
 export async function login(data: AuthLogin): Promise<AuthLoginResponse> {
   const response = await apiClient.post<AuthLoginResponse>(
     api.auth.login,
+    data,
+  );
+
+  return response.data;
+}
+
+export async function loginOrganization(
+  data: AuthLoginOrganization,
+): Promise<AuthLoginOrganizationResponse> {
+  const response = await apiClient.post<AuthLoginOrganizationResponse>(
+    api.auth.loginOrganization,
     data,
   );
 

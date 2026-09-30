@@ -10,7 +10,8 @@ const useAuthStore = create<AuthState>()(
       organization: null,
       login: (user, accessToken) =>
         set({ accessToken, user, organization: null }),
-      loginOrganization: (organization) => set({ organization }),
+      loginOrganization: (organization, accessToken) =>
+        set({ organization, accessToken }),
       logout: () => set({ accessToken: null, user: null, organization: null }),
     }),
     {

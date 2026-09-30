@@ -1,7 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
-import { login, register, registerVerify, resendOtp } from "./auth.api";
+import {
+  login,
+  loginOrganization,
+  register,
+  registerVerify,
+  resendOtp,
+} from "./auth.api";
 import {
   AuthLogin,
+  AuthLoginOrganization,
+  AuthLoginOrganizationResponse,
   AuthLoginResponse,
   AuthRegister,
   AuthRegisterResponse,
@@ -13,6 +21,16 @@ import {
 export function useLoginMutation() {
   return useMutation<AuthLoginResponse, Error, AuthLogin>({
     mutationFn: login,
+  });
+}
+
+export function useLoginOrganizationMutation() {
+  return useMutation<
+    AuthLoginOrganizationResponse,
+    Error,
+    AuthLoginOrganization
+  >({
+    mutationFn: loginOrganization,
   });
 }
 

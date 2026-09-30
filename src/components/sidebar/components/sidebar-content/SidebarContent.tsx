@@ -6,17 +6,19 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Collapse } from "@mui/material";
+import { Avatar, Collapse } from "@mui/material";
 import { SidebarListItem } from "./SidebarContent.types";
 import useSidebarContent from "./SidebarContent.hooks";
 import { CustomLink } from "@/styled/CustomLink";
 import LogoutButton from "../logout-button";
+import { storageBaseUrl } from "@/constants/api";
 
 export default function SidebarContent() {
   const {
     accessibleSidebarItems,
     isChildrenOpen,
     menuActive,
+    organization,
     handleParentOnClick,
   } = useSidebarContent();
 
@@ -63,8 +65,13 @@ export default function SidebarContent() {
   return (
     <Box>
       <Toolbar>
-        <Typography variant="h6" sx={{ textAlign: "center" }}>
-          Seblak Kang Azmi
+        <Avatar
+          alt="umkm"
+          src={`${storageBaseUrl}${organization?.logoUrl}`}
+          sx={{ width: 32, height: 32 }}
+        />
+        <Typography variant="h6" sx={{ fontSize: "18px", marginLeft: "8px" }}>
+          {organization?.name ?? ""}
         </Typography>
       </Toolbar>
       <List>

@@ -10,6 +10,14 @@ export interface AuthLoginResponse {
   accessToken: string;
 }
 
+export interface AuthLoginOrganization {
+  organizationId: string;
+}
+
+export interface AuthLoginOrganizationResponse {
+  accessToken: string;
+}
+
 export interface AuthRegister {
   email: string;
   password: string;

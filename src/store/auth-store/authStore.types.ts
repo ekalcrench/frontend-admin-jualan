@@ -5,6 +5,9 @@ export interface AuthState {
   user: User | null;
   organization: SelectedUserOrganization | null;
   login: (user: User, accessToken: string) => void;
-  loginOrganization: (organization: SelectedUserOrganization) => void;
+  loginOrganization: (
+    organization: SelectedUserOrganization,
+    accessToken: string,
+  ) => void;
   logout: () => void;
 }
