@@ -10,6 +10,9 @@ export const paths = {
   sales: "/sales",
 
   users: "/users",
+  inventoryItems: "/inventory-items",
+  purchases: "/purchases",
+  stocks: "/stocks",
 
   allUsers: "/all-users",
   umkm: "/umkm",

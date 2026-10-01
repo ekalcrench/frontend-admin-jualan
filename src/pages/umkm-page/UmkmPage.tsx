@@ -126,7 +126,7 @@ export default function UmkmPage() {
           handleSearch={handleChangeSearch}
           addButton={addButton()}
           columnRowActionsSize={
-            userState?.role === userRole.SUPER_ADMIN ? 100 : 50
+            userState?.role === userRole.SUPER_ADMIN ? 110 : 80
           }
           enableRowActions={userState?.role === userRole.USER ? false : true}
           renderRowActions={({ row }) => renderRowActions(row.original.id)}

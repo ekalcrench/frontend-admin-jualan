@@ -12,6 +12,8 @@ import { CustomLink } from "@/styled/CustomLink";
 import LogoutButton from "../logout-button";
 import { storageBaseUrl } from "@/constants/api";
 import { OrganizationName, TopSidebar } from "./SidebarContent.styles";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
 export default function SidebarContent() {
   const {
@@ -22,7 +24,7 @@ export default function SidebarContent() {
     handleParentOnClick,
   } = useSidebarContent();
 
-  const childMenu = (sidebarItem: SidebarListItem, index: number) => {
+  const childMenu = (sidebarItem: SidebarListItem, hasParent?: boolean) => {
     let isActive = false;
     if (menuActive === sidebarItem.url) isActive = true;
 
@@ -32,7 +34,7 @@ export default function SidebarContent() {
     }
 
     return (
-      <CustomLink key={index} to={href}>
+      <CustomLink to={href}>
         <ListItem sx={{ padding: 0 }}>
           <ListItemButton
             className={
@@ -42,8 +44,11 @@ export default function SidebarContent() {
                   ? "active-sidebar"
                   : undefined
             }
+            sx={{ ...(hasParent && { paddingLeft: "52px" }) }}
           >
-            <ListItemIcon>{sidebarItem.icon}</ListItemIcon>
+            {sidebarItem.icon && (
+              <ListItemIcon>{sidebarItem.icon}</ListItemIcon>
+            )}
             <ListItemText
               primary={sidebarItem.title}
               className={isActive ? "active-item-text" : undefined}
@@ -80,7 +85,7 @@ export default function SidebarContent() {
             }
 
             if (sidebarItem.child === undefined) {
-              return childMenu(sidebarItem, index);
+              return <Box key={index}>{childMenu(sidebarItem)}</Box>;
             }
 
             let isParentActive = false;
@@ -92,44 +97,46 @@ export default function SidebarContent() {
 
             return (
               <Box key={index}>
-                <ListItem onClick={() => handleParentOnClick(index)}>
+                <ListItem
+                  sx={{ padding: 0, cursor: "pointer" }}
+                  onClick={() => handleParentOnClick(index)}
+                >
                   <ListItemButton
                     className={
                       isParentActive && !isChildrenOpen[index]
-                        ? "active-sidebar-parent"
+                        ? "active-sidebar"
                         : undefined
                     }
-                    sx={{
-                      backgroundColor:
-                        isParentActive && !isChildrenOpen[index]
-                          ? "background.sidebarActive"
-                          : "transparent",
-                    }}
                   >
-                    <ListItemIcon
-                      className={
-                        isParentActive && !isChildrenOpen[index]
-                          ? "active-item-icon-parent"
-                          : undefined
-                      }
-                    >
-                      {sidebarItem.icon}
-                    </ListItemIcon>
+                    <ListItemIcon>{sidebarItem.icon}</ListItemIcon>
                     <ListItemText
                       primary={sidebarItem.title}
                       className={
                         isParentActive && !isChildrenOpen[index]
-                          ? "active-item-text-parent"
+                          ? "active-item-text"
                           : undefined
                       }
                     />
+                    {isChildrenOpen[index] ? (
+                      <ArrowDropUpIcon />
+                    ) : (
+                      <ArrowDropDownIcon
+                        sx={{
+                          color: isParentActive
+                            ? "text.sidebarActive"
+                            : "text.sidebar",
+                        }}
+                      />
+                    )}
                   </ListItemButton>
                 </ListItem>
 
                 <Collapse in={isChildrenOpen[index]} orientation="vertical">
-                  {sidebarItem.child.map((childItem, childIndex) =>
-                    childMenu(childItem, index * 100 + childIndex),
-                  )}
+                  {sidebarItem.child.map((childItem, childIndex) => (
+                    <Box key={index * 100 + childIndex}>
+                      {childMenu(childItem, true)}
+                    </Box>
+                  ))}
                 </Collapse>
               </Box>
             );

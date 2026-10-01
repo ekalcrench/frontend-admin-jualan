@@ -70,6 +70,7 @@ export default function useSidebarContent() {
   };
 
   useEffect(() => {
+    console.log(">>> location.pathname", location.pathname);
     setMenuActive(location.pathname);
   }, [location]);
 
