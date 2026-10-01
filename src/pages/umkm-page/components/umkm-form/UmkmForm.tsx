@@ -15,7 +15,7 @@ export default function UmkmForm(props: UmkmFormProps) {
       open={props.open}
       onClose={props.onClose}
       onOpen={props.onOpen}
-      title="Buat UMKM Baru"
+      title={`${props.id ? "Edit UMKM" : "Buat UMKM Baru"}`}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInput

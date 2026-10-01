@@ -8,6 +8,8 @@ import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex } from "@/styled/CustomBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import useAuthStore from "@/store/auth-store/authStore";
+import { userRole } from "@/constants/user";
 
 export default function UmkmPage() {
   const {
@@ -30,7 +32,11 @@ export default function UmkmPage() {
     setIsFormOpen,
   } = useUmkmPage();
 
+  const userState = useAuthStore((state) => state.user);
+
   const addButton = () => {
+    if (userState?.role === userRole.USER) return undefined;
+
     return (
       <Button
         variant="contained"
@@ -45,18 +51,25 @@ export default function UmkmPage() {
   const renderRowActions = (id: string) => {
     return (
       <BoxFlex>
-        <IconButton onClick={() => handleClickEditForm(id)} color="secondary">
-          <EditIcon />
-        </IconButton>
-        <IconButton
-          onClick={() => handleClickDelete(id)}
-          color="error"
-          loading={
-            deleteOrganization.isPending && deleteOrganization.variables === id
-          }
-        >
-          <DeleteIcon />
-        </IconButton>
+        {(userState?.role === userRole.SUPER_ADMIN ||
+          userState?.role === userRole.ADMIN) && (
+          <IconButton onClick={() => handleClickEditForm(id)} color="secondary">
+            <EditIcon />
+          </IconButton>
+        )}
+
+        {userState?.role === userRole.SUPER_ADMIN && (
+          <IconButton
+            onClick={() => handleClickDelete(id)}
+            color="error"
+            loading={
+              deleteOrganization.isPending &&
+              deleteOrganization.variables === id
+            }
+          >
+            <DeleteIcon />
+          </IconButton>
+        )}
       </BoxFlex>
     );
   };
@@ -112,8 +125,10 @@ export default function UmkmPage() {
           search={search}
           handleSearch={handleChangeSearch}
           addButton={addButton()}
-          columnRowActionsSize={100}
-          enableRowActions
+          columnRowActionsSize={
+            userState?.role === userRole.SUPER_ADMIN ? 100 : 50
+          }
+          enableRowActions={userState?.role === userRole.USER ? false : true}
           renderRowActions={({ row }) => renderRowActions(row.original.id)}
           searchPlaceholder={"Cari berdasarkan Nama, Email, Nomor HP, & Alamat"}
         />
