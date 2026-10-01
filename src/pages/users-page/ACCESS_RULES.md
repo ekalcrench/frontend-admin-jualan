@@ -25,8 +25,8 @@ Role ini hanya berlaku dalam organization terkait.
 | Action           | OWNER | ADMIN | MEMBER | SUPER_ADMIN |
 | ---------------- | :---: | :---: | :----: | :---------: |
 | View Users       |  ✅   |  ✅   |   ✅   |     ✅      |
-| Add User         |  ✅   |  ✅   |   ❌   |     ✅      |
-| Approve User     |  ✅   |  ❌   |   ❌   |     ✅      |
-| Block User       |  ✅   |  ❌   |   ❌   |     ✅      |
-| Activate User    |  ✅   |  ❌   |   ❌   |     ✅      |
+| Add User         |  ✅   |  ✅   |   ❌   |     ❌      |
+| Approve User     |  ✅   |  ❌   |   ❌   |     ❌      |
+| Block User       |  ✅   |  ✅   |   ❌   |     ❌      |
+| Activate User    |  ✅   |  ✅   |   ❌   |     ❌      |
 | Change User Role |  ❌   |  ❌   |   ❌   |     ✅      |
