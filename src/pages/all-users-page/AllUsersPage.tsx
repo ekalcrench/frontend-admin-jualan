@@ -135,7 +135,9 @@ export default function AllUsersPage() {
           handleResetFilter={handleResetFilter}
           search={search}
           handleSearch={handleChangeSearch}
-          columnRowActionsSize={220}
+          columnRowActionsSize={
+            userState?.role === userRole.SUPER_ADMIN ? 220 : 110
+          }
           enableRowActions
           renderRowActions={({ row }) =>
             row.original.id === editingRoleId
