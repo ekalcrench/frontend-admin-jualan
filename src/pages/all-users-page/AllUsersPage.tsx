@@ -4,7 +4,8 @@ import CustomTable from "@/components/custom-table";
 import { User } from "@/types/user";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex } from "@/styled/CustomBox";
-import { userStatus } from "@/constants/user";
+import { userRole, userStatus } from "@/constants/user";
+import useAuthStore from "@/store/auth-store/authStore";
 
 export default function AllUsersPage() {
   const {
@@ -30,14 +31,10 @@ export default function AllUsersPage() {
     setEditingRoleId,
   } = useAllUsersPage();
 
+  const userState = useAuthStore((state) => state.user);
+
   const renderRowActions = (user: User) => (
     <BoxFlex sx={{ gap: "4px" }}>
-      <Button
-        size="small"
-        onClick={() => handleClickChangeRole(user.id, user.role)}
-      >
-        Ganti Role
-      </Button>
       {user.status === userStatus.ACTIVE && (
         <Button
           size="small"
@@ -58,6 +55,15 @@ export default function AllUsersPage() {
           Activate
         </Button>
       )}
+      {userState?.role === userRole.SUPER_ADMIN &&
+        user.status === userStatus.ACTIVE && (
+          <Button
+            size="small"
+            onClick={() => handleClickChangeRole(user.id, user.role)}
+          >
+            Ganti Role
+          </Button>
+        )}
     </BoxFlex>
   );
 

@@ -79,7 +79,9 @@ export default function useLoginPage() {
         }
 
         if (organizations.length === 0) {
-          toast.error("User belum didaftarkan oleh OWNER");
+          toast.error(
+            "User belum terdaftar di organisasi, hubungi admin untuk bertanya",
+          );
           logout();
           return;
         }
@@ -87,6 +89,7 @@ export default function useLoginPage() {
 
       navigate(paths.selectOrganizations, { replace: true });
     } catch (error) {
+      logout();
       apiErrorHandler(error);
     } finally {
       toast.dismiss(toastId);

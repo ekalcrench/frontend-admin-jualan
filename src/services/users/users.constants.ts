@@ -9,5 +9,7 @@ export const userKeys = {
   details: () => ["users", "detail"] as const,
   detail: (id?: string) => ["users", "detail", id] as const,
 
+  options: (search: string) => ["users", "options", search] as const,
+
   organizations: (id?: string) => ["users", "organizations", id] as const,
 };

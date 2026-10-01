@@ -4,7 +4,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Avatar, Collapse } from "@mui/material";
 import { SidebarListItem } from "./SidebarContent.types";
@@ -12,6 +11,7 @@ import useSidebarContent from "./SidebarContent.hooks";
 import { CustomLink } from "@/styled/CustomLink";
 import LogoutButton from "../logout-button";
 import { storageBaseUrl } from "@/constants/api";
+import { OrganizationName, TopSidebar } from "./SidebarContent.styles";
 
 export default function SidebarContent() {
   const {
@@ -64,16 +64,14 @@ export default function SidebarContent() {
 
   return (
     <Box>
-      <Toolbar>
+      <TopSidebar>
         <Avatar
           alt="umkm"
           src={`${storageBaseUrl}${organization?.logoUrl}`}
           sx={{ width: 32, height: 32 }}
         />
-        <Typography variant="h6" sx={{ fontSize: "18px", marginLeft: "8px" }}>
-          {organization?.name ?? ""}
-        </Typography>
-      </Toolbar>
+        <OrganizationName>{organization?.name ?? ""}</OrganizationName>
+      </TopSidebar>
       <List>
         {accessibleSidebarItems.map(
           (sidebarItem: SidebarListItem, index: number) => {

@@ -33,6 +33,7 @@ interface ExtendedAutocompleteProps<TFieldValues extends FieldValues, Option> {
   required?: boolean;
   textFieldProps?: Omit<TextFieldProps, "required" | "disabled">;
   errors?: FieldErrors<TFieldValues>;
+  size?: "small" | "medium";
 }
 
 export type CustomAutocompleteProps<

@@ -8,7 +8,6 @@ export interface CreateUser {
   status: UserStatus;
 }
 
-export interface EditUser extends Partial<Omit<CreateUser, "password">> {
+export interface EditUser extends Partial<CreateUser> {
   id: string;
-  password?: string;
 }

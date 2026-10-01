@@ -107,17 +107,22 @@ export const sidebarList: SidebarListItem[] = [
     url: paths.users,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <GroupIcon />,
-    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
-    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
+    organizationRoleAccess: [
+      organizationRole.ADMIN,
+      organizationRole.OWNER,
+      organizationRole.MEMBER,
+    ],
   },
-  { groupName: "Systems" },
+  {
+    groupName: "Systems",
+    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
+  },
   {
     title: "Semua User",
     url: paths.allUsers,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <GroupIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
-    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
   },
   {
     title: "UMKM",
@@ -125,6 +130,5 @@ export const sidebarList: SidebarListItem[] = [
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <StoreIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
-    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
   },
 ];

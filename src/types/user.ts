@@ -22,16 +22,20 @@ export type UserOrganizationStatus =
 
 export interface UserOrganization extends BaseApiResponse {
   id: string;
-  userId: string;
-  organizationId: string;
+  name: string;
+  email: string;
   role: UserOrganizationRole;
-  approvedAt: string;
-  approvedById: string;
-  updatedById: string;
   status: UserOrganizationStatus;
+  approvedAt: string | null;
+  approvedById: string | null;
+  updatedById: string | null;
 }
 
 export interface UserFilterPayload extends DefaultFilter {
+  search?: string;
+}
+
+export interface UserOrganizationFilterPayload extends DefaultFilter {
   search?: string;
 }
 
@@ -41,4 +45,21 @@ export interface SelectedUserOrganization extends Pick<
 > {
   name: string;
   logoUrl: string;
+}
+
+export interface UserOrganizationDetail extends BaseApiResponse {
+  id: string;
+  userId: string;
+  organizationId: string;
+  role: UserOrganizationRole;
+  status: UserOrganizationStatus;
+  approvedAt: string | null;
+  approvedById: string | null;
+  updatedById: string | null;
+}
+
+export interface UserOptions {
+  id: string;
+  name: string;
+  email: string;
 }

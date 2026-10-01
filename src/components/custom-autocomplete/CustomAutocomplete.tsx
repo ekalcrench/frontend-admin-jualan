@@ -27,6 +27,7 @@ export default function CustomAutocomplete<Field extends FieldValues, Option>({
   required,
   textFieldProps,
   errors,
+  size,
 
   // Controller Props
   name,
@@ -72,6 +73,17 @@ export default function CustomAutocomplete<Field extends FieldValues, Option>({
                   disabled={disabled}
                   required={required}
                   fullWidth
+                  sx={{
+                    height:
+                      size === "small" ? "48px !important" : "54px !important",
+                    "& input": {
+                      height:
+                        size === "small"
+                          ? "48px !important"
+                          : "54px !important",
+                    },
+                    ...textFieldProps?.sx,
+                  }}
                 />
               )}
               renderGroup={(params) => (

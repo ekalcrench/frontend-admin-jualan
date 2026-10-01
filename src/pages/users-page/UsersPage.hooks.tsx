@@ -1,13 +1,11 @@
 import { defaultParameter } from "@/constants/table";
 import CustomAutocomplete from "@/components/custom-autocomplete";
-import {
-  useActivateUserMutation,
-  useEditUserMutation,
-  useSuspendUserMutation,
-} from "@/services/users/users.mutation";
-import { useUsersQuery } from "@/services/users/users.query";
 import useConfirmationStore from "@/store/confirmation-store";
-import { User, UserRole, UserStatus } from "@/types/user";
+import {
+  UserOrganization,
+  UserOrganizationRole,
+  UserOrganizationStatus,
+} from "@/types/user";
 import { ColumnSort } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { formatLocalDate } from "@/utils/dateTime";
@@ -18,13 +16,20 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
-  userRole,
-  userRoleMapping,
-  userStatusColorMapping,
-  userStatusMapping,
+  userOrganizationRoleMapping,
+  userOrganizationRoleOptions,
+  userOrganizationStatusColorMapping,
+  userOrganizationStatusMapping,
 } from "@/constants/user";
+import { useOrganizationUsersQuery } from "@/services/organization-users/organizationUsers.query";
+import {
+  useActivateOrganizationUserMutation,
+  useApproveOrganizationUserMutation,
+  useEditOrganizationUserMutation,
+  useSuspendOrganizationUserMutation,
+} from "@/services/organization-users/organizationUsers.mutation";
 
-export default function useAllUsersPage() {
+export default function useUsersPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get("page") ?? defaultParameter.page);
   const size = Number(searchParams.get("size") ?? defaultParameter.size);
@@ -49,7 +54,7 @@ export default function useAllUsersPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const { data, isLoading, isError, error } = useUsersQuery({
+  const { data, isLoading, isError, error } = useOrganizationUsersQuery({
     page,
     size,
     sortBy,
@@ -57,11 +62,14 @@ export default function useAllUsersPage() {
   });
 
   const [editingRoleId, setEditingRoleId] = useState<string | null>(null);
-  const { control, getValues, reset } = useForm<{ role: UserRole }>();
+  const { control, getValues, reset } = useForm<{
+    role: UserOrganizationRole;
+  }>();
 
-  const suspendUser = useSuspendUserMutation();
-  const activateUser = useActivateUserMutation();
-  const editUser = useEditUserMutation();
+  const suspendOrganizationUser = useSuspendOrganizationUserMutation();
+  const activateOrganizationUser = useActivateOrganizationUserMutation();
+  const approveOrganizationUser = useApproveOrganizationUserMutation();
+  const editOrganizationUser = useEditOrganizationUserMutation();
   const confirm = useConfirmationStore((state) => state.confirm);
 
   const handleChangePage = (value: number) =>
@@ -91,12 +99,12 @@ export default function useAllUsersPage() {
       return prev;
     });
 
-  const handleClickChangeRole = (id: string, role: UserRole) => {
+  const handleClickChangeRole = (id: string, role: UserOrganizationRole) => {
     setEditingRoleId(id);
     reset({ role });
   };
 
-  const onSaveChangeRole = async (id: string, role: UserRole) => {
+  const onSaveChangeRole = async (id: string, role: UserOrganizationRole) => {
     if (
       !(await confirm({
         title: "Mengganti Role User",
@@ -106,7 +114,7 @@ export default function useAllUsersPage() {
       return;
     const toastId = toast.loading("Sedang mengganti...");
     try {
-      await editUser.mutateAsync({ id, role });
+      await editOrganizationUser.mutateAsync({ id, role });
       setEditingRoleId(null);
       toast.success("Berhasil Mengganti Role");
     } catch (error) {
@@ -116,9 +124,15 @@ export default function useAllUsersPage() {
     }
   };
 
-  const columns: MRT_ColumnDef<User>[] = useMemo(
+  const columns: MRT_ColumnDef<UserOrganization>[] = useMemo(
     () => [
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
+      {
+        accessorKey: "userId",
+        header: "User ID",
+        size: 160,
+        enableSorting: false,
+      },
       { accessorKey: "name", header: "Nama", size: 200 },
       {
         accessorKey: "email",
@@ -137,15 +151,25 @@ export default function useAllUsersPage() {
               control={control}
               placeholder="Pilih role"
               autocompleteProps={{
-                options: Object.values(userRole),
+                options: userOrganizationRoleOptions.map((role) => role.value),
                 disableClearable: true,
+                getOptionLabel: (option) => {
+                  const roleOption = userOrganizationRoleOptions.find(
+                    (r) => r.value === option,
+                  );
+                  return roleOption ? roleOption.label : "";
+                },
               }}
-              textFieldProps={{ sx: { minWidth: "180px" } }}
+              textFieldProps={{ sx: { minWidth: "200px" } }}
               size="small"
             />
           ) : (
             <Chip
-              label={userRoleMapping[cell.getValue<UserRole>()]}
+              label={
+                userOrganizationRoleMapping[
+                  cell.getValue<UserOrganizationRole>()
+                ]
+              }
               size="small"
             />
           ),
@@ -156,11 +180,31 @@ export default function useAllUsersPage() {
         size: 150,
         Cell: ({ cell }) => (
           <Chip
-            label={userStatusMapping[cell.getValue<UserStatus>()]}
+            label={
+              userOrganizationStatusMapping[
+                cell.getValue<UserOrganizationStatus>()
+              ]
+            }
             size="small"
-            color={userStatusColorMapping[cell.getValue<UserStatus>()]}
+            color={
+              userOrganizationStatusColorMapping[
+                cell.getValue<UserOrganizationStatus>()
+              ]
+            }
           />
         ),
+      },
+      {
+        accessorKey: "approvedAt",
+        header: "Approved At",
+        size: 160,
+        Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
+      },
+      {
+        accessorKey: "approvedById",
+        header: "Approved by ID",
+        size: 160,
+        enableSorting: false,
       },
       {
         accessorKey: "createdAt",
@@ -174,13 +218,44 @@ export default function useAllUsersPage() {
         size: 160,
         Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
       },
+      {
+        accessorKey: "updatedById",
+        header: "Updated by ID",
+        size: 160,
+        enableSorting: false,
+      },
     ],
-    [control, editingRoleId, editUser.isPending, editUser.variables, getValues],
+    [
+      control,
+      editingRoleId,
+      editOrganizationUser.isPending,
+      editOrganizationUser.variables,
+      getValues,
+    ],
   );
 
   useEffect(() => {
     if (isError && error) apiErrorHandler(error);
   }, [isError, error]);
+
+  const handleClickApprove = async (id: string) => {
+    if (
+      !(await confirm({
+        title: "Approve User",
+        message: "Apakah Anda yakin ingin menyetujui user ini?",
+      }))
+    )
+      return;
+    const toastId = toast.loading("Sedang menyetujui...");
+    try {
+      await approveOrganizationUser.mutateAsync(id);
+      toast.success("Berhasil Menyetujui");
+    } catch (error) {
+      apiErrorHandler(error);
+    } finally {
+      toast.dismiss(toastId);
+    }
+  };
 
   const handleClickSuspend = async (id: string) => {
     if (
@@ -192,7 +267,7 @@ export default function useAllUsersPage() {
       return;
     const toastId = toast.loading("Sedang memblokir...");
     try {
-      await suspendUser.mutateAsync(id);
+      await suspendOrganizationUser.mutateAsync(id);
       toast.success("Berhasil Memblokir");
     } catch (error) {
       apiErrorHandler(error);
@@ -211,7 +286,7 @@ export default function useAllUsersPage() {
       return;
     const toastId = toast.loading("Sedang mengaktifkan...");
     try {
-      await activateUser.mutateAsync(id);
+      await activateOrganizationUser.mutateAsync(id);
       toast.success("Berhasil Mengaktifkan");
     } catch (error) {
       apiErrorHandler(error);
@@ -220,26 +295,32 @@ export default function useAllUsersPage() {
     }
   };
 
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+
   return {
-    activateUser,
+    activateOrganizationUser,
+    approveOrganizationUser,
     columns,
     data,
     editingRoleId,
-    editUser,
+    editOrganizationUser,
     isLoading,
     isError,
+    isFormOpen,
     search: search ?? "",
     sortBy,
-    suspendUser,
+    suspendOrganizationUser,
     getValues,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
     handleClickActivate,
+    handleClickApprove,
     handleClickChangeRole,
     handleClickSuspend,
     handleResetFilter,
     onSaveChangeRole,
     setEditingRoleId,
+    setIsFormOpen,
   };
 }

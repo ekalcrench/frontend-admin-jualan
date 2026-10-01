@@ -1,121 +1,215 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import useUsersPage from "./UsersPage.hooks";
+import CustomTable from "@/components/custom-table";
+import { User, UserOrganization } from "@/types/user";
+import { getSortDirection, removeSortByDirection } from "@/utils/table";
+import { BoxFlex } from "@/styled/CustomBox";
 import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { useMemo } from "react";
-import { useUsersQuery } from "@/services/users/users.query";
-import { User } from "@/types/user";
-import { boxShadowCard } from "@/constants/styled";
-import { defaultParameter } from "@/constants/table";
+  userOrganizationRole,
+  userOrganizationStatus,
+  userRole,
+  userStatus,
+} from "@/constants/user";
+import useAuthStore from "@/store/auth-store";
+import AddIcon from "@mui/icons-material/Add";
+import UserForm from "./components/user-form";
+import { SyntheticEvent } from "react";
 
 export default function UsersPage() {
-  const { data, isLoading, isError } = useUsersQuery(defaultParameter);
+  const {
+    activateOrganizationUser,
+    approveOrganizationUser,
+    columns,
+    data,
+    editingRoleId,
+    editOrganizationUser,
+    isLoading,
+    isError,
+    isFormOpen,
+    search,
+    sortBy,
+    suspendOrganizationUser,
+    getValues,
+    handleChangePage,
+    handleChangeSearch,
+    handleChangeSort,
+    handleClickActivate,
+    handleClickApprove,
+    handleClickChangeRole,
+    handleClickSuspend,
+    handleResetFilter,
+    onSaveChangeRole,
+    setEditingRoleId,
+    setIsFormOpen,
+  } = useUsersPage();
 
-  const columns = useMemo<GridColDef<User>[]>(
-    () => [
-      { field: "id", headerName: "ID", width: 90 },
-      { field: "name", headerName: "Name", flex: 1, minWidth: 160 },
-      { field: "email", headerName: "Email", flex: 1, minWidth: 220 },
-      {
-        field: "role",
-        headerName: "Role",
-        width: 140,
-        renderCell: (params) => (
-          <Chip
-            label={params.value}
+  const organization = useAuthStore((state) => state.organization);
+  const userState = useAuthStore((state) => state.user);
+
+  const renderRowActions = (user: UserOrganization) => (
+    <BoxFlex sx={{ gap: "4px" }}>
+      {user.status === userOrganizationStatus.PENDING_APPROVAL &&
+        organization?.role === userOrganizationRole.OWNER && (
+          <Button
             size="small"
-            sx={{
-              backgroundColor: "action.hover",
-              color: "text.secondary",
-              fontWeight: 600,
-            }}
-          />
-        ),
-      },
-      {
-        field: "status",
-        headerName: "Status",
-        width: 120,
-        valueFormatter: (value) =>
-          value === "ACTIVE"
-            ? "Active"
-            : value === "PENDING_EMAIL"
-              ? "Pending"
-              : "Suspended",
-      },
-    ],
-    [],
+            color="success"
+            onClick={() => handleClickApprove(user.id)}
+            loading={
+              approveOrganizationUser.isPending &&
+              approveOrganizationUser.variables === user.id
+            }
+          >
+            Approve
+          </Button>
+        )}
+      {user.status === userOrganizationStatus.APPROVED &&
+        (organization?.role === userOrganizationRole.OWNER ||
+          organization?.role === userOrganizationRole.ADMIN) && (
+          <Button
+            size="small"
+            color="error"
+            onClick={() => handleClickSuspend(user.id)}
+            loading={
+              suspendOrganizationUser.isPending &&
+              suspendOrganizationUser.variables === user.id
+            }
+          >
+            Blokir
+          </Button>
+        )}
+      {user.status === userOrganizationStatus.SUSPENDED &&
+        (organization?.role === userOrganizationRole.OWNER ||
+          organization?.role === userOrganizationRole.ADMIN) && (
+          <Button
+            size="small"
+            color="success"
+            onClick={() => handleClickActivate(user.id)}
+            loading={
+              activateOrganizationUser.isPending &&
+              activateOrganizationUser.variables === user.id
+            }
+          >
+            Activate
+          </Button>
+        )}
+      {user.status === userOrganizationStatus.APPROVED &&
+        userState?.role === userRole.SUPER_ADMIN && (
+          <Button
+            size="small"
+            onClick={() => handleClickChangeRole(user.id, user.role)}
+          >
+            Ganti Role
+          </Button>
+        )}
+    </BoxFlex>
   );
 
+  const renderSaveAndCancelChangeRole = (user: UserOrganization) => (
+    <BoxFlex sx={{ gap: "4px" }}>
+      <Button
+        size="small"
+        variant="contained"
+        color="success"
+        onClick={() => onSaveChangeRole(user.id, getValues("role"))}
+        loading={
+          editOrganizationUser.isPending &&
+          editOrganizationUser.variables?.id === user.id
+        }
+      >
+        Simpan
+      </Button>
+      <Button
+        size="small"
+        variant="contained"
+        color="error"
+        onClick={() => setEditingRoleId(null)}
+      >
+        Batal
+      </Button>
+    </BoxFlex>
+  );
+
+  const renderAddButton = () =>
+    organization?.role === userOrganizationRole.ADMIN ||
+    organization?.role === userOrganizationRole.OWNER ? (
+      <Button startIcon={<AddIcon />} onClick={() => setIsFormOpen(true)}>
+        Tambah User
+      </Button>
+    ) : undefined;
+
   return (
-    <Stack spacing={3}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          alignItems: { xs: "stretch", md: "center" },
-          justifyContent: "space-between",
-          gap: "16px",
-          padding: "16px 12px",
-        }}
-      >
-        <Box>
-          <Typography variant="h5">Users</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Manage user accounts, roles, and status for the admin portal.
-          </Typography>
-        </Box>
+    <Box>
+      <UserForm
+        open={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onOpen={() => setIsFormOpen(true)}
+        setIsFormOpen={setIsFormOpen}
+        // id={editFormId}
+      />
 
-        {/* <Button variant="contained">Add user</Button> */}
-      </Box>
-
-      <Card
-        sx={{
-          overflow: "hidden",
-          border: 1,
-          borderColor: "divider",
-          backgroundColor: "background.paper",
-          boxShadow: boxShadowCard,
-        }}
-      >
-        <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
-          <Box sx={{ height: 560, width: "100%" }}>
-            <DataGrid
-              rows={data?.items ?? []}
-              columns={columns}
-              loading={isLoading}
-              checkboxSelection
-              disableRowSelectionOnClick
-              pagination
-              pageSizeOptions={[5, 10, 20]}
-              sx={{ border: "none" }}
-              slots={{
-                noRowsOverlay: () => (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
-                      color: "text.secondary",
-                    }}
-                  >
-                    <Typography variant="body2">
-                      {isError ? "Unable to load users." : "No users found."}
-                    </Typography>
-                  </Box>
-                ),
-              }}
-            />
+      <Stack spacing={3}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: { xs: "stretch", md: "center" },
+            justifyContent: "space-between",
+            gap: "16px",
+            padding: "16px 12px",
+          }}
+        >
+          <Box>
+            <Typography variant="h5">Users</Typography>
+            <Typography variant="body2" color="text.secondary">
+              Mengatur semua user yang terdaftar di{" "}
+              {organization?.name ?? "UMKM"}
+            </Typography>
           </Box>
-        </CardContent>
-      </Card>
-    </Stack>
+        </Box>
+        <CustomTable<UserOrganization>
+          columns={columns}
+          data={data?.items ?? []}
+          isLoading={isLoading}
+          isError={isError}
+          page={data?.pagination?.page}
+          size={data?.pagination?.size}
+          totalRows={data?.pagination?.total}
+          totalPages={data?.pagination?.totalPages}
+          handleChangePage={handleChangePage}
+          initialState={{
+            columnVisibility: {
+              id: false,
+              userId: false,
+              approvedAt: false,
+              approvedById: false,
+              createdAt: false,
+              updatedAt: false,
+              updatedById: false,
+            },
+          }}
+          sortBy={{
+            direction: getSortDirection(sortBy),
+            id: removeSortByDirection(sortBy),
+          }}
+          onSortChange={handleChangeSort}
+          handleResetFilter={handleResetFilter}
+          search={search}
+          handleSearch={handleChangeSearch}
+          columnRowActionsSize={
+            userState?.role === userRole.SUPER_ADMIN ? 220 : 110
+          }
+          enableRowActions={
+            organization?.role === userOrganizationRole.MEMBER ? false : true
+          }
+          renderRowActions={({ row }) =>
+            row.original.id === editingRoleId
+              ? renderSaveAndCancelChangeRole(row.original)
+              : renderRowActions(row.original)
+          }
+          searchPlaceholder="Cari berdasarkan Nama dan Email"
+          addButton={renderAddButton()}
+        />
+      </Stack>
+    </Box>
   );
 }

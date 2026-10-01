@@ -12,10 +12,18 @@ export const api = {
     activate: (id: string) => `/users/${id}/activate`,
     suspend: (id: string) => `/users/${id}/suspend`,
     organizations: (id: string) => `/users/${id}/organizations`,
+    options: "/users/options",
   },
   organizations: {
     base: "/organizations",
     byId: (id: string) => `/organizations/${id}`,
+  },
+  organizationUsers: {
+    base: "/organization-users",
+    byId: (id: string) => `/organization-users/${id}`,
+    approve: (id: string) => `/organization-users/${id}/approve`,
+    suspend: (id: string) => `/organization-users/${id}/suspend`,
+    activate: (id: string) => `/organization-users/${id}/activate`,
   },
 };
 

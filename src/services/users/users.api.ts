@@ -5,6 +5,7 @@ import {
   SelectedUserOrganization,
   User,
   UserFilterPayload,
+  UserOptions,
 } from "@/types/user";
 import { EditUser } from "./users.types";
 
@@ -28,6 +29,13 @@ export async function fetchOrganizationsById(
   const response = await apiClient.get<SelectedUserOrganization[]>(
     api.users.organizations(id),
   );
+  return response.data;
+}
+
+export async function fetchUserOptions(search: string): Promise<UserOptions[]> {
+  const response = await apiClient.get<UserOptions[]>(api.users.options, {
+    params: { search },
+  });
   return response.data;
 }
 
