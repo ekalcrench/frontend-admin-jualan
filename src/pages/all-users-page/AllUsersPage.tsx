@@ -35,28 +35,33 @@ export default function AllUsersPage() {
 
   const renderRowActions = (user: User) => (
     <BoxFlex sx={{ gap: "4px" }}>
-      {user.status === userStatus.ACTIVE && (
-        <Button
-          size="small"
-          color="error"
-          onClick={() => handleClickSuspend(user.id)}
-          loading={suspendUser.isPending && suspendUser.variables === user.id}
-        >
-          Blokir
-        </Button>
-      )}
-      {user.status === userStatus.SUSPENDED && (
-        <Button
-          size="small"
-          color="success"
-          onClick={() => handleClickActivate(user.id)}
-          loading={activateUser.isPending && activateUser.variables === user.id}
-        >
-          Activate
-        </Button>
-      )}
-      {userState?.role === userRole.SUPER_ADMIN &&
-        user.status === userStatus.ACTIVE && (
+      {user.status === userStatus.ACTIVE &&
+        userState?.role === userRole.SUPER_ADMIN && (
+          <Button
+            size="small"
+            color="error"
+            onClick={() => handleClickSuspend(user.id)}
+            loading={suspendUser.isPending && suspendUser.variables === user.id}
+          >
+            Blokir
+          </Button>
+        )}
+      {user.status === userStatus.SUSPENDED &&
+        (userState?.role === userRole.SUPER_ADMIN ||
+          userState?.role === userRole.ADMIN) && (
+          <Button
+            size="small"
+            color="success"
+            onClick={() => handleClickActivate(user.id)}
+            loading={
+              activateUser.isPending && activateUser.variables === user.id
+            }
+          >
+            Activate
+          </Button>
+        )}
+      {user.status === userStatus.ACTIVE &&
+        userState?.role === userRole.SUPER_ADMIN && (
           <Button
             size="small"
             onClick={() => handleClickChangeRole(user.id, user.role)}
