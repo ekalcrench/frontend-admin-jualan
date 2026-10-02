@@ -25,6 +25,10 @@ export const api = {
     suspend: (id: string) => `/organization-users/${id}/suspend`,
     activate: (id: string) => `/organization-users/${id}/activate`,
   },
+  inventoryItems: {
+    base: "/inventory-items",
+    byId: (id: string) => `/inventory-items/${id}`,
+  },
 };
 
 export const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
