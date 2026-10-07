@@ -26,7 +26,6 @@ export default function CustomAutocomplete<Field extends FieldValues, Option>({
   renderErrorMessage,
   required,
   textFieldProps,
-  errors,
   size,
 
   // Controller Props
@@ -36,10 +35,6 @@ export default function CustomAutocomplete<Field extends FieldValues, Option>({
   ...rest
 }: CustomAutocompleteProps<Field, Option>) {
   const { options, ...restAutocompleteProps } = autocompleteProps;
-
-  const error = errors?.[name];
-  const errorMessage =
-    typeof error?.message === "string" ? error.message : undefined;
 
   return (
     <BoxFieldWrapper
@@ -56,72 +51,84 @@ export default function CustomAutocomplete<Field extends FieldValues, Option>({
       <Controller
         name={name}
         control={control}
-        render={({ field }) => {
+        render={({ field, fieldState }) => {
           const { onChange, value, ...restField } = field;
+          const errorMessage =
+            typeof fieldState.error?.message === "string"
+              ? fieldState.error.message
+              : undefined;
 
           return (
-            <Autocomplete
-              options={options}
-              renderInput={(params: AutocompleteRenderInputParams) => (
-                <TextField
-                  {...params}
-                  {...textFieldProps}
-                  id={name}
-                  placeholder={placeholder}
-                  error={Boolean(errorMessage)}
-                  variant="outlined"
-                  disabled={disabled}
-                  required={required}
-                  fullWidth
-                  sx={{
-                    height:
-                      size === "small" ? "48px !important" : "54px !important",
-                    "& input": {
+            <Fragment>
+              <Autocomplete
+                options={options}
+                renderInput={(params: AutocompleteRenderInputParams) => (
+                  <TextField
+                    {...params}
+                    {...textFieldProps}
+                    id={name}
+                    placeholder={placeholder}
+                    error={Boolean(errorMessage)}
+                    variant="outlined"
+                    disabled={disabled}
+                    required={required}
+                    fullWidth
+                    sx={{
                       height:
                         size === "small"
                           ? "48px !important"
                           : "54px !important",
-                    },
-                    ...textFieldProps?.sx,
-                  }}
-                />
-              )}
-              renderGroup={(params) => (
-                <Fragment key={params.key}>
-                  <AutocompleteGroupHeader>
-                    {params.group}
-                  </AutocompleteGroupHeader>
-                  {params.children}
-                </Fragment>
-              )}
-              {...restAutocompleteProps}
-              onChange={(event, data, reason, details) => {
-                if (typeof restAutocompleteProps.onChange === "function") {
-                  restAutocompleteProps.onChange(event, data, reason, details);
+                      "& input": {
+                        height:
+                          size === "small"
+                            ? "48px !important"
+                            : "54px !important",
+                      },
+                      ...textFieldProps?.sx,
+                    }}
+                  />
+                )}
+                renderGroup={(params) => (
+                  <Fragment key={params.key}>
+                    <AutocompleteGroupHeader>
+                      {params.group}
+                    </AutocompleteGroupHeader>
+                    {params.children}
+                  </Fragment>
+                )}
+                {...restAutocompleteProps}
+                onChange={(event, data, reason, details) => {
+                  if (typeof restAutocompleteProps.onChange === "function") {
+                    restAutocompleteProps.onChange(
+                      event,
+                      data,
+                      reason,
+                      details,
+                    );
 
-                  if (overridOnChangeAutocomplete) return;
-                }
-                onChange(data);
+                    if (overridOnChangeAutocomplete) return;
+                  }
+                  onChange(data);
 
-                return data;
-              }}
-              {...restField}
-              disabled={disabled}
-              openOnFocus
-              value={(value as Option | Option[]) ?? null}
-              defaultValue={(value as Option | Option[]) ?? null}
-            />
+                  return data;
+                }}
+                {...restField}
+                disabled={disabled}
+                openOnFocus
+                value={(value as Option | Option[]) ?? null}
+                defaultValue={(value as Option | Option[]) ?? null}
+              />
+              {renderErrorMessage && Boolean(errorMessage) && (
+                <TypographyErrorInput color="error">
+                  {errorMessage}
+                </TypographyErrorInput>
+              )}
+            </Fragment>
           );
         }}
         defaultValue={defaultValue}
         {...rest}
       />
-
-      {renderErrorMessage && Boolean(errorMessage) && (
-        <TypographyErrorInput color="error">
-          {errorMessage}
-        </TypographyErrorInput>
-      )}
     </BoxFieldWrapper>
   );
 }

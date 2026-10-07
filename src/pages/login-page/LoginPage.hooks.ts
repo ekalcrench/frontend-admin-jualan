@@ -30,7 +30,7 @@ export default function useLoginPage() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     mode: "onBlur",
@@ -98,7 +98,6 @@ export default function useLoginPage() {
 
   return {
     control,
-    errors,
     isLoading,
     showPassword,
     handleSubmit,

@@ -10,7 +10,6 @@ import { Fragment } from "react/jsx-runtime";
 
 export default function CustomInput<TFieldValues extends FieldValues>({
   control,
-  errors,
   name,
   label,
   placeholder,
@@ -21,10 +20,6 @@ export default function CustomInput<TFieldValues extends FieldValues>({
   textFieldProps,
   numeric,
 }: CustomInputProps<TFieldValues>) {
-  const error = errors?.[name];
-  const errorMessage =
-    typeof error?.message === "string" ? error.message : undefined;
-
   return (
     <BoxFieldWrapper
       {...boxFieldWrapperProps}
@@ -40,34 +35,41 @@ export default function CustomInput<TFieldValues extends FieldValues>({
       <Controller
         name={name}
         control={control}
-        render={({ field }) => (
-          <Fragment>
-            <TextField
-              {...field}
-              {...textFieldProps}
-              onKeyDown={(e) => {
-                const regex = new RegExp(
-                  /[0-9]|(Backspace|Tab|Enter|Delete|ArrowLeft|ArrowRight|ArrowUp|ArrowDown)/,
-                );
-                const inputNonNumeric = !e.key.match(regex);
-                if (numeric && inputNonNumeric) e.preventDefault();
+        render={({ field, fieldState }) => {
+          const errorMessage =
+            typeof fieldState.error?.message === "string"
+              ? fieldState.error.message
+              : undefined;
 
-                textFieldProps?.onKeyDown?.(e);
-              }}
-              fullWidth
-              placeholder={placeholder}
-              type={type}
-              disabled={disabled}
-              error={Boolean(errorMessage)}
-            />
+          return (
+            <Fragment>
+              <TextField
+                {...field}
+                {...textFieldProps}
+                onKeyDown={(e) => {
+                  const regex = new RegExp(
+                    /[0-9]|(Backspace|Tab|Enter|Delete|ArrowLeft|ArrowRight|ArrowUp|ArrowDown)/,
+                  );
+                  const inputNonNumeric = !e.key.match(regex);
+                  if (numeric && inputNonNumeric) e.preventDefault();
 
-            {renderErrorMessage && Boolean(errorMessage) && (
-              <TypographyErrorInput color="error">
-                {errorMessage}
-              </TypographyErrorInput>
-            )}
-          </Fragment>
-        )}
+                  textFieldProps?.onKeyDown?.(e);
+                }}
+                fullWidth
+                placeholder={placeholder}
+                type={type}
+                disabled={disabled}
+                error={Boolean(errorMessage)}
+              />
+
+              {renderErrorMessage && Boolean(errorMessage) && (
+                <TypographyErrorInput color="error">
+                  {errorMessage}
+                </TypographyErrorInput>
+              )}
+            </Fragment>
+          );
+        }}
       />
     </BoxFieldWrapper>
   );

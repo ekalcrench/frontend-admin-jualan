@@ -9,7 +9,6 @@ import { storageBaseUrl } from "@/constants/api";
 export default function SelectOrganizationsPage() {
   const {
     control,
-    errors,
     organizations,
     isLoading,
     isSubmitting,
@@ -30,7 +29,6 @@ export default function SelectOrganizationsPage() {
             <CustomAutocomplete
               name="organization"
               control={control}
-              errors={errors}
               placeholder="Pilih UMKM Anda"
               renderErrorMessage
               disabled={isLoading}

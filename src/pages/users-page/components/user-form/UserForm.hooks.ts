@@ -20,7 +20,7 @@ export default function useUserForm(props: UserFormProps) {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting, dirtyFields },
+    formState: { isSubmitting, dirtyFields },
   } = useForm<UserFormValues>({
     resolver: zodResolver(
       props.id ? userEditFormSchema : userFormSchema,
@@ -78,7 +78,6 @@ export default function useUserForm(props: UserFormProps) {
 
   return {
     control,
-    errors,
     isLoading,
     isLoadingGetOptions,
     userOptions,

@@ -21,7 +21,7 @@ export default function useInventoryItemForm(props: InventoryItemFormProps) {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<InventoryItemFormValues>({
     resolver: zodResolver(
       inventoryItemFormSchema,
@@ -70,5 +70,5 @@ export default function useInventoryItemForm(props: InventoryItemFormProps) {
     }
   };
 
-  return { control, errors, isLoading, handleSubmit, onSubmit };
+  return { control, isLoading, handleSubmit, onSubmit };
 }

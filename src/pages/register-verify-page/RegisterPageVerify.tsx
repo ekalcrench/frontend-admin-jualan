@@ -12,7 +12,6 @@ import LoadingPage from "@/components/loading-page";
 export default function RegisterPageVerify() {
   const {
     control,
-    errors,
     isLoading,
     isLoadingSubmit,
     resendOtpDelay,
@@ -38,7 +37,6 @@ export default function RegisterPageVerify() {
             <CustomInput
               name="email"
               control={control}
-              errors={errors}
               label="Email"
               placeholder="contoh@gmail.com"
               renderErrorMessage

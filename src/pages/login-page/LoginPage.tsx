@@ -16,7 +16,6 @@ import { paths } from "@/constants/path";
 export default function LoginPage() {
   const {
     control,
-    errors,
     isLoading,
     showPassword,
     handleSubmit,
@@ -37,7 +36,6 @@ export default function LoginPage() {
             <CustomInput
               name="email"
               control={control}
-              errors={errors}
               label="Email"
               placeholder="contoh@gmail.com"
               renderErrorMessage
@@ -47,7 +45,6 @@ export default function LoginPage() {
             <CustomInput
               name="password"
               control={control}
-              errors={errors}
               label="Password"
               placeholder="Masukkan password"
               type={showPassword ? "text" : "password"}

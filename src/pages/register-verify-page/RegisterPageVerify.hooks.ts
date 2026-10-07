@@ -30,7 +30,7 @@ export default function useRegisterPageVerify() {
     control,
     getValues,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerVerifySchema),
     mode: "onBlur",
@@ -114,7 +114,6 @@ export default function useRegisterPageVerify() {
 
   return {
     control,
-    errors,
     isLoading,
     isLoadingSubmit,
     resendOtpDelay,

@@ -5,6 +5,7 @@ import FormDrawer from "@/components/form-drawer";
 import { inventoryUnits } from "./InventoryItemForm.constants";
 import useInventoryItemForm from "./InventoryItemForm.hooks";
 import { InventoryItemFormProps } from "./InventoryItemForm.types";
+import { InventoryUnit } from "@/types/inventoryItem";
 
 const unitLabels: Record<(typeof inventoryUnits)[number], string> = {
   GRAM: "Gram (g)",
@@ -13,7 +14,7 @@ const unitLabels: Record<(typeof inventoryUnits)[number], string> = {
 };
 
 export default function InventoryItemForm(props: InventoryItemFormProps) {
-  const { control, errors, isLoading, handleSubmit, onSubmit } =
+  const { control, isLoading, handleSubmit, onSubmit } =
     useInventoryItemForm(props);
 
   return (
@@ -27,7 +28,6 @@ export default function InventoryItemForm(props: InventoryItemFormProps) {
         <CustomInput
           name="name"
           control={control}
-          errors={errors}
           label="Nama Barang"
           placeholder="Contoh: Tepung terigu"
           renderErrorMessage
@@ -37,7 +37,6 @@ export default function InventoryItemForm(props: InventoryItemFormProps) {
         <CustomAutocomplete
           name="unit"
           control={control}
-          errors={errors}
           label="Satuan"
           placeholder="Pilih satuan"
           renderErrorMessage
@@ -45,7 +44,7 @@ export default function InventoryItemForm(props: InventoryItemFormProps) {
           autocompleteProps={{
             options: inventoryUnits,
             disableClearable: true,
-            getOptionLabel: (unit) => unitLabels[unit],
+            getOptionLabel: (unit) => unitLabels[unit as InventoryUnit],
           }}
         />
 

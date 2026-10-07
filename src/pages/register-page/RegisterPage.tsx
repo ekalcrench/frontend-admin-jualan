@@ -16,7 +16,6 @@ import { paths } from "@/constants/path";
 export default function RegisterPage() {
   const {
     control,
-    errors,
     isLoading,
     showPassword,
     showPasswordConfirmation,
@@ -39,7 +38,6 @@ export default function RegisterPage() {
             <CustomInput
               name="name"
               control={control}
-              errors={errors}
               label="Name"
               placeholder="John Doe"
               renderErrorMessage
@@ -49,7 +47,6 @@ export default function RegisterPage() {
             <CustomInput
               name="email"
               control={control}
-              errors={errors}
               label="Email"
               placeholder="contoh@gmail.com"
               renderErrorMessage
@@ -59,7 +56,6 @@ export default function RegisterPage() {
             <CustomInput
               name="password"
               control={control}
-              errors={errors}
               label="Password"
               placeholder="••••••••"
               type={showPassword ? "text" : "password"}
@@ -91,7 +87,6 @@ export default function RegisterPage() {
             <CustomInput
               name="passwordConfirmation"
               control={control}
-              errors={errors}
               label="Password Confirmation"
               placeholder="••••••••"
               type={showPasswordConfirmation ? "text" : "password"}

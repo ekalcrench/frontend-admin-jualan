@@ -176,7 +176,13 @@ export default function CustomTable<TData extends MRT_RowData>({
           }),
         }}
         renderEmptyRowsFallback={() => (
-          <BoxCenter sx={{ height: "100%", minHeight: "100px" }}>
+          <BoxCenter
+            sx={{
+              height: "100%",
+              minHeight: "100px",
+              backgroundColor: "white",
+            }}
+          >
             {isError ? errorMessage : emptyMessage}
           </BoxCenter>
         )}

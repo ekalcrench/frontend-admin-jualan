@@ -24,7 +24,7 @@ export default function useUmkmForm(props: UmkmFormProps) {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting, dirtyFields },
+    formState: { isSubmitting, dirtyFields },
   } = useForm<UmkmFormValues>({
     resolver: zodResolver(
       props.id ? umkmEditFormSchema : umkmFormSchema,
@@ -45,7 +45,7 @@ export default function useUmkmForm(props: UmkmFormProps) {
       address: getOrganizationById.data.address,
       phone: getOrganizationById.data.phone,
       file: undefined as unknown as File,
-      logoUrl: getOrganizationById.data.logoUrl,
+      logoUrl: getOrganizationById.data.logoUrl ?? "",
     });
   }, [getOrganizationById.data, reset]);
 
@@ -90,7 +90,6 @@ export default function useUmkmForm(props: UmkmFormProps) {
 
   return {
     control,
-    errors,
     isLoading,
     handleSubmit,
     onSubmit,

@@ -18,3 +18,9 @@ export interface InventoryItemByPages extends InventoryItem {
 export interface InventoryItemFilterPayload extends DefaultFilter {
   search?: string;
 }
+
+export interface InventoryItemOptions {
+  id: string;
+  name: string;
+  unit: InventoryUnit;
+}

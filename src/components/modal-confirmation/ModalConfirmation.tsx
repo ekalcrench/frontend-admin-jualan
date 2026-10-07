@@ -1,4 +1,4 @@
-import { Dialog, Typography, Button } from "@mui/material";
+import { Dialog, Button } from "@mui/material";
 import {
   TitleDialog,
   IconWrapperBox,
@@ -27,14 +27,7 @@ export default function ModalConfirmation({
       PaperComponent={DialogPaperComponent}
       keepMounted
     >
-      <TitleDialog>
-        <Typography
-          variant={"h6"}
-          sx={{ textAlign: "center", fontWeight: 600 }}
-        >
-          {title ?? "Warning!"}
-        </Typography>
-      </TitleDialog>
+      <TitleDialog>{title ?? "Warning!"}</TitleDialog>
 
       <IconWrapperBox>
         <WarningIcon sx={{ fontSize: "80px" }} color="warning" />

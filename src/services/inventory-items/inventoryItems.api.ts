@@ -6,6 +6,7 @@ import {
   InventoryItem,
   InventoryItemByPages,
   InventoryItemFilterPayload,
+  InventoryItemOptions,
 } from "@/types/inventoryItem";
 
 export async function fetchInventoryItems(
@@ -15,6 +16,18 @@ export async function fetchInventoryItems(
     api.inventoryItems.base,
     {
       params: payload,
+    },
+  );
+  return response.data;
+}
+
+export async function fetchInventoryItemOptions(
+  search: string,
+): Promise<InventoryItemOptions[]> {
+  const response = await apiClient.get<InventoryItemOptions[]>(
+    api.inventoryItems.options,
+    {
+      params: { search },
     },
   );
   return response.data;

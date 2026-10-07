@@ -8,7 +8,6 @@ import { userOrganizationRoleOptions } from "@/constants/user";
 export default function UserForm(props: UserFormProps) {
   const {
     control,
-    errors,
     isLoading,
     isLoadingGetOptions,
     userOptions,
@@ -28,9 +27,8 @@ export default function UserForm(props: UserFormProps) {
         <CustomAutocomplete
           name="userId"
           control={control}
-          errors={errors}
           label="User"
-          placeholder="Pilih user yang sudah terdaftar"
+          placeholder="Ketik untuk mencari user"
           renderErrorMessage
           disabled={isLoading}
           autocompleteProps={{
@@ -48,7 +46,6 @@ export default function UserForm(props: UserFormProps) {
         <CustomAutocomplete
           name="role"
           control={control}
-          errors={errors}
           label="Role"
           placeholder="Pilih role user"
           renderErrorMessage

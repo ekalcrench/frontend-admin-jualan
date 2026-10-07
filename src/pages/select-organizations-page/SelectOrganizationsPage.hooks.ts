@@ -22,7 +22,7 @@ export default function useSelectOrganizationsPage() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<SelectOrganizationFormValues>({
     resolver: zodResolver(selectOrganizationSchema),
     defaultValues: { organization: undefined },
@@ -50,7 +50,6 @@ export default function useSelectOrganizationsPage() {
 
   return {
     control,
-    errors,
     isLoading: organizationsQuery.isLoading,
     isSubmitting,
     organizations: organizationsQuery.data ?? [],

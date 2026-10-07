@@ -81,7 +81,9 @@ export default function SidebarContent() {
         {accessibleSidebarItems.map(
           (sidebarItem: SidebarListItem, index: number) => {
             if (sidebarItem.groupName) {
-              return renderGroupname(sidebarItem.groupName);
+              return (
+                <Box key={index}>{renderGroupname(sidebarItem.groupName)}</Box>
+              );
             }
 
             if (sidebarItem.child === undefined) {

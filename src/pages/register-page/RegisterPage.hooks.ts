@@ -17,7 +17,7 @@ export default function useRegisterPage() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     mode: "onBlur",
@@ -50,7 +50,6 @@ export default function useRegisterPage() {
 
   return {
     control,
-    errors,
     isLoading,
     showPassword,
     showPasswordConfirmation,

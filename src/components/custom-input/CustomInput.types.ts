@@ -1,11 +1,10 @@
 import { BoxProps, TextFieldProps } from "@mui/material";
-import { Control, FieldErrors, FieldValues, Path } from "react-hook-form";
+import { Control, FieldValues, Path } from "react-hook-form";
 
 export type CustomInputProps<TFieldValues extends FieldValues> = {
   control: Control<TFieldValues>;
   name: Path<TFieldValues>;
   label: string;
-  errors?: FieldErrors<TFieldValues>;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
   disabled?: boolean;

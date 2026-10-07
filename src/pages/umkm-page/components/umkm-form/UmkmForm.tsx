@@ -7,7 +7,7 @@ import CustomImageSelect from "@/components/custom-image-select";
 import { storageBaseUrl } from "@/constants/api";
 
 export default function UmkmForm(props: UmkmFormProps) {
-  const { control, errors, isLoading, handleSubmit, onSubmit, logoUrl } =
+  const { control, isLoading, handleSubmit, onSubmit, logoUrl } =
     useUmkmForm(props);
 
   return (
@@ -21,7 +21,6 @@ export default function UmkmForm(props: UmkmFormProps) {
         <CustomInput
           name="name"
           control={control}
-          errors={errors}
           label="Nama"
           placeholder="Nama UMKM (Contoh: Seblak Kang Uus)"
           renderErrorMessage
@@ -31,7 +30,6 @@ export default function UmkmForm(props: UmkmFormProps) {
         <CustomInput
           name="email"
           control={control}
-          errors={errors}
           label="Email"
           placeholder="contoh@gmail.com"
           renderErrorMessage
@@ -41,7 +39,6 @@ export default function UmkmForm(props: UmkmFormProps) {
         <CustomInput
           name="phone"
           control={control}
-          errors={errors}
           label="Nomor HP"
           placeholder="08976573345"
           renderErrorMessage
@@ -52,7 +49,6 @@ export default function UmkmForm(props: UmkmFormProps) {
         <CustomInput
           name="address"
           control={control}
-          errors={errors}
           label="Alamat"
           placeholder="Contoh: Jl. Kemang Raya No. 10, RT 05/RW 02, Kec. Mampang Prapatan"
           renderErrorMessage
@@ -67,7 +63,6 @@ export default function UmkmForm(props: UmkmFormProps) {
         <CustomImageSelect
           name="file"
           control={control}
-          errors={errors}
           label="Logo"
           renderErrorMessage
           disabled={isLoading}

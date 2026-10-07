@@ -19,6 +19,7 @@ export const DialogPaperComponent = styled(Paper)(() => ({
 
 export const TitleDialog = styled(DialogTitle)(() => ({
   padding: 0,
+  textAlign: "center",
 }));
 
 export const IconWrapperBox = styled(BoxCenter)(() => ({

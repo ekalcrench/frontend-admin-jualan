@@ -43,7 +43,7 @@ export default function UmkmPage() {
         startIcon={<AddIcon />}
         onClick={handleClickAddForm}
       >
-        Add UMKM
+        Tambah UMKM
       </Button>
     );
   };
