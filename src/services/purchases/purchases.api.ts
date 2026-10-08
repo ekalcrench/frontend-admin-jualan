@@ -1,12 +1,8 @@
 import { apiClient } from "@/config/api";
 import { api } from "@/constants/api";
 import { PaginatedData } from "@/types/table";
-import {
-  CreatePurchase,
-  EditPurchase,
-  PurchaseResponse,
-} from "./purchases.types";
-import { PurchaseFilterPayload } from "@/types/purchase";
+import { CreatePurchase, EditPurchase } from "./purchases.types";
+import { PurchaseFilterPayload, PurchaseResponse } from "@/types/purchase";
 
 export async function fetchPurchases(
   payload: PurchaseFilterPayload,

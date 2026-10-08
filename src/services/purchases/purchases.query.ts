@@ -3,8 +3,7 @@ import { fiveMinutes } from "@/constants/time";
 import { PaginatedData } from "@/types/table";
 import { fetchPurchaseById, fetchPurchases } from "./purchases.api";
 import { purchasesKeys } from "./purchases.constants";
-import { PurchaseFilterPayload } from "@/types/purchase";
-import { PurchaseResponse } from "./purchases.types";
+import { PurchaseFilterPayload, PurchaseResponse } from "@/types/purchase";
 
 export function usePurchasesQuery(payload: PurchaseFilterPayload) {
   return useQuery<PaginatedData<PurchaseResponse>>({

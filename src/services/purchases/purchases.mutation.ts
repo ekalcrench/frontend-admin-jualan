@@ -1,12 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { purchasesKeys } from "./purchases.constants";
-import {
-  CreatePurchase,
-  EditPurchase,
-  PurchaseResponse,
-} from "./purchases.types";
+import { CreatePurchase, EditPurchase } from "./purchases.types";
 import { createPurchase, deletePurchase, editPurchase } from "./purchases.api";
 import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
+import { PurchaseResponse } from "@/types/purchase";
 
 export function useCreatePurchaseMutation() {
   return useMutation<PurchaseResponse, Error, CreatePurchase>({

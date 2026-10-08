@@ -16,11 +16,12 @@ import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import PurchaseForm from "./components/purchase-form";
 import usePurchasesPage from "./PurchasesPage.hooks";
 import type { MRT_Row } from "material-react-table";
-import { PurchaseResponse } from "@/services/purchases/purchases.types";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
 import { currencyFormatter } from "@/constants/currency";
 import { TypographyTab } from "@/styled/CustomTypography";
 import { formatLocalDate } from "@/utils/dateTime";
+import { PurchaseResponse } from "@/types/purchase";
+import { StackDetailPanel } from "./PurchasesPage.styles";
 
 export default function PurchasesPage() {
   const {
@@ -77,16 +78,7 @@ export default function PurchasesPage() {
   );
 
   const renderDetailPanel = (row: MRT_Row<PurchaseResponse>) => (
-    <Stack
-      spacing={2}
-      sx={{
-        maxWidth: "700px",
-        marginLeft: "auto",
-        marginRight: "auto",
-        padding: "8px",
-        boxSizing: "border-box",
-      }}
-    >
+    <StackDetailPanel spacing={2}>
       <Typography>Purchase #{row.original.invoiceNumber}</Typography>
 
       <Box>
@@ -131,7 +123,7 @@ export default function PurchasesPage() {
           </Typography>
         </BoxFlexSpaceBetween>
       </Box>
-    </Stack>
+    </StackDetailPanel>
   );
 
   return (
