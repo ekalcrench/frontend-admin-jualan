@@ -1,19 +1,19 @@
 import { z } from "zod";
+import {
+  PurchaseFormValues,
+  PurchaseItemFormValues,
+} from "./PurchaseForm.types";
 
 const purchaseItemSchema = z.object({
-  inventoryItemId: z.string().min(1, "Pilih barang persediaan"),
-  quantity: z
-    .number()
-    .nullable()
-    .refine((value) => value !== null && value > 0, {
-      message: "Harus lebih dari 0",
-    }),
-  unitCost: z
-    .number()
-    .nullable()
-    .refine((value) => value !== null && value >= 0, {
-      message: "Harus lebih dari 0",
-    }),
+  inventoryItemId: z.object(
+    {
+      label: z.string(),
+      value: z.string(),
+    },
+    { error: "Pilih barang persediaan" },
+  ),
+  quantity: z.number("Tidak boleh kosong").positive("Harus lebih dari 0"),
+  unitCost: z.number("Tidak boleh kosong").positive("Harus lebih dari 0"),
   receivedAt: z.string().min(1, "Masukkan tanggal diterima"),
   expiredAt: z.string().optional(),
 });
@@ -27,14 +27,12 @@ export const purchaseFormSchema = z.object({
     .min(1, "Tambahkan minimal satu barang"),
 });
 
-export type PurchaseFormValues = z.infer<typeof purchaseFormSchema>;
-
-export const emptyPurchaseItem = {
-  inventoryItemId: "",
+export const emptyPurchaseItem: PurchaseItemFormValues = {
+  inventoryItemId: null,
   quantity: null,
   unitCost: null,
   receivedAt: "",
-  expiredAt: "",
+  expiredAt: undefined,
 };
 
 export const emptyPurchaseFormValues: PurchaseFormValues = {

@@ -34,7 +34,7 @@ export function useDeletePurchaseMutation() {
   return useMutation<boolean, Error, string>({
     mutationFn: deletePurchase,
     onSuccess: (result, payload, _onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: purchasesKeys.lists() });
+      context.client.invalidateQueries({ queryKey: purchasesKeys.all });
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.all });
     },
   });

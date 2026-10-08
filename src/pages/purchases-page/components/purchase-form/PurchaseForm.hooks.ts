@@ -32,7 +32,7 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting, dirtyFields },
   } = useForm<PurchaseFormValues>({
     resolver: zodResolver(purchaseFormSchema) as Resolver<PurchaseFormValues>,
     mode: "onBlur",
@@ -49,6 +49,10 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
   }, [watch]);
 
   useEffect(() => {
+    console.log(">>> dirtyFields", dirtyFields);
+  }, [dirtyFields]);
+
+  useEffect(() => {
     if (!props.open) return;
     if (!props.id) {
       reset(emptyPurchaseFormValues);
@@ -57,16 +61,20 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     if (!purchaseQuery.data) return;
 
     const purchase = purchaseQuery.data;
+
     reset({
       supplierName: purchase.supplierName ?? "",
       invoiceNumber: purchase.invoiceNumber ?? "",
       purchasedAt: dateInputValue(purchase.purchasedAt),
-      purchaseItems: purchase.purchaseItems?.map((item: any) => ({
-        inventoryItemId: item.inventoryItemId ?? item.inventoryItem?.id ?? "",
-        quantity: Number(item.quantity ?? 1),
-        unitCost: Number(item.unitCost ?? 0),
-        receivedAt: dateInputValue(item.receivedAt),
-        expiredAt: dateInputValue(item.expiredAt),
+      purchaseItems: purchase.purchaseItems?.map((item) => ({
+        inventoryItemId: {
+          label: `${item.inventoryItem.name} (${item.inventoryItem.unit})`,
+          value: item.inventoryItem.id,
+        },
+        quantity: item.quantity,
+        unitCost: item.unitCost,
+        receivedAt: dateInputValue(item.inventoryLot.receivedAt),
+        expiredAt: dateInputValue(item.inventoryLot.expiredAt),
       })) ?? [{ ...emptyPurchaseItem }],
     });
   }, [props.id, props.open, purchaseQuery.data, reset]);
@@ -81,23 +89,32 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     isLoadingGetData;
 
   const onSubmit = async (values: PurchaseFormValues) => {
-    const payload = {
-      ...values,
-      purchaseItems: values.purchaseItems.map((item) => ({
-        ...item,
-        quantity: Number(item.quantity ?? 0),
-        unitCost: Number(item.unitCost ?? 0),
-        expiredAt: item.expiredAt || undefined,
-      })),
-    };
+    const purchaseItems = values.purchaseItems.map((item) => ({
+      ...item,
+      quantity: item.quantity ?? 0,
+      unitCost: item.unitCost ?? 0,
+      expiredAt: item.expiredAt || undefined,
+      inventoryItemId: item.inventoryItemId?.value ?? "",
+    }));
+    const payload = props.id
+      ? {
+          ...(dirtyFields.supplierName && {
+            supplierName: values.supplierName,
+          }),
+          ...(dirtyFields.invoiceNumber && {
+            invoiceNumber: values.invoiceNumber,
+          }),
+          ...(dirtyFields.purchasedAt && { purchasedAt: values.purchasedAt }),
+          ...(dirtyFields.purchaseItems && { purchaseItems }),
+        }
+      : { ...values, purchaseItems };
     const toastId = toast.loading(
       props.id ? "Memperbarui pembelian..." : "Membuat pembelian...",
     );
     try {
       if (props.id)
         await editPurchase.mutateAsync({ id: props.id, ...payload });
-      else await createPurchase.mutateAsync(payload);
-
+      else await createPurchase.mutateAsync({ ...values, purchaseItems });
       toast.success(
         props.id
           ? "Pembelian berhasil diperbarui"
@@ -140,13 +157,8 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     return () => clearTimeout(timeoutId);
   }, [prefix]);
 
-  useEffect(() => {
-    console.log(">>> errors : ", errors);
-  }, [errors]);
-
   return {
     control,
-    errors,
     fields,
     inventoryItemOptions,
     isLoading,

@@ -8,16 +8,7 @@ import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import PurchaseForm from "./components/purchase-form";
 import usePurchasesPage from "./PurchasesPage.hooks";
 import type { MRT_Row } from "material-react-table";
-
-interface PurchaseRow {
-  id: string;
-  supplierName?: string;
-  invoiceNumber?: string;
-  purchasedAt?: string;
-  purchaseItems?: unknown[];
-  totalCost?: number;
-  totalAmount?: number;
-}
+import { PurchaseResponse } from "@/services/purchases/purchases.types";
 
 export default function PurchasesPage() {
   const {
@@ -50,7 +41,7 @@ export default function PurchasesPage() {
     </Button>
   );
 
-  const renderRowActions = (row: MRT_Row<PurchaseRow>) => (
+  const renderRowActions = (row: MRT_Row<PurchaseResponse>) => (
     <BoxFlex>
       <IconButton
         aria-label={`Edit purchase ${row.original.invoiceNumber ?? row.original.id}`}
@@ -97,12 +88,12 @@ export default function PurchasesPage() {
           <Box>
             <Typography variant="h5">Purchases</Typography>
             <Typography variant="body2" color="text.secondary">
-              Mengelola pembelian barang persediaan
+              Mengelola pembelian stok barang
             </Typography>
           </Box>
         </Box>
 
-        <CustomTable<PurchaseRow>
+        <CustomTable
           columns={columns}
           data={data?.items ?? []}
           isLoading={isLoading}
@@ -113,7 +104,7 @@ export default function PurchasesPage() {
           totalPages={data?.pagination?.totalPages}
           handleChangePage={handleChangePage}
           initialState={{
-            columnVisibility: { id: false },
+            columnVisibility: { id: false, createdAt: false, updatedAt: false },
           }}
           sortBy={{
             direction: getSortDirection(sortBy),
@@ -127,7 +118,7 @@ export default function PurchasesPage() {
           enableRowActions
           columnRowActionsSize={96}
           renderRowActions={({ row }) => renderRowActions(row)}
-          searchPlaceholder="Cari berdasarkan pemasok atau nomor faktur"
+          searchPlaceholder="Cari berdasarkan supplier atau nomor invoice"
         />
       </Stack>
     </Box>

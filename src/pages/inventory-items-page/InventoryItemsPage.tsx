@@ -88,7 +88,7 @@ export default function InventoryItemsPage() {
           <Box>
             <Typography variant="h5">Inventory Items</Typography>
             <Typography variant="body2" color="text.secondary">
-              Mengatur daftar barang persediaan
+              Mengelola daftar barang
             </Typography>
           </Box>
         </Box>

@@ -1,34 +1,28 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  Autocomplete,
   Box,
   Button,
   Divider,
   Grid,
   IconButton,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
-import { Controller } from "react-hook-form";
 import CustomInput from "@/components/custom-input";
 import CustomInputNumber from "@/components/custom-input-number";
 import FormDrawer from "@/components/form-drawer";
-import { InventoryItemByPages } from "@/types/inventoryItem";
 import usePurchaseForm from "./PurchaseForm.hooks";
 import { PurchaseFormProps } from "./PurchaseForm.types";
 import CustomDateTimePicker from "@/components/custom-date-time-picker";
 import { emptyPurchaseItem } from "./PurchaseForm.constants";
 import CustomAutocomplete from "@/components/custom-autocomplete";
-import { inventoryUnitLabels } from "@/constants/inventoryItem";
 import { BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { TypographyInputLabel } from "@/styled/CustomTypography";
 
 export default function PurchaseForm(props: PurchaseFormProps) {
   const {
     control,
-    errors,
     fields,
     inventoryItemOptions,
     isLoading,
@@ -45,6 +39,7 @@ export default function PurchaseForm(props: PurchaseFormProps) {
       open={props.open}
       onClose={props.onClose}
       onOpen={props.onOpen}
+      disableCloseOnOutsideInteraction
       title={props.id ? "Edit Pembelian" : "Tambah Pembelian"}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -118,17 +113,10 @@ export default function PurchaseForm(props: PurchaseFormProps) {
                 renderErrorMessage
                 disabled={isLoading}
                 autocompleteProps={{
-                  options: (inventoryItemOptions ?? []).map(
-                    (inventoryItem) => inventoryItem.id,
-                  ),
-                  getOptionLabel: (option) => {
-                    const selectedOption = (inventoryItemOptions ?? []).find(
-                      (inventoryItem) => inventoryItem.id === option,
-                    );
-                    return selectedOption
-                      ? `${selectedOption.name} (${selectedOption.unit})`
-                      : "";
-                  },
+                  options: (inventoryItemOptions ?? []).map((item) => ({
+                    label: `${item.name} (${item.unit})`,
+                    value: item.id,
+                  })),
                   onInputChange: (_, value, reason) => {
                     if (reason === "input") setPrefix(value);
                   },

@@ -1,3 +1,6 @@
+import { BaseApiResponse } from "@/types/api";
+import { InventoryItemOptions } from "@/types/inventoryItem";
+
 export interface CreatePurchaseItem {
   inventoryItemId: string;
   quantity: number;
@@ -17,12 +20,6 @@ export interface EditPurchase extends Partial<CreatePurchase> {
   id: string;
 }
 
-interface InventoryItem {
-  id: string;
-  name: string;
-  unit: string;
-}
-
 interface InventoryLot {
   id: string;
   quantity: number;
@@ -37,13 +34,11 @@ interface PurchaseItem {
   inventoryItemId: string;
   quantity: number;
   unitCost: number;
-  inventoryItem: InventoryItem;
+  inventoryItem: InventoryItemOptions;
   inventoryLot: InventoryLot;
 }
 
-export interface PurchaseResponse {
-  createdAt: string;
-  updatedAt: string;
+export interface PurchaseResponse extends BaseApiResponse {
   id: string;
   organizationId: string;
   supplierName: string;

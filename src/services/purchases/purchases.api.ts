@@ -1,13 +1,17 @@
 import { apiClient } from "@/config/api";
 import { api } from "@/constants/api";
 import { PaginatedData } from "@/types/table";
-import { CreatePurchase, EditPurchase } from "./purchases.types";
-import { PurchaseByPages, PurchaseFilterPayload } from "@/types/purchase";
+import {
+  CreatePurchase,
+  EditPurchase,
+  PurchaseResponse,
+} from "./purchases.types";
+import { PurchaseFilterPayload } from "@/types/purchase";
 
 export async function fetchPurchases(
   payload: PurchaseFilterPayload,
-): Promise<PaginatedData<PurchaseByPages>> {
-  const response = await apiClient.get<PaginatedData<PurchaseByPages>>(
+): Promise<PaginatedData<PurchaseResponse>> {
+  const response = await apiClient.get<PaginatedData<PurchaseResponse>>(
     api.purchases.base,
     {
       params: payload,
@@ -16,19 +20,28 @@ export async function fetchPurchases(
   return response.data;
 }
 
-export async function fetchPurchaseById(id: string): Promise<any> {
-  const response = await apiClient.get<any>(api.purchases.byId(id));
+export async function fetchPurchaseById(id: string): Promise<PurchaseResponse> {
+  const response = await apiClient.get<PurchaseResponse>(
+    api.purchases.byId(id),
+  );
   return response.data;
 }
 
-export async function createPurchase(data: CreatePurchase): Promise<any> {
-  const response = await apiClient.post<any>(api.purchases.base, data);
+export async function createPurchase(
+  data: CreatePurchase,
+): Promise<PurchaseResponse> {
+  const response = await apiClient.post<PurchaseResponse>(
+    api.purchases.base,
+    data,
+  );
   return response.data;
 }
 
-export async function editPurchase(data: EditPurchase): Promise<any> {
+export async function editPurchase(
+  data: EditPurchase,
+): Promise<PurchaseResponse> {
   const { id, ...remainingData } = data;
-  const response = await apiClient.patch<any>(
+  const response = await apiClient.patch<PurchaseResponse>(
     api.purchases.byId(data.id),
     remainingData,
   );

@@ -4,9 +4,10 @@ import { PaginatedData } from "@/types/table";
 import { fetchPurchaseById, fetchPurchases } from "./purchases.api";
 import { purchasesKeys } from "./purchases.constants";
 import { PurchaseFilterPayload } from "@/types/purchase";
+import { PurchaseResponse } from "./purchases.types";
 
 export function usePurchasesQuery(payload: PurchaseFilterPayload) {
-  return useQuery<PaginatedData<any>>({
+  return useQuery<PaginatedData<PurchaseResponse>>({
     queryKey: purchasesKeys.list(payload),
     queryFn: () => fetchPurchases(payload),
     staleTime: fiveMinutes,
@@ -17,7 +18,7 @@ export function usePurchasesQuery(payload: PurchaseFilterPayload) {
 }
 
 export function usePurchaseByIdQuery(id?: string) {
-  return useQuery<any>({
+  return useQuery<PurchaseResponse>({
     queryKey: purchasesKeys.detail(id),
     queryFn: () => {
       if (!id) {

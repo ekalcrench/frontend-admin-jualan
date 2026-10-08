@@ -2,10 +2,11 @@ import { currencyFormatter } from "@/constants/currency";
 import { defaultParameter } from "@/constants/table";
 import { useDeletePurchaseMutation } from "@/services/purchases/purchases.mutation";
 import { usePurchasesQuery } from "@/services/purchases/purchases.query";
+import { PurchaseResponse } from "@/services/purchases/purchases.types";
 import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
 import { ColumnSort, PaginatedData } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
-import { formatLocalDateOnly } from "@/utils/dateTime";
+import { formatLocalDate, formatLocalDateOnly } from "@/utils/dateTime";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -59,7 +60,7 @@ export default function usePurchasesPage() {
     sortBy,
     search,
   });
-  const data = response as PaginatedData<PurchaseRow> | undefined;
+  const data = response as PaginatedData<PurchaseResponse> | undefined;
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingPurchaseId, setEditingPurchaseId] = useState<string>();
 
@@ -100,11 +101,11 @@ export default function usePurchasesPage() {
     setIsFormOpen(true);
   };
 
-  const columns: MRT_ColumnDef<PurchaseRow>[] = useMemo(
+  const columns: MRT_ColumnDef<PurchaseResponse>[] = useMemo(
     () => [
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
-      { accessorKey: "supplierName", header: "Pemasok", size: 220 },
-      { accessorKey: "invoiceNumber", header: "Nomor Faktur", size: 180 },
+      { accessorKey: "supplierName", header: "Supplier", size: 200 },
+      { accessorKey: "invoiceNumber", header: "Nomor Invoice", size: 180 },
       {
         accessorKey: "purchasedAt",
         header: "Tanggal Pembelian",
@@ -117,20 +118,35 @@ export default function usePurchasesPage() {
       {
         id: "itemCount",
         header: "Jumlah Barang",
-        size: 150,
+        size: 140,
         enableSorting: false,
         accessorFn: (row) => row.purchaseItems?.length ?? 0,
       },
       {
-        id: "totalCost",
+        id: "purchaseItems",
         header: "Total Pembelian",
         size: 180,
         enableSorting: false,
-        accessorFn: (row) => row.totalCost ?? row.totalAmount ?? undefined,
-        Cell: ({ cell }) => {
-          const value = cell.getValue<number | undefined>();
-          return value == null ? "-" : currencyFormatter.format(value);
+        Cell: ({ row }) => {
+          const purchaseItems = row.original.purchaseItems;
+          const totalCost = purchaseItems.reduce(
+            (total, item) => total + Number(item.unitCost),
+            0,
+          );
+          return currencyFormatter.format(totalCost);
         },
+      },
+      {
+        accessorKey: "createdAt",
+        header: "Dibuat Pada",
+        size: 160,
+        Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
+      },
+      {
+        accessorKey: "updatedAt",
+        header: "Diubah Pada",
+        size: 160,
+        Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
       },
     ],
     [],

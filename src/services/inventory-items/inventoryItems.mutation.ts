@@ -13,6 +13,7 @@ export function useCreateInventoryItemMutation() {
     mutationFn: createInventoryItem,
     onSuccess: (result, payload, onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists() });
+      context.client.setQueryData(inventoryItemKeys.detail(result.id), result);
     },
   });
 }
@@ -22,6 +23,7 @@ export function useEditInventoryItemMutation() {
     mutationFn: editInventoryItem,
     onSuccess: (result, payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists() });
+      context.client.setQueryData(inventoryItemKeys.detail(result.id), result);
     },
   });
 }
@@ -30,7 +32,7 @@ export function useDeleteInventoryItemMutation() {
   return useMutation<boolean, Error, string>({
     mutationFn: deleteInventoryItem,
     onSuccess: (result, payload, _onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists() });
+      context.client.invalidateQueries({ queryKey: inventoryItemKeys.all });
     },
   });
 }
