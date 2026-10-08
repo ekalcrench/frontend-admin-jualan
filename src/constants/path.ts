@@ -11,8 +11,8 @@ export const paths = {
 
   users: "/users",
   inventoryItems: "/inventory-items",
+  inventoryItemsDetail: (id: string) => `/inventory-items/${id}`,
   purchases: "/purchases",
-  stocks: "/stocks",
 
   allUsers: "/all-users",
   umkm: "/umkm",

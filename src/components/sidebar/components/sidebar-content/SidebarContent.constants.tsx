@@ -73,16 +73,6 @@ export const sidebarList: SidebarListItem[] = [
           organizationRole.MEMBER,
         ],
       },
-      {
-        title: "Stock",
-        url: paths.stocks,
-        params: "page=1&size=20&sortBy=-createdAt",
-        organizationRoleAccess: [
-          organizationRole.ADMIN,
-          organizationRole.OWNER,
-          organizationRole.MEMBER,
-        ],
-      },
     ],
     organizationRoleAccess: [
       organizationRole.ADMIN,
