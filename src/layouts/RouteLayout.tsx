@@ -11,6 +11,7 @@ import AllUsersPage from "@/pages/all-users-page";
 import DashboardPage from "@/pages/dashboard-page";
 import SelectOrganizationsPage from "@/pages/select-organizations-page";
 import InventoryItemsPage from "@/pages/inventory-items-page";
+import InventoryItemsDetailPage from "@/pages/inventory-items-detail-page";
 import PurchasesPage from "@/pages/purchases-page";
 
 function ProtectedRoute() {
@@ -59,6 +60,10 @@ export default function RouteLayout() {
             <Route index element={<Navigate to={paths.dashboard} replace />} />
             <Route path={paths.dashboard} element={<DashboardPage />} />
             <Route path={paths.users} element={<UsersPage />} />
+            <Route
+              path={paths.inventoryItemsDetailRoute}
+              element={<InventoryItemsDetailPage />}
+            />
             <Route
               path={paths.inventoryItems}
               element={<InventoryItemsPage />}

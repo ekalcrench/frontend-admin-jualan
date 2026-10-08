@@ -26,7 +26,7 @@ export default function SidebarContent() {
 
   const childMenu = (sidebarItem: SidebarListItem, hasParent?: boolean) => {
     let isActive = false;
-    if (menuActive === sidebarItem.url) isActive = true;
+    if (menuActive.includes(sidebarItem.url ?? "")) isActive = true;
 
     let href = sidebarItem.url ?? "";
     if (sidebarItem.params) {
@@ -92,7 +92,7 @@ export default function SidebarContent() {
 
             let isParentActive = false;
             const menuA = sidebarItem.child.find((child) => {
-              if (menuActive === child.url) return true;
+              if (menuActive.includes(child.url ?? "")) return true;
               return false;
             });
             if (menuA) isParentActive = true;

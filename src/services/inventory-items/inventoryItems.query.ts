@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fiveMinutes } from "@/constants/time";
 import { PaginatedData } from "@/types/table";
 import {
+  fetchInventoryItemById,
   fetchInventoryItemOptions,
   fetchInventoryItems,
 } from "./inventoryItems.api";
@@ -28,6 +29,21 @@ export function useInventoryItemOptionsQuery(search: string) {
     queryKey: inventoryItemKeys.options(search),
     queryFn: () => fetchInventoryItemOptions(search),
     enabled: search.length > 2,
+    staleTime: fiveMinutes,
+  });
+}
+
+export function useInventoryItemByIdQuery(id?: string) {
+  return useQuery<InventoryItemResponse>({
+    queryKey: inventoryItemKeys.detail(id),
+    queryFn: () => {
+      if (!id) {
+        throw new Error("Inventory item id is required");
+      }
+
+      return fetchInventoryItemById(id);
+    },
+    enabled: Boolean(id),
     staleTime: fiveMinutes,
   });
 }

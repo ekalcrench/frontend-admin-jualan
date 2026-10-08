@@ -3,16 +3,15 @@ import { api } from "@/constants/api";
 import { PaginatedData } from "@/types/table";
 import { CreateInventoryItem, EditInventoryItem } from "./inventoryItems.types";
 import {
-  InventoryItem,
-  InventoryItemByPages,
   InventoryItemFilterPayload,
   InventoryItemOptions,
+  InventoryItemResponse,
 } from "@/types/inventoryItem";
 
 export async function fetchInventoryItems(
   payload: InventoryItemFilterPayload,
-): Promise<PaginatedData<InventoryItemByPages>> {
-  const response = await apiClient.get<PaginatedData<InventoryItemByPages>>(
+): Promise<PaginatedData<InventoryItemResponse>> {
+  const response = await apiClient.get<PaginatedData<InventoryItemResponse>>(
     api.inventoryItems.base,
     {
       params: payload,
@@ -33,10 +32,19 @@ export async function fetchInventoryItemOptions(
   return response.data;
 }
 
+export async function fetchInventoryItemById(
+  id: string,
+): Promise<InventoryItemResponse> {
+  const response = await apiClient.get<InventoryItemResponse>(
+    api.inventoryItems.byId(id),
+  );
+  return response.data;
+}
+
 export async function createInventoryItem(
   data: CreateInventoryItem,
-): Promise<InventoryItem> {
-  const response = await apiClient.post<InventoryItem>(
+): Promise<InventoryItemResponse> {
+  const response = await apiClient.post<InventoryItemResponse>(
     api.inventoryItems.base,
     data,
   );
@@ -45,9 +53,9 @@ export async function createInventoryItem(
 
 export async function editInventoryItem(
   data: EditInventoryItem,
-): Promise<InventoryItem> {
+): Promise<InventoryItemResponse> {
   const { id, ...remainingData } = data;
-  const response = await apiClient.patch<InventoryItem>(
+  const response = await apiClient.patch<InventoryItemResponse>(
     api.inventoryItems.byId(data.id),
     remainingData,
   );
