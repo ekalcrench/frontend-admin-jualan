@@ -3,13 +3,16 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import CustomTable from "@/components/custom-table";
 import { BoxFlex } from "@/styled/CustomBox";
-import { InventoryItemByPages } from "@/types/inventoryItem";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import useInventoryItemsPage from "./InventoryItemsPage.hooks";
 import InventoryItemForm from "./components/inventory-item-form";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useAuthStore from "@/store/auth-store/authStore";
 import { userOrganizationRole } from "@/constants/user";
+import { InventoryItemResponse } from "@/types/inventoryItem";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { useNavigate } from "react-router-dom";
+import { paths } from "@/constants/path";
 
 export default function InventoryItemsPage() {
   const {
@@ -32,6 +35,7 @@ export default function InventoryItemsPage() {
   } = useInventoryItemsPage();
 
   const organizaiton = useAuthStore((state) => state.organization);
+  const navigate = useNavigate();
 
   const renderAddButton = () => (
     <Button
@@ -43,8 +47,15 @@ export default function InventoryItemsPage() {
     </Button>
   );
 
-  const renderRowActions = (row: { original: InventoryItemByPages }) => (
+  const renderRowActions = (row: { original: InventoryItemResponse }) => (
     <BoxFlex>
+      <IconButton
+        aria-label={`Detail ${row.original.name}`}
+        onClick={() => navigate(paths.inventoryItemsDetail(row.original.id))}
+        color="primary"
+      >
+        <VisibilityIcon />
+      </IconButton>
       <IconButton
         aria-label={`Edit ${row.original.name}`}
         onClick={() => handleClickEditForm(row.original)}
@@ -64,6 +75,7 @@ export default function InventoryItemsPage() {
       )}
     </BoxFlex>
   );
+
   return (
     <Box>
       <InventoryItemForm
@@ -88,12 +100,12 @@ export default function InventoryItemsPage() {
           <Box>
             <Typography variant="h5">Inventory Items</Typography>
             <Typography variant="body2" color="text.secondary">
-              Mengelola daftar barang
+              Melihat stok dan mengelola daftar barang
             </Typography>
           </Box>
         </Box>
 
-        <CustomTable<InventoryItemByPages>
+        <CustomTable<InventoryItemResponse>
           columns={columns}
           data={data?.items ?? []}
           isLoading={isLoading}
@@ -120,7 +132,7 @@ export default function InventoryItemsPage() {
           handleSearch={handleChangeSearch}
           addButton={renderAddButton()}
           columnRowActionsSize={
-            organizaiton?.role === userOrganizationRole.MEMBER ? 80 : 110
+            organizaiton?.role === userOrganizationRole.MEMBER ? 110 : 140
           }
           enableRowActions
           renderRowActions={({ row }) => renderRowActions(row)}

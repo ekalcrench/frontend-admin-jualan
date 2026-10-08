@@ -7,13 +7,13 @@ import {
 } from "./inventoryItems.api";
 import { inventoryItemKeys } from "./inventoryItems.constants";
 import {
-  InventoryItemByPages,
   InventoryItemFilterPayload,
   InventoryItemOptions,
+  InventoryItemResponse,
 } from "@/types/inventoryItem";
 
 export function useInventoryItemsQuery(payload: InventoryItemFilterPayload) {
-  return useQuery<PaginatedData<InventoryItemByPages>>({
+  return useQuery<PaginatedData<InventoryItemResponse>>({
     queryKey: inventoryItemKeys.list(payload),
     queryFn: () => fetchInventoryItems(payload),
     staleTime: fiveMinutes,

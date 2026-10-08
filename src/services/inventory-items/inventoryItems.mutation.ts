@@ -6,10 +6,10 @@ import {
   editInventoryItem,
 } from "./inventoryItems.api";
 import { CreateInventoryItem, EditInventoryItem } from "./inventoryItems.types";
-import { InventoryItem } from "@/types/inventoryItem";
+import { InventoryItemResponse } from "@/types/inventoryItem";
 
 export function useCreateInventoryItemMutation() {
-  return useMutation<InventoryItem, Error, CreateInventoryItem>({
+  return useMutation<InventoryItemResponse, Error, CreateInventoryItem>({
     mutationFn: createInventoryItem,
     onSuccess: (result, payload, onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists() });
@@ -19,7 +19,7 @@ export function useCreateInventoryItemMutation() {
 }
 
 export function useEditInventoryItemMutation() {
-  return useMutation<InventoryItem, Error, EditInventoryItem>({
+  return useMutation<InventoryItemResponse, Error, EditInventoryItem>({
     mutationFn: editInventoryItem,
     onSuccess: (result, payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists() });

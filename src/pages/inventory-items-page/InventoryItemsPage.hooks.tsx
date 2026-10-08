@@ -4,7 +4,7 @@ import { defaultParameter } from "@/constants/table";
 import { useDeleteInventoryItemMutation } from "@/services/inventory-items/inventoryItems.mutation";
 import { useInventoryItemsQuery } from "@/services/inventory-items/inventoryItems.query";
 import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
-import { InventoryItemByPages, InventoryUnit } from "@/types/inventoryItem";
+import { InventoryItemResponse, InventoryUnit } from "@/types/inventoryItem";
 import { ColumnSort } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { formatLocalDate } from "@/utils/dateTime";
@@ -48,7 +48,7 @@ export default function useInventoryItemsPage() {
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<
-    InventoryItemByPages | undefined
+    InventoryItemResponse | undefined
   >();
 
   const handleChangePage = (value: number) =>
@@ -83,12 +83,12 @@ export default function useInventoryItemsPage() {
     setIsFormOpen(true);
   };
 
-  const handleClickEditForm = (item: InventoryItemByPages) => {
+  const handleClickEditForm = (item: InventoryItemResponse) => {
     setEditingItem(item);
     setIsFormOpen(true);
   };
 
-  const columns: MRT_ColumnDef<InventoryItemByPages>[] = useMemo(
+  const columns: MRT_ColumnDef<InventoryItemResponse>[] = useMemo(
     () => [
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       { accessorKey: "name", header: "Nama Barang", size: 220 },
@@ -107,9 +107,19 @@ export default function useInventoryItemsPage() {
       },
       {
         accessorKey: "averageCost",
-        header: "Rata-rata Biaya",
+        header: "Rata-Rata Biaya",
         size: 180,
-        Cell: ({ cell }) => currencyFormatter.format(cell.getValue<number>()),
+        Cell: ({ cell, row }) =>
+          `${currencyFormatter.format(cell.getValue<number>())} / ${inventoryUnitLabels[row.original.unit]}`,
+      },
+      {
+        accessorKey: "totalCost",
+        header: "Total Biaya",
+        size: 180,
+        Cell: ({ row }) =>
+          currencyFormatter.format(
+            row.original.totalStock * row.original.averageCost,
+          ),
       },
       {
         accessorKey: "createdAt",
