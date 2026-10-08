@@ -2,10 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
-import {
-  useInventoryItemOptionsQuery,
-  useInventoryItemsQuery,
-} from "@/services/inventory-items/inventoryItems.query";
+import { useInventoryItemOptionsQuery } from "@/services/inventory-items/inventoryItems.query";
 import {
   useCreatePurchaseMutation,
   useEditPurchaseMutation,
@@ -18,10 +15,6 @@ import {
   emptyPurchaseItem,
   purchaseFormSchema,
 } from "./PurchaseForm.constants";
-
-function dateInputValue(value?: string) {
-  return value ? value.slice(0, 10) : "";
-}
 
 export default function usePurchaseForm(props: PurchaseFormProps) {
   const createPurchase = useCreatePurchaseMutation();
@@ -45,14 +38,6 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
   });
 
   useEffect(() => {
-    console.log(">>> watch", watch);
-  }, [watch]);
-
-  useEffect(() => {
-    console.log(">>> dirtyFields", dirtyFields);
-  }, [dirtyFields]);
-
-  useEffect(() => {
     if (!props.open) return;
     if (!props.id) {
       reset(emptyPurchaseFormValues);
@@ -65,7 +50,7 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     reset({
       supplierName: purchase.supplierName ?? "",
       invoiceNumber: purchase.invoiceNumber ?? "",
-      purchasedAt: dateInputValue(purchase.purchasedAt),
+      purchasedAt: purchase.purchasedAt,
       purchaseItems: purchase.purchaseItems?.map((item) => ({
         inventoryItemId: {
           label: `${item.inventoryItem.name} (${item.inventoryItem.unit})`,
@@ -73,8 +58,8 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
         },
         quantity: item.quantity,
         unitCost: item.unitCost,
-        receivedAt: dateInputValue(item.inventoryLot.receivedAt),
-        expiredAt: dateInputValue(item.inventoryLot.expiredAt),
+        receivedAt: item.inventoryLot.receivedAt,
+        expiredAt: item.inventoryLot.expiredAt,
       })) ?? [{ ...emptyPurchaseItem }],
     });
   }, [props.id, props.open, purchaseQuery.data, reset]);

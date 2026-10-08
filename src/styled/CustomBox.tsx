@@ -26,6 +26,12 @@ export const BoxFlex = styled(Box)<BoxProps>(() => ({
   alignItems: "center",
 }));
 
+export const BoxFlexEnd = styled(Box)<BoxProps>(() => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+}));
+
 export const BoxFlexSpaceBetween = styled(Box)<BoxProps>(() => ({
   display: "flex",
   justifyContent: "space-between",

@@ -202,6 +202,11 @@ export default function CustomTable<TData extends MRT_RowData>({
             backgroundColor: "white",
           },
         }}
+        muiDetailPanelProps={{
+          sx: {
+            display: "block",
+          },
+        }}
         muiSkeletonProps={{ height: 24 }}
       />
 

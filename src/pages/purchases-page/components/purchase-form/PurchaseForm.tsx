@@ -124,7 +124,7 @@ export default function PurchaseForm(props: PurchaseFormProps) {
                 }}
               />
 
-              <Grid container columnSpacing={2}>
+              <Grid container columnSpacing={1.5}>
                 <Grid size={{ xs: 12, sm: 6 }}>
                   <CustomInputNumber
                     name={`purchaseItems.${index}.quantity`}

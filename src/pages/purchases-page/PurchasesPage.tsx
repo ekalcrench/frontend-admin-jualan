@@ -1,14 +1,26 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import CustomTable from "@/components/custom-table";
-import { BoxFlex } from "@/styled/CustomBox";
+import { BoxFlex, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import PurchaseForm from "./components/purchase-form";
 import usePurchasesPage from "./PurchasesPage.hooks";
 import type { MRT_Row } from "material-react-table";
 import { PurchaseResponse } from "@/services/purchases/purchases.types";
+import { inventoryUnitLabels } from "@/constants/inventoryItem";
+import { currencyFormatter } from "@/constants/currency";
+import { TypographyTab } from "@/styled/CustomTypography";
+import { formatLocalDate } from "@/utils/dateTime";
 
 export default function PurchasesPage() {
   const {
@@ -62,6 +74,64 @@ export default function PurchasesPage() {
         <DeleteIcon />
       </IconButton>
     </BoxFlex>
+  );
+
+  const renderDetailPanel = (row: MRT_Row<PurchaseResponse>) => (
+    <Stack
+      spacing={2}
+      sx={{
+        maxWidth: "700px",
+        marginLeft: "auto",
+        marginRight: "auto",
+        padding: "8px",
+        boxSizing: "border-box",
+      }}
+    >
+      <Typography>Purchase #{row.original.invoiceNumber}</Typography>
+
+      <Box>
+        <TypographyTab>{`Supplier\t: ${row.original.supplierName}`}</TypographyTab>
+        <TypographyTab>{`Tanggal\t: ${formatLocalDate(row.original.purchasedAt)}`}</TypographyTab>
+      </Box>
+
+      <Box>
+        <Typography>Items</Typography>
+        <Divider sx={{ marginTop: "4px", marginBottom: "8px" }} />
+        <Grid container columnSpacing={2}>
+          {row.original.purchaseItems.map((item) => (
+            <>
+              <Grid size={6}>
+                <Typography>{item.inventoryItem.name}</Typography>
+              </Grid>
+              <Grid size={3}>
+                <Typography>
+                  {`${item.quantity} ${inventoryUnitLabels[item.inventoryItem.unit]}`}
+                </Typography>
+              </Grid>
+              <Grid size={3}>
+                <BoxFlexEnd>
+                  <Typography>
+                    {currencyFormatter.format(item.unitCost)}
+                  </Typography>
+                </BoxFlexEnd>
+              </Grid>
+            </>
+          ))}
+        </Grid>
+        <Divider sx={{ marginTop: "8px", marginBottom: "4px" }} />
+        <BoxFlexSpaceBetween>
+          <Typography sx={{ fontWeight: 700 }}>Total</Typography>
+          <Typography>
+            {currencyFormatter.format(
+              row.original.purchaseItems.reduce(
+                (total, item) => total + Number(item.unitCost),
+                0,
+              ),
+            )}
+          </Typography>
+        </BoxFlexSpaceBetween>
+      </Box>
+    </Stack>
   );
 
   return (
@@ -118,6 +188,7 @@ export default function PurchasesPage() {
           enableRowActions
           columnRowActionsSize={96}
           renderRowActions={({ row }) => renderRowActions(row)}
+          renderDetailPanel={({ row }) => renderDetailPanel(row)}
           searchPlaceholder="Cari berdasarkan supplier atau nomor invoice"
         />
       </Stack>
