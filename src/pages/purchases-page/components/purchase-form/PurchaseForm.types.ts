@@ -10,7 +10,7 @@ export interface PurchaseFormProps extends SwipeableDrawerProps {
 export interface PurchaseItemFormValues {
   inventoryItemId: LabelValue<string> | null;
   quantity: number | null;
-  unitCost: number | null;
+  totalCost: number | null;
   receivedAt: string;
   expiredAt: string | undefined;
 }

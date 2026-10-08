@@ -10,7 +10,7 @@ interface InventoryLot {
   id: string;
   quantity: number;
   remainingQuantity: number;
-  unitCost: number;
+  totalCost: number;
   receivedAt: string;
   expiredAt: string;
 }
@@ -19,7 +19,7 @@ interface PurchaseItem {
   id: string;
   inventoryItemId: string;
   quantity: number;
-  unitCost: number;
+  totalCost: number;
   inventoryItem: InventoryItemOptions;
   inventoryLot: InventoryLot;
 }

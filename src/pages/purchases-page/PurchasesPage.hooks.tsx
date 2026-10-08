@@ -120,7 +120,7 @@ export default function usePurchasesPage() {
         Cell: ({ row }) => {
           const purchaseItems = row.original.purchaseItems;
           const totalCost = purchaseItems.reduce(
-            (total, item) => total + Number(item.unitCost),
+            (total, item) => total + Number(item.totalCost),
             0,
           );
           return currencyFormatter.format(totalCost);

@@ -97,7 +97,7 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
           handleResetFilter={handleResetFilter}
           search={search}
           handleSearch={handleChangeSearch}
-          searchPlaceholder="Cari invoice number"
+          searchPlaceholder="Cari nama supplier dan nomor invoice"
         />
       </Stack>
     </Box>

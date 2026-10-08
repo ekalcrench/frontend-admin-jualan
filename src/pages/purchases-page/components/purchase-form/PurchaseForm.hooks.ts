@@ -15,6 +15,7 @@ import {
   emptyPurchaseItem,
   purchaseFormSchema,
 } from "./PurchaseForm.constants";
+import { inventoryUnitLabels } from "@/constants/inventoryItem";
 
 export default function usePurchaseForm(props: PurchaseFormProps) {
   const createPurchase = useCreatePurchaseMutation();
@@ -53,11 +54,11 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
       purchasedAt: purchase.purchasedAt,
       purchaseItems: purchase.purchaseItems?.map((item) => ({
         inventoryItemId: {
-          label: `${item.inventoryItem.name} (${item.inventoryItem.unit})`,
+          label: `${item.inventoryItem.name} (${inventoryUnitLabels[item.inventoryItem.unit]})`,
           value: item.inventoryItem.id,
         },
         quantity: item.quantity,
-        unitCost: item.unitCost,
+        totalCost: item.totalCost,
         receivedAt: item.inventoryLot.receivedAt,
         expiredAt: item.inventoryLot.expiredAt,
       })) ?? [{ ...emptyPurchaseItem }],
@@ -77,7 +78,7 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     const purchaseItems = values.purchaseItems.map((item) => ({
       ...item,
       quantity: item.quantity ?? 0,
-      unitCost: item.unitCost ?? 0,
+      totalCost: item.totalCost ?? 0,
       expiredAt: item.expiredAt || undefined,
       inventoryItemId: item.inventoryItemId?.value ?? "",
     }));

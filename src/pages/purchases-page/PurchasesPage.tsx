@@ -103,7 +103,7 @@ export default function PurchasesPage() {
               <Grid size={3}>
                 <BoxFlexEnd>
                   <Typography>
-                    {currencyFormatter.format(item.unitCost)}
+                    {currencyFormatter.format(item.totalCost)}
                   </Typography>
                 </BoxFlexEnd>
               </Grid>
@@ -116,7 +116,7 @@ export default function PurchasesPage() {
           <Typography>
             {currencyFormatter.format(
               row.original.purchaseItems.reduce(
-                (total, item) => total + Number(item.unitCost),
+                (total, item) => total + Number(item.totalCost),
                 0,
               ),
             )}

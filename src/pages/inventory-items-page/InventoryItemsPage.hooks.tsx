@@ -106,13 +106,6 @@ export default function useInventoryItemsPage() {
           `${cell.getValue<number>().toLocaleString("id-ID")} ${inventoryUnitLabels[row.original.unit]}`,
       },
       {
-        accessorKey: "averageCost",
-        header: "Rata-Rata Biaya",
-        size: 180,
-        Cell: ({ cell, row }) =>
-          `${currencyFormatter.format(cell.getValue<number>())} / ${inventoryUnitLabels[row.original.unit]}`,
-      },
-      {
         accessorKey: "totalCost",
         header: "Total Biaya",
         size: 180,
@@ -120,6 +113,13 @@ export default function useInventoryItemsPage() {
           currencyFormatter.format(
             row.original.totalStock * row.original.averageCost,
           ),
+      },
+      {
+        accessorKey: "averageCost",
+        header: "Rata-Rata Biaya",
+        size: 180,
+        Cell: ({ cell, row }) =>
+          `${currencyFormatter.format(cell.getValue<number>())} / ${inventoryUnitLabels[row.original.unit]}`,
       },
       {
         accessorKey: "createdAt",

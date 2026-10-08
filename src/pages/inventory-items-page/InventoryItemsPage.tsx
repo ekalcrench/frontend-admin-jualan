@@ -51,7 +51,11 @@ export default function InventoryItemsPage() {
     <BoxFlex>
       <IconButton
         aria-label={`Detail ${row.original.name}`}
-        onClick={() => navigate(paths.inventoryItemsDetail(row.original.id))}
+        onClick={() =>
+          navigate(
+            `${paths.inventoryItemsDetail(row.original.id)}?page=1&size=20&sortBy=-receivedAt`,
+          )
+        }
         color="primary"
       >
         <VisibilityIcon />

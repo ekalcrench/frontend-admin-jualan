@@ -1,5 +1,4 @@
 import { currencyFormatter } from "@/constants/currency";
-import { defaultParameter } from "@/constants/table";
 import { useInventoryLotsQuery } from "@/services/inventory-lots/inventoryLots.query";
 import { ColumnSort } from "@/types/table";
 import { InventoryLotsResponse } from "@/types/inventoryLot";
@@ -9,12 +8,19 @@ import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useInventoryItemByIdQuery } from "@/services/inventory-items/inventoryItems.query";
+import { inventoryLotsDefaultParameter } from "./InventoryItemsDetailPage.constants";
+import { inventoryUnitLabels } from "@/constants/inventoryItem";
 
 export default function useInventoryItemsDetailPage(inventoryItemId: string) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const page = Number(searchParams.get("page") ?? defaultParameter.page);
-  const size = Number(searchParams.get("size") ?? defaultParameter.size);
-  const sortBy = searchParams.get("sortBy") ?? defaultParameter.sortBy;
+  const page = Number(
+    searchParams.get("page") ?? inventoryLotsDefaultParameter.page,
+  );
+  const size = Number(
+    searchParams.get("size") ?? inventoryLotsDefaultParameter.size,
+  );
+  const sortBy =
+    searchParams.get("sortBy") ?? inventoryLotsDefaultParameter.sortBy;
   const search = searchParams.get("search") ?? undefined;
 
   useEffect(() => {
@@ -22,15 +28,15 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
     let changed = false;
 
     if (!searchParams.has("page")) {
-      params.set("page", String(defaultParameter.page));
+      params.set("page", String(inventoryLotsDefaultParameter.page));
       changed = true;
     }
     if (!searchParams.has("size")) {
-      params.set("size", String(defaultParameter.size));
+      params.set("size", String(inventoryLotsDefaultParameter.size));
       changed = true;
     }
     if (!searchParams.has("sortBy")) {
-      params.set("sortBy", defaultParameter.sortBy);
+      params.set("sortBy", inventoryLotsDefaultParameter.sortBy);
       changed = true;
     }
 
@@ -56,14 +62,14 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
     setSearchParams((prev) => {
       if (value.trim()) prev.set("search", value);
       else prev.delete("search");
-      prev.set("page", String(defaultParameter.page));
+      prev.set("page", String(inventoryLotsDefaultParameter.page));
       return prev;
     });
 
   const handleResetFilter = () =>
     setSearchParams((prev) => {
       prev.delete("search");
-      prev.set("page", String(defaultParameter.page));
+      prev.set("page", String(inventoryLotsDefaultParameter.page));
       return prev;
     });
 
@@ -89,6 +95,12 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
         enableSorting: false,
       },
       {
+        accessorKey: "supplierName",
+        header: "Supplier",
+        size: 200,
+        enableSorting: false,
+      },
+      {
         accessorKey: "invoiceNumber",
         header: "Nomor Invoice",
         size: 180,
@@ -98,16 +110,24 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
         accessorKey: "quantity",
         header: "Jumlah Stok",
         size: 170,
-        Cell: ({ cell }) => cell.getValue<number>().toLocaleString("id-ID"),
+        Cell: ({ cell }) =>
+          `${cell.getValue<number>().toLocaleString("id-ID")} (${inventoryUnitLabels[inventoryItemQuery?.data?.unit ?? "PCS"]})`,
       },
       {
         accessorKey: "remainingQuantity",
         header: "Sisa Stok",
         size: 140,
-        Cell: ({ cell }) => cell.getValue<number>().toLocaleString("id-ID"),
+        Cell: ({ cell }) =>
+          `${cell.getValue<number>().toLocaleString("id-ID")} (${inventoryUnitLabels[inventoryItemQuery?.data?.unit ?? "PCS"]})`,
       },
       {
         accessorKey: "unitCost",
+        header: "Harga Per Stok",
+        size: 160,
+        Cell: ({ cell }) => currencyFormatter.format(cell.getValue<number>()),
+      },
+      {
+        accessorKey: "totalCost",
         header: "Total Biaya",
         size: 170,
         Cell: ({ cell }) => currencyFormatter.format(cell.getValue<number>()),

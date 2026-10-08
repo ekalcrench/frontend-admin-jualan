@@ -13,9 +13,9 @@ const purchaseItemSchema = z.object({
     { error: "Pilih barang persediaan" },
   ),
   quantity: z.number("Tidak boleh kosong").positive("Harus lebih dari 0"),
-  unitCost: z.number("Tidak boleh kosong").positive("Harus lebih dari 0"),
+  totalCost: z.number("Tidak boleh kosong").positive("Harus lebih dari 0"),
   receivedAt: z.string().min(1, "Masukkan tanggal diterima"),
-  expiredAt: z.string().optional(),
+  expiredAt: z.string().optional().nullish(),
 });
 
 export const purchaseFormSchema = z.object({
@@ -30,7 +30,7 @@ export const purchaseFormSchema = z.object({
 export const emptyPurchaseItem: PurchaseItemFormValues = {
   inventoryItemId: null,
   quantity: null,
-  unitCost: null,
+  totalCost: null,
   receivedAt: "",
   expiredAt: undefined,
 };

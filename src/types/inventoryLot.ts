@@ -6,9 +6,11 @@ export interface InventoryLotsResponse extends BaseApiResponse {
   inventoryItemId: string;
   purchaseItemId: string;
   invoiceNumber: string;
+  supplierName: string;
   quantity: number;
   remainingQuantity: number;
   unitCost: number;
+  totalCost: number;
   receivedAt: string;
   expiredAt?: string;
 }

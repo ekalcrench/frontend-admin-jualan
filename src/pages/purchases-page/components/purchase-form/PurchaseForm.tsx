@@ -17,8 +17,9 @@ import { PurchaseFormProps } from "./PurchaseForm.types";
 import CustomDateTimePicker from "@/components/custom-date-time-picker";
 import { emptyPurchaseItem } from "./PurchaseForm.constants";
 import CustomAutocomplete from "@/components/custom-autocomplete";
-import { BoxFlexSpaceBetween } from "@/styled/CustomBox";
+import { BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { TypographyInputLabel } from "@/styled/CustomTypography";
+import { inventoryUnitLabels } from "@/constants/inventoryItem";
 
 export default function PurchaseForm(props: PurchaseFormProps) {
   const {
@@ -79,14 +80,6 @@ export default function PurchaseForm(props: PurchaseFormProps) {
           }}
         >
           <Typography sx={{ fontWeight: 600 }}>Barang Pembelian</Typography>
-          <Button
-            size="small"
-            startIcon={<AddIcon />}
-            disabled={isLoading}
-            onClick={() => append(emptyPurchaseItem)}
-          >
-            Tambah Barang
-          </Button>
         </Stack>
 
         <Stack spacing={2} divider={<Divider flexItem />}>
@@ -114,7 +107,7 @@ export default function PurchaseForm(props: PurchaseFormProps) {
                 disabled={isLoading}
                 autocompleteProps={{
                   options: (inventoryItemOptions ?? []).map((item) => ({
-                    label: `${item.name} (${item.unit})`,
+                    label: `${item.name} (${inventoryUnitLabels[item.unit]})`,
                     value: item.id,
                   })),
                   onInputChange: (_, value, reason) => {
@@ -137,7 +130,7 @@ export default function PurchaseForm(props: PurchaseFormProps) {
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
                   <CustomInputNumber
-                    name={`purchaseItems.${index}.unitCost`}
+                    name={`purchaseItems.${index}.totalCost`}
                     control={control}
                     label="Harga"
                     placeholder="99.000"
@@ -169,8 +162,19 @@ export default function PurchaseForm(props: PurchaseFormProps) {
           ))}
         </Stack>
 
+        <BoxFlexEnd>
+          <Button
+            size="small"
+            startIcon={<AddIcon />}
+            disabled={isLoading}
+            onClick={() => append(emptyPurchaseItem)}
+          >
+            Tambah Barang
+          </Button>
+        </BoxFlexEnd>
+
         <Button
-          sx={{ mt: 1 }}
+          sx={{ mt: "32px" }}
           type="submit"
           variant="contained"
           fullWidth

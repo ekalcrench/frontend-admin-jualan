@@ -1,7 +1,7 @@
 export interface CreatePurchaseItem {
   inventoryItemId: string;
   quantity: number;
-  unitCost: number;
+  totalCost: number;
   receivedAt: string;
   expiredAt?: string;
 }
