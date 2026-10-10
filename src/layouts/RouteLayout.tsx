@@ -13,6 +13,7 @@ import SelectOrganizationsPage from "@/pages/select-organizations-page";
 import InventoryItemsPage from "@/pages/inventory-items-page";
 import InventoryItemsDetailPage from "@/pages/inventory-items-detail-page";
 import PurchasesPage from "@/pages/purchases-page";
+import InventoryTransactionsPage from "@/pages/inventory-transactions-page";
 
 function ProtectedRoute() {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -61,12 +62,16 @@ export default function RouteLayout() {
             <Route path={paths.dashboard} element={<DashboardPage />} />
             <Route path={paths.users} element={<UsersPage />} />
             <Route
+              path={paths.inventoryItems}
+              element={<InventoryItemsPage />}
+            />
+            <Route
               path={paths.inventoryItemsDetailRoute}
               element={<InventoryItemsDetailPage />}
             />
             <Route
-              path={paths.inventoryItems}
-              element={<InventoryItemsPage />}
+              path={paths.inventoryTransactions}
+              element={<InventoryTransactionsPage />}
             />
             <Route path={paths.purchases} element={<PurchasesPage />} />
             <Route path={paths.allUsers} element={<AllUsersPage />} />

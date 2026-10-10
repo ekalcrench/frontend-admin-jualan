@@ -8,6 +8,7 @@ import { organizationRole } from "@/constants/organization";
 import StoreIcon from "@mui/icons-material/Store";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 export const sidebarList: SidebarListItem[] = [
   {
@@ -25,6 +26,20 @@ export const sidebarList: SidebarListItem[] = [
     icon: <AnalyticsIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
     organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
+  },
+  {
+    groupName: "Transactions",
+  },
+  {
+    title: "Purchases",
+    url: paths.purchases,
+    params: "page=1&size=20&sortBy=-createdAt",
+    icon: <ShoppingCartIcon />,
+    organizationRoleAccess: [
+      organizationRole.ADMIN,
+      organizationRole.OWNER,
+      organizationRole.MEMBER,
+    ],
   },
   {
     title: "Sales",
@@ -64,8 +79,8 @@ export const sidebarList: SidebarListItem[] = [
         ],
       },
       {
-        title: "Purchases",
-        url: paths.purchases,
+        title: "Transactions",
+        url: paths.inventoryTransactions,
         params: "page=1&size=20&sortBy=-createdAt",
         organizationRoleAccess: [
           organizationRole.ADMIN,

@@ -13,6 +13,7 @@ export const paths = {
   inventoryItems: "/inventory-items",
   inventoryItemsDetail: (id: string) => `/inventory-items/${id}`,
   inventoryItemsDetailRoute: "/inventory-items/:inventoryItemId",
+  inventoryTransactions: "/inventory-transactions",
   purchases: "/purchases",
 
   allUsers: "/all-users",

@@ -1,6 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form";
+import {
+  FieldNamesMarkedBoolean,
+  Resolver,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from "react-hook-form";
 import { toast } from "sonner";
 import { useInventoryItemOptionsQuery } from "@/services/inventory-items/inventoryItems.query";
 import {
@@ -8,14 +14,69 @@ import {
   useEditPurchaseMutation,
 } from "@/services/purchases/purchases.mutation";
 import { usePurchaseByIdQuery } from "@/services/purchases/purchases.query";
+import {
+  CreatePurchaseItem,
+  EditPurchaseItem,
+} from "@/services/purchases/purchases.types";
 import { apiErrorHandler } from "@/utils/api";
-import { PurchaseFormProps, PurchaseFormValues } from "./PurchaseForm.types";
+import {
+  PurchaseFormProps,
+  PurchaseFormValues,
+  PurchaseItemFormValues,
+} from "./PurchaseForm.types";
 import {
   emptyPurchaseFormValues,
   emptyPurchaseItem,
   purchaseFormSchema,
 } from "./PurchaseForm.constants";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
+
+function toCreatePurchaseItem(
+  item: PurchaseItemFormValues,
+): CreatePurchaseItem {
+  return {
+    inventoryItemId: item.inventoryItemId?.value ?? "",
+    quantity: item.quantity ?? 0,
+    totalCost: item.totalCost ?? 0,
+    receivedAt: item.receivedAt,
+    expiredAt: item.expiredAt || undefined,
+  };
+}
+
+function toEditPurchaseItems(
+  items: PurchaseItemFormValues[],
+  dirtyItems: FieldNamesMarkedBoolean<PurchaseFormValues>["purchaseItems"],
+): EditPurchaseItem[] {
+  console.log(">>> items : ", items);
+  console.log(">>> dirtyItems : ", dirtyItems);
+  return items.flatMap<EditPurchaseItem>((item, index): EditPurchaseItem[] => {
+    const dirtyItem = dirtyItems?.[index];
+    if (!dirtyItem) return [];
+
+    if (!item.id || !item.inventoryLotId) return [toCreatePurchaseItem(item)];
+
+    return [
+      {
+        id: item.id,
+        inventoryLotId: item.inventoryLotId,
+        ...(dirtyItem.inventoryItemId && {
+          inventoryItemId: item.inventoryItemId?.value ?? "",
+        }),
+        ...(dirtyItem.quantity && dirtyItem.totalCost
+          ? {
+              quantity: item.quantity ?? 0,
+              totalCost: item.totalCost ?? 0,
+            }
+          : (dirtyItem.quantity || dirtyItem.totalCost) && {
+              quantity: item.quantity ?? 0,
+              totalCost: item.totalCost ?? 0,
+            }),
+        ...(dirtyItem.receivedAt && { receivedAt: item.receivedAt }),
+        ...(dirtyItem.expiredAt && { expiredAt: item.expiredAt ?? undefined }),
+      },
+    ];
+  });
+}
 
 export default function usePurchaseForm(props: PurchaseFormProps) {
   const createPurchase = useCreatePurchaseMutation();
@@ -32,11 +93,16 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     mode: "onBlur",
     defaultValues: emptyPurchaseFormValues,
   });
-  const watch = useWatch({ control });
   const { fields, append, remove } = useFieldArray({
     control,
     name: "purchaseItems",
   });
+  const watch = useWatch({ control });
+
+  useEffect(() => {
+    console.log(">>> watch : ", watch);
+    console.log(">>> dirtyFields : ", dirtyFields);
+  }, [watch, dirtyFields]);
 
   useEffect(() => {
     if (!props.open) return;
@@ -53,6 +119,8 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
       invoiceNumber: purchase.invoiceNumber ?? "",
       purchasedAt: purchase.purchasedAt,
       purchaseItems: purchase.purchaseItems?.map((item) => ({
+        id: item.id,
+        inventoryLotId: item.inventoryLot.id,
         inventoryItemId: {
           label: `${item.inventoryItem.name} (${inventoryUnitLabels[item.inventoryItem.unit]})`,
           value: item.inventoryItem.id,
@@ -75,39 +143,48 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     isLoadingGetData;
 
   const onSubmit = async (values: PurchaseFormValues) => {
-    const purchaseItems = values.purchaseItems.map((item) => ({
-      ...item,
-      quantity: item.quantity ?? 0,
-      totalCost: item.totalCost ?? 0,
-      expiredAt: item.expiredAt || undefined,
-      inventoryItemId: item.inventoryItemId?.value ?? "",
-    }));
-    const payload = props.id
-      ? {
-          ...(dirtyFields.supplierName && {
-            supplierName: values.supplierName,
-          }),
-          ...(dirtyFields.invoiceNumber && {
-            invoiceNumber: values.invoiceNumber,
-          }),
-          ...(dirtyFields.purchasedAt && { purchasedAt: values.purchasedAt }),
-          ...(dirtyFields.purchaseItems && { purchaseItems }),
-        }
-      : { ...values, purchaseItems };
+    console.log(">>> values di onSubmit : ", values);
+    const editPayload = {
+      ...(dirtyFields.supplierName && {
+        supplierName: values.supplierName,
+      }),
+      ...(dirtyFields.invoiceNumber && {
+        invoiceNumber: values.invoiceNumber,
+      }),
+      ...(dirtyFields.purchasedAt && { purchasedAt: values.purchasedAt }),
+      ...(dirtyFields.purchaseItems && {
+        purchaseItems: toEditPurchaseItems(
+          values.purchaseItems,
+          dirtyFields.purchaseItems,
+        ),
+      }),
+    };
+
+    console.log(">>> editPayload : ", editPayload);
+
+    if (props.id && Object.keys(dirtyFields).length === 0) {
+      toast.info("Tidak ada perubahan untuk disimpan");
+      return;
+    }
+
     const toastId = toast.loading(
       props.id ? "Memperbarui pembelian..." : "Membuat pembelian...",
     );
     try {
       if (props.id)
-        await editPurchase.mutateAsync({ id: props.id, ...payload });
-      else await createPurchase.mutateAsync({ ...values, purchaseItems });
+        await editPurchase.mutateAsync({ id: props.id, ...editPayload });
+      else
+        await createPurchase.mutateAsync({
+          ...values,
+          purchaseItems: values.purchaseItems.map(toCreatePurchaseItem),
+        });
       toast.success(
         props.id
           ? "Pembelian berhasil diperbarui"
           : "Pembelian berhasil ditambahkan",
       );
-      reset(emptyPurchaseFormValues);
-      props.setIsFormOpen(false);
+      // reset(emptyPurchaseFormValues);
+      // props.setIsFormOpen(false);
     } catch (error) {
       apiErrorHandler(error);
     } finally {

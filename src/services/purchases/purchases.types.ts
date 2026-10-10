@@ -13,6 +13,16 @@ export interface CreatePurchase {
   purchaseItems: CreatePurchaseItem[];
 }
 
-export interface EditPurchase extends Partial<CreatePurchase> {
+export type EditPurchaseItem =
+  | (Partial<CreatePurchaseItem> & {
+      id: string;
+      inventoryLotId: string;
+    })
+  | CreatePurchaseItem;
+
+export interface EditPurchase extends Partial<
+  Omit<CreatePurchase, "purchaseItems">
+> {
   id: string;
+  purchaseItems?: EditPurchaseItem[];
 }

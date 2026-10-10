@@ -150,7 +150,7 @@ export default function PurchasesPage() {
           <Box>
             <Typography variant="h5">Purchases</Typography>
             <Typography variant="body2" color="text.secondary">
-              Mengelola pembelian stok barang
+              Mengelola pembelian stok inventory
             </Typography>
           </Box>
         </Box>
