@@ -24,11 +24,12 @@ export function useInventoryItemsQuery(payload: InventoryItemFilterPayload) {
   });
 }
 
-export function useInventoryItemOptionsQuery() {
+export function useInventoryItemOptionsQuery(enabled: boolean) {
   return useQuery<InventoryItemOptions[]>({
     queryKey: inventoryItemKeys.options,
     queryFn: () => fetchInventoryItemOptions(),
     staleTime: fiveMinutes,
+    enabled,
   });
 }
 

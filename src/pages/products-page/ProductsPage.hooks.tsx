@@ -1,4 +1,3 @@
-import { currencyFormatter } from "@/constants/currency";
 import { defaultParameter } from "@/constants/table";
 import { useDeleteProductMutation } from "@/services/products/products.mutation";
 import { useProductQuery } from "@/services/products/products.query";
@@ -6,6 +5,7 @@ import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
 import type { ProductResponse } from "@/types/product";
 import type { ColumnSort, PaginatedData } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
+import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate } from "@/utils/dateTime";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
@@ -103,6 +103,21 @@ export default function useProductsPage() {
         size: 140,
         enableSorting: false,
         accessorFn: (row) => row.productIngredients?.length ?? 0,
+      },
+      {
+        accessorKey: "capitalCost",
+        header: "Harga Modal",
+        size: 140,
+        enableSorting: false,
+        Cell: ({ row }) => {
+          const capitalCost = row.original.productIngredients.reduce(
+            (total, ingredient) =>
+              total + ingredient.quantity * ingredient.unitCost,
+            0,
+          );
+
+          return capitalCost ? currencyFormatter.format(capitalCost) : "-";
+        },
       },
       {
         accessorKey: "createdAt",

@@ -1,4 +1,3 @@
-import { currencyFormatter } from "@/constants/currency";
 import { useInventoryLotsQuery } from "@/services/inventory-lots/inventoryLots.query";
 import { ColumnSort } from "@/types/table";
 import { InventoryLotsResponse } from "@/types/inventoryLot";
@@ -10,6 +9,7 @@ import { useSearchParams } from "react-router-dom";
 import { useInventoryItemByIdQuery } from "@/services/inventory-items/inventoryItems.query";
 import { inventoryLotsDefaultParameter } from "./InventoryItemsDetailPage.constants";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
+import { currencyFormatter } from "@/utils/currency";
 
 export default function useInventoryItemsDetailPage(inventoryItemId: string) {
   const [searchParams, setSearchParams] = useSearchParams();

@@ -12,9 +12,9 @@ Role ini hanya berlaku dalam organization terkait.
 
 ## Permissions
 
-| Action           | SUPER_ADMIN | ADMIN | USER |
-| ---------------- | :---------: | :---: | :--: |
-| View Inventory   |     ✅      |  ✅   |  ✅  |
-| Create Inventory |     ✅      |  ✅   |  ✅  |
-| Edit Inventory   |     ✅      |  ✅   |  ✅  |
-| Delete Inventory |     ✅      |  ✅   |  ❌  |
+| Action           | OWNER | ADMIN | MEMBER |
+| ---------------- | :---: | :---: | :----: |
+| View Inventory   |  ✅   |  ✅   |   ✅   |
+| Create Inventory |  ✅   |  ✅   |   ✅   |
+| Edit Inventory   |  ✅   |  ✅   |   ✅   |
+| Delete Inventory |  ✅   |  ✅   |   ❌   |

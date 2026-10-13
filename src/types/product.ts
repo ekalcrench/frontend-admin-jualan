@@ -8,8 +8,8 @@ export interface ProductFilterPayload extends DefaultFilter {
 
 interface ProductIngredients {
   id: string;
-  inventoryItemId: string;
   quantity: number;
+  unitCost: number;
   inventoryItem: InventoryItemOptions;
 }
 

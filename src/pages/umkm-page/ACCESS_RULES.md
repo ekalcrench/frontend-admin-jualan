@@ -10,16 +10,6 @@ Role yang melekat langsung pada `User`:
 
 Role ini berlaku secara global pada sistem.
 
-## Organization User Role
-
-Role yang melekat pada `OrganizationUser`:
-
-- `OWNER`
-- `ADMIN`
-- `MEMBER`
-
-Role ini hanya berlaku dalam organization terkait.
-
 ## Permissions
 
 | Action      | SUPER_ADMIN | ADMIN | USER |

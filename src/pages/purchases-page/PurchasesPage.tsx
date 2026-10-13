@@ -17,11 +17,11 @@ import PurchaseForm from "./components/purchase-form";
 import usePurchasesPage from "./PurchasesPage.hooks";
 import type { MRT_Row } from "material-react-table";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
-import { currencyFormatter } from "@/constants/currency";
 import { TypographyTab } from "@/styled/CustomTypography";
 import { formatLocalDate } from "@/utils/dateTime";
 import { PurchaseResponse } from "@/types/purchase";
 import { StackDetailPanel } from "./PurchasesPage.styles";
+import { currencyFormatter } from "@/utils/currency";
 
 export default function PurchasesPage() {
   const {
@@ -87,7 +87,19 @@ export default function PurchasesPage() {
       </Box>
 
       <Box>
-        <Typography>Items</Typography>
+        <Grid container columnSpacing={2}>
+          <Grid size={6}>
+            <Typography>Stok</Typography>
+          </Grid>
+          <Grid size={3}>
+            <Typography>Jumlah</Typography>
+          </Grid>
+          <Grid size={3}>
+            <BoxFlexEnd>
+              <Typography>Harga</Typography>
+            </BoxFlexEnd>
+          </Grid>
+        </Grid>
         <Divider sx={{ marginTop: "4px", marginBottom: "8px" }} />
         <Grid container columnSpacing={2}>
           {row.original.purchaseItems.map((item) => (
@@ -178,7 +190,7 @@ export default function PurchasesPage() {
           handleSearch={handleChangeSearch}
           addButton={renderAddButton()}
           enableRowActions
-          columnRowActionsSize={96}
+          columnRowActionsSize={110}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
           searchPlaceholder="Cari berdasarkan supplier atau nomor invoice"

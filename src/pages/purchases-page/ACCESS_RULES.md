@@ -12,9 +12,9 @@ Role ini hanya berlaku dalam organization terkait.
 
 ## Permissions
 
-| Action          | SUPER_ADMIN | ADMIN | USER |
-| --------------- | :---------: | :---: | :--: |
-| View Purchase   |     ✅      |  ✅   |  ✅  |
-| Create Purchase |     ✅      |  ✅   |  ✅  |
-| Edit Purchase   |     ✅      |  ✅   |  ✅  |
-| Delete Purchase |     ✅      |  ✅   |  ✅  |
+| Action          | OWNER | ADMIN | MEMBER |
+| --------------- | :---: | :---: | :----: |
+| View Purchase   |  ✅   |  ✅   |   ✅   |
+| Create Purchase |  ✅   |  ✅   |   ✅   |
+| Edit Purchase   |  ✅   |  ✅   |   ✅   |
+| Delete Purchase |  ✅   |  ✅   |   ✅   |

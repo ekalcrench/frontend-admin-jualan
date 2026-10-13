@@ -203,7 +203,7 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     isLoading: isLoadingGetOptions,
     isError: isErrorGetOptions,
     error: errorGetOptions,
-  } = useInventoryItemOptionsQuery();
+  } = useInventoryItemOptionsQuery(props.open ?? false);
 
   useEffect(() => {
     if (isErrorGetOptions && errorGetOptions) apiErrorHandler(errorGetOptions);

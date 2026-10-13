@@ -1,4 +1,3 @@
-import { currencyFormatter } from "@/constants/currency";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
 import { defaultParameter } from "@/constants/table";
 import { useDeleteInventoryItemMutation } from "@/services/inventory-items/inventoryItems.mutation";
@@ -7,6 +6,7 @@ import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
 import { InventoryItemResponse, InventoryUnit } from "@/types/inventoryItem";
 import { ColumnSort } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
+import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate } from "@/utils/dateTime";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";

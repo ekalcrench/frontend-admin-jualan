@@ -1,4 +1,3 @@
-import { currencyFormatter } from "@/constants/currency";
 import { defaultParameter } from "@/constants/table";
 import { useDeletePurchaseMutation } from "@/services/purchases/purchases.mutation";
 import { usePurchasesQuery } from "@/services/purchases/purchases.query";
@@ -6,6 +5,7 @@ import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
 import { PurchaseResponse } from "@/types/purchase";
 import { ColumnSort, PaginatedData } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
+import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate, formatLocalDateOnly } from "@/utils/dateTime";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
