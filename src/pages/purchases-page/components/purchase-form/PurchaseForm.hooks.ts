@@ -5,6 +5,7 @@ import {
   Resolver,
   useFieldArray,
   useForm,
+  useWatch,
 } from "react-hook-form";
 import { toast } from "sonner";
 import { useInventoryItemOptionsQuery } from "@/services/inventory-items/inventoryItems.query";
@@ -33,25 +34,29 @@ import { inventoryUnitLabels } from "@/constants/inventoryItem";
 
 function toCreatePurchaseItem(
   item: PurchaseItemFormValues,
+  purchasedAt: string,
 ): CreatePurchaseItem {
   return {
     inventoryItemId: item.inventoryItemId?.value ?? "",
     quantity: item.quantity ?? 0,
     totalCost: item.totalCost ?? 0,
-    receivedAt: item.receivedAt,
-    expiredAt: item.expiredAt || undefined,
+    receivedAt: item.isSameAsPurchaseAt ? purchasedAt : item.receivedAt,
+    expiredAt: item.isHasNoExpired ? undefined : item.expiredAt || undefined,
   };
 }
 
 function toEditPurchaseItems(
   items: PurchaseItemFormValues[],
   dirtyItems: FieldNamesMarkedBoolean<PurchaseFormValues>["purchaseItems"],
+  purchasedAt: string,
 ): EditPurchaseItem[] {
   return items.flatMap<EditPurchaseItem>((item, index): EditPurchaseItem[] => {
     const dirtyItem = dirtyItems?.[index];
     if (!dirtyItem) return [];
 
-    if (!item.id || !item.inventoryLotId) return [toCreatePurchaseItem(item)];
+    if (!item.id || !item.inventoryLotId) {
+      return [toCreatePurchaseItem(item, purchasedAt)];
+    }
 
     return [
       {
@@ -69,8 +74,14 @@ function toEditPurchaseItems(
               quantity: item.quantity ?? 0,
               totalCost: item.totalCost ?? 0,
             }),
-        ...(dirtyItem.receivedAt && { receivedAt: item.receivedAt }),
-        ...(dirtyItem.expiredAt && { expiredAt: item.expiredAt ?? undefined }),
+        ...((dirtyItem.receivedAt || dirtyItem.isSameAsPurchaseAt) && {
+          receivedAt: item.isSameAsPurchaseAt ? purchasedAt : item.receivedAt,
+        }),
+        ...((dirtyItem.expiredAt || dirtyItem.isHasNoExpired) && {
+          expiredAt: item.isHasNoExpired
+            ? undefined
+            : (item.expiredAt ?? undefined),
+        }),
       },
     ];
   });
@@ -83,6 +94,7 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
 
   const {
     control,
+    setValue,
     handleSubmit,
     reset,
     formState: { isSubmitting, dirtyFields },
@@ -95,6 +107,25 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     control,
     name: "purchaseItems",
   });
+  const purchasedAt = useWatch({ control, name: "purchasedAt" });
+  const purchaseItemsValues = useWatch({ control, name: "purchaseItems" });
+
+  useEffect(() => {
+    console.log(">>> purchaseItemsValues : ", purchaseItemsValues);
+    purchaseItemsValues?.forEach((item, index) => {
+      if (item.isSameAsPurchaseAt && item.receivedAt !== purchasedAt) {
+        setValue(`purchaseItems.${index}.receivedAt`, purchasedAt, {
+          shouldDirty: true,
+        });
+      }
+
+      if (item.isHasNoExpired && item.expiredAt !== undefined) {
+        setValue(`purchaseItems.${index}.expiredAt`, undefined, {
+          shouldDirty: true,
+        });
+      }
+    });
+  }, [purchaseItemsValues, purchasedAt, setValue]);
 
   useEffect(() => {
     if (!props.open) return;
@@ -119,7 +150,10 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
         },
         quantity: item.quantity,
         totalCost: item.totalCost,
+        isSameAsPurchaseAt:
+          item.inventoryLot.receivedAt === purchase.purchasedAt,
         receivedAt: item.inventoryLot.receivedAt,
+        isHasNoExpired: !Boolean(item.inventoryLot.expiredAt),
         expiredAt: item.inventoryLot.expiredAt,
       })) ?? [{ ...emptyPurchaseItem }],
     });
@@ -157,6 +191,7 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
             purchaseItems: toEditPurchaseItems(
               values.purchaseItems,
               dirtyFields.purchaseItems,
+              values.purchasedAt,
             ),
           }),
         };
@@ -165,7 +200,9 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
       } else {
         await createPurchase.mutateAsync({
           ...values,
-          purchaseItems: values.purchaseItems.map(toCreatePurchaseItem),
+          purchaseItems: values.purchaseItems.map((item) =>
+            toCreatePurchaseItem(item, values.purchasedAt),
+          ),
         });
       }
       toast.success(
@@ -201,6 +238,7 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
   return {
     control,
     fields,
+    purchaseItemsValues,
     inventoryItemOptions,
     isLoading,
     isLoadingGetOptions,

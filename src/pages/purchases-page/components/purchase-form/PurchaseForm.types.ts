@@ -13,7 +13,9 @@ export interface PurchaseItemFormValues {
   inventoryItemId: LabelValue<string> | null;
   quantity: number | null;
   totalCost: number | null;
+  isSameAsPurchaseAt: boolean;
   receivedAt: string;
+  isHasNoExpired: boolean;
   expiredAt: string | undefined;
 }
 

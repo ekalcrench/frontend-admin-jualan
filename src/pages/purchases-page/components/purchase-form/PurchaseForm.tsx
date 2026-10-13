@@ -9,6 +9,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import CustomCheckbox from "@/components/custom-checkbox";
 import CustomInput from "@/components/custom-input";
 import CustomInputNumber from "@/components/custom-input-number";
 import FormDrawer from "@/components/form-drawer";
@@ -26,6 +27,7 @@ export default function PurchaseForm(props: PurchaseFormProps) {
     control,
     fields,
     inventoryItemOptions,
+    purchaseItemsValues,
     isLoading,
     isLoadingGetOptions,
     append,
@@ -138,23 +140,59 @@ export default function PurchaseForm(props: PurchaseFormProps) {
                     disabled={isLoading}
                   />
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <CustomDateTimePicker
+                <Grid size={12}>
+                  <Typography sx={{ marginBottom: "4px" }}>
+                    Tanggal Diterima
+                  </Typography>
+                  <CustomCheckbox
                     control={control}
-                    name={`purchaseItems.${index}.receivedAt`}
-                    label="Tanggal Diterima"
-                    renderErrorMessage
+                    name={`purchaseItems.${index}.isSameAsPurchaseAt`}
+                    label="Sama dengan tanggal pembelian"
                     disabled={isLoading}
+                    boxFieldWrapperProps={{
+                      sx: {
+                        marginBottom: purchaseItemsValues?.[index]
+                          ?.isSameAsPurchaseAt
+                          ? "16px"
+                          : 0,
+                      },
+                    }}
                   />
+                  {!purchaseItemsValues?.[index]?.isSameAsPurchaseAt && (
+                    <CustomDateTimePicker
+                      control={control}
+                      name={`purchaseItems.${index}.receivedAt`}
+                      renderErrorMessage
+                      disabled={isLoading}
+                    />
+                  )}
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <CustomDateTimePicker
+                <Grid size={12}>
+                  <Typography sx={{ marginBottom: "4px" }}>
+                    Tanggal Kedaluwarsa
+                  </Typography>
+                  <CustomCheckbox
                     control={control}
-                    name={`purchaseItems.${index}.expiredAt`}
-                    label="Tanggal Kedaluwarsa"
-                    renderErrorMessage
+                    name={`purchaseItems.${index}.isHasNoExpired`}
+                    label="Tidak memiliki tanggal kedaluwarsa"
                     disabled={isLoading}
+                    boxFieldWrapperProps={{
+                      sx: {
+                        marginBottom: purchaseItemsValues?.[index]
+                          ?.isHasNoExpired
+                          ? "16px"
+                          : 0,
+                      },
+                    }}
                   />
+                  {!purchaseItemsValues?.[index]?.isHasNoExpired && (
+                    <CustomDateTimePicker
+                      control={control}
+                      name={`purchaseItems.${index}.expiredAt`}
+                      renderErrorMessage
+                      disabled={isLoading}
+                    />
+                  )}
                 </Grid>
               </Grid>
             </Box>

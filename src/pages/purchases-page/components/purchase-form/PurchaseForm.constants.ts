@@ -18,6 +18,8 @@ const purchaseItemSchema = z.object({
   totalCost: z.number("Tidak boleh kosong").positive("Harus lebih dari 0"),
   receivedAt: z.string().min(1, "Masukkan tanggal diterima"),
   expiredAt: z.string().optional().nullish(),
+  isSameAsPurchaseAt: z.boolean().optional(),
+  isHasNoExpired: z.boolean().optional(),
 });
 
 export const purchaseFormSchema = z.object({
@@ -35,6 +37,8 @@ export const emptyPurchaseItem: PurchaseItemFormValues = {
   totalCost: null,
   receivedAt: "",
   expiredAt: undefined,
+  isSameAsPurchaseAt: true,
+  isHasNoExpired: true,
 };
 
 export const emptyPurchaseFormValues: PurchaseFormValues = {
