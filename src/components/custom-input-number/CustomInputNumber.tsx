@@ -11,10 +11,12 @@ import { CustomInputNumberProps } from "./CustomInputNumber.types";
 import { ReactNode } from "react";
 
 type NumericTextFieldProps = React.ComponentProps<typeof TextField> & {
+  endAdornment?: ReactNode;
   startAdornment?: ReactNode;
 };
 
 function NumericTextField({
+  endAdornment,
   startAdornment,
   slotProps,
   ...textFieldProps
@@ -27,6 +29,9 @@ function NumericTextField({
         input: {
           startAdornment: startAdornment ? (
             <InputAdornment position="start">{startAdornment}</InputAdornment>
+          ) : undefined,
+          endAdornment: endAdornment ? (
+            <InputAdornment position="end">{endAdornment}</InputAdornment>
           ) : undefined,
         },
       }}
@@ -72,7 +77,7 @@ export default function CustomInputNumber<TFieldValues extends FieldValues>({
                 decimalSeparator=","
                 getInputRef={field.ref}
                 name={field.name}
-                value={field.value ?? null}
+                value={field.value ?? ""}
                 onValueChange={({ floatValue }) =>
                   field.onChange(floatValue ?? null)
                 }

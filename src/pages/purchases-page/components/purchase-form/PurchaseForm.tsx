@@ -32,7 +32,6 @@ export default function PurchaseForm(props: PurchaseFormProps) {
     handleSubmit,
     remove,
     onSubmit,
-    setPrefix,
   } = usePurchaseForm(props);
 
   return (
@@ -110,9 +109,9 @@ export default function PurchaseForm(props: PurchaseFormProps) {
                     label: `${item.name} (${inventoryUnitLabels[item.unit]})`,
                     value: item.id,
                   })),
-                  onInputChange: (_, value, reason) => {
-                    if (reason === "input") setPrefix(value);
-                  },
+                  // onInputChange: (_, value, reason) => {
+                  //   if (reason === "input") setPrefix(value);
+                  // },
                   loading: isLoadingGetOptions,
                 }}
               />

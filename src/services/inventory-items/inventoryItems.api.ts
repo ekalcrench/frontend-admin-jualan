@@ -20,14 +20,11 @@ export async function fetchInventoryItems(
   return response.data;
 }
 
-export async function fetchInventoryItemOptions(
-  search: string,
-): Promise<InventoryItemOptions[]> {
+export async function fetchInventoryItemOptions(): Promise<
+  InventoryItemOptions[]
+> {
   const response = await apiClient.get<InventoryItemOptions[]>(
     api.inventoryItems.options,
-    {
-      params: { search },
-    },
   );
   return response.data;
 }

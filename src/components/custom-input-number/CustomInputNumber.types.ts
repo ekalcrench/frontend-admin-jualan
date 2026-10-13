@@ -8,6 +8,7 @@ export type CustomInputNumberProps<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;
   label?: string;
   placeholder?: string;
+  endAdornment?: ReactNode;
   startAdornment?: ReactNode;
   disabled?: boolean;
   textFieldProps?: TextFieldProps;

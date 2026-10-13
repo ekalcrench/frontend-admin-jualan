@@ -16,6 +16,7 @@ import {
 import { usePurchaseByIdQuery } from "@/services/purchases/purchases.query";
 import {
   CreatePurchaseItem,
+  EditPurchase,
   EditPurchaseItem,
 } from "@/services/purchases/purchases.types";
 import { apiErrorHandler } from "@/utils/api";
@@ -144,47 +145,46 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
 
   const onSubmit = async (values: PurchaseFormValues) => {
     console.log(">>> values di onSubmit : ", values);
-    const editPayload = {
-      ...(dirtyFields.supplierName && {
-        supplierName: values.supplierName,
-      }),
-      ...(dirtyFields.invoiceNumber && {
-        invoiceNumber: values.invoiceNumber,
-      }),
-      ...(dirtyFields.purchasedAt && { purchasedAt: values.purchasedAt }),
-      ...(dirtyFields.purchaseItems && {
-        purchaseItems: toEditPurchaseItems(
-          values.purchaseItems,
-          dirtyFields.purchaseItems,
-        ),
-      }),
-    };
-
-    console.log(">>> editPayload : ", editPayload);
-
     if (props.id && Object.keys(dirtyFields).length === 0) {
       toast.info("Tidak ada perubahan untuk disimpan");
       return;
     }
-
     const toastId = toast.loading(
       props.id ? "Memperbarui pembelian..." : "Membuat pembelian...",
     );
     try {
-      if (props.id)
-        await editPurchase.mutateAsync({ id: props.id, ...editPayload });
-      else
+      if (props.id) {
+        const editPayload: EditPurchase = {
+          id: props.id,
+          ...(dirtyFields.supplierName && {
+            supplierName: values.supplierName,
+          }),
+          ...(dirtyFields.invoiceNumber && {
+            invoiceNumber: values.invoiceNumber,
+          }),
+          ...(dirtyFields.purchasedAt && { purchasedAt: values.purchasedAt }),
+          ...(dirtyFields.purchaseItems && {
+            purchaseItems: toEditPurchaseItems(
+              values.purchaseItems,
+              dirtyFields.purchaseItems,
+            ),
+          }),
+        };
+
+        console.log(">>> editPayload : ", editPayload);
+        await editPurchase.mutateAsync(editPayload);
+      } else {
         await createPurchase.mutateAsync({
           ...values,
           purchaseItems: values.purchaseItems.map(toCreatePurchaseItem),
         });
+      }
       toast.success(
         props.id
           ? "Pembelian berhasil diperbarui"
           : "Pembelian berhasil ditambahkan",
       );
-      // reset(emptyPurchaseFormValues);
-      // props.setIsFormOpen(false);
+      props.setIsFormOpen(false);
     } catch (error) {
       apiErrorHandler(error);
     } finally {
@@ -198,27 +198,16 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     }
   }, [purchaseQuery.isError, purchaseQuery.error]);
 
-  const [prefix, setPrefix] = useState<string>("");
-  const [debouncedPrefix, setDebouncedPrefix] = useState<string>("");
-
   const {
     data: inventoryItemOptions,
     isLoading: isLoadingGetOptions,
     isError: isErrorGetOptions,
     error: errorGetOptions,
-  } = useInventoryItemOptionsQuery(debouncedPrefix);
+  } = useInventoryItemOptionsQuery();
 
   useEffect(() => {
     if (isErrorGetOptions && errorGetOptions) apiErrorHandler(errorGetOptions);
   }, [isErrorGetOptions, errorGetOptions]);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setDebouncedPrefix(prefix);
-    }, 2000);
-
-    return () => clearTimeout(timeoutId);
-  }, [prefix]);
 
   return {
     control,
@@ -230,6 +219,5 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     handleSubmit,
     remove,
     onSubmit,
-    setPrefix,
   };
 }

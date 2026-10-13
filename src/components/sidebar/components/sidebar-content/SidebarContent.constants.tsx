@@ -9,6 +9,9 @@ import StoreIcon from "@mui/icons-material/Store";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CategoryIcon from "@mui/icons-material/Category";
+import CampaignIcon from "@mui/icons-material/Campaign";
+import HistoryIcon from "@mui/icons-material/History";
 
 export const sidebarList: SidebarListItem[] = [
   {
@@ -46,14 +49,36 @@ export const sidebarList: SidebarListItem[] = [
     url: paths.sales,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <PaidIcon />,
+    organizationRoleAccess: [
+      organizationRole.ADMIN,
+      organizationRole.OWNER,
+      organizationRole.MEMBER,
+    ],
+  },
+  {
+    title: "Cash Flows",
+    url: paths.cashFlows,
+    params: "page=1&size=20&sortBy=-createdAt",
+    icon: <HistoryIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
-    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
+    organizationRoleAccess: [organizationRole.OWNER],
   },
   {
     groupName: "Organizations",
   },
   {
-    title: "User",
+    title: "Products",
+    url: paths.products,
+    params: "page=1&size=20&sortBy=-createdAt",
+    icon: <CategoryIcon />,
+    organizationRoleAccess: [
+      organizationRole.ADMIN,
+      organizationRole.OWNER,
+      organizationRole.MEMBER,
+    ],
+  },
+  {
+    title: "Users",
     url: paths.users,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <GroupIcon />,
@@ -100,7 +125,7 @@ export const sidebarList: SidebarListItem[] = [
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
   },
   {
-    title: "Semua User",
+    title: "All Users",
     url: paths.allUsers,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <GroupIcon />,
@@ -111,6 +136,13 @@ export const sidebarList: SidebarListItem[] = [
     url: paths.umkm,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <StoreIcon />,
+    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
+  },
+  {
+    title: "Announcements",
+    url: paths.announcements,
+    params: "page=1&size=20&sortBy=-createdAt",
+    icon: <CampaignIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
   },
 ];

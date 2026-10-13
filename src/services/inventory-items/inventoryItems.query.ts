@@ -24,11 +24,10 @@ export function useInventoryItemsQuery(payload: InventoryItemFilterPayload) {
   });
 }
 
-export function useInventoryItemOptionsQuery(search: string) {
+export function useInventoryItemOptionsQuery() {
   return useQuery<InventoryItemOptions[]>({
-    queryKey: inventoryItemKeys.options(search),
-    queryFn: () => fetchInventoryItemOptions(search),
-    enabled: search.length > 2,
+    queryKey: inventoryItemKeys.options,
+    queryFn: () => fetchInventoryItemOptions(),
     staleTime: fiveMinutes,
   });
 }

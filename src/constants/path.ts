@@ -7,8 +7,11 @@ export const paths = {
 
   dashboard: "/dashboard",
   analytics: "/analytics",
+  announcements: "/announcements",
   sales: "/sales",
+  cashFlows: "/cash-flows",
 
+  products: "/products",
   users: "/users",
   inventoryItems: "/inventory-items",
   inventoryItemsDetail: (id: string) => `/inventory-items/${id}`,

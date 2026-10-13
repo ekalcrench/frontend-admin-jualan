@@ -37,6 +37,10 @@ export const api = {
     base: "/purchases",
     byId: (id: string) => `/purchases/${id}`,
   },
+  products: {
+    base: "/products",
+    byId: (id: string) => `/products/${id}`,
+  },
 };
 
 export const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
