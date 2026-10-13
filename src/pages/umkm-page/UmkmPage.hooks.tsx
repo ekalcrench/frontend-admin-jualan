@@ -61,7 +61,6 @@ export default function useUmkmPage() {
   };
 
   const handleChangeSearch = (value: string) => {
-    console.log(">>> value : ", value);
     setSearchParams((prev) => {
       if (value.trim()) prev.set("search", value);
       else prev.delete("search");
@@ -81,8 +80,6 @@ export default function useUmkmPage() {
   };
 
   const handleChangeSort = (sortBy: ColumnSort) => {
-    console.log(">>> sortBy : ", sortBy);
-
     const sortById = sortBy.id;
     let sortByDirection = "";
 

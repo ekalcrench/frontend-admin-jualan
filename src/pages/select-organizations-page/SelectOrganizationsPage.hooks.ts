@@ -30,7 +30,6 @@ export default function useSelectOrganizationsPage() {
   const organizationsQuery = useOrganizationsByUserIdQuery(user?.id);
 
   const onSubmit = async (values: SelectOrganizationFormValues) => {
-    console.log(">>> values : ", values);
     const toastId = toast.loading("Signing  in...");
     try {
       const response = await loginOrganizationMutation.mutateAsync({

@@ -1,11 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   FieldNamesMarkedBoolean,
   Resolver,
   useFieldArray,
   useForm,
-  useWatch,
 } from "react-hook-form";
 import { toast } from "sonner";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
@@ -24,7 +23,6 @@ import type {
 import { apiErrorHandler } from "@/utils/api";
 import {
   emptyProductFormValues,
-  emptyProductIngredient,
   productFormSchema,
 } from "./ProductForm.constants";
 import type {
@@ -57,8 +55,6 @@ function toEditProductIngredients(
   items: ProductIngredientFormValues[],
   dirtyItems: FieldNamesMarkedBoolean<ProductFormValues>["productIngredients"],
 ): EditProductIngredients[] {
-  console.log(">>> items : ", items);
-  console.log(">>> dirtyItems : ", dirtyItems);
   return items.flatMap<EditProductIngredients>(
     (item, index): EditProductIngredients[] => {
       const dirtyItem = dirtyItems?.[index];
@@ -90,7 +86,7 @@ export default function useProductForm(props: ProductFormProps) {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting, dirtyFields },
+    formState: { isSubmitting, dirtyFields },
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema) as Resolver<ProductFormValues>,
     mode: "onBlur",
@@ -100,13 +96,6 @@ export default function useProductForm(props: ProductFormProps) {
     control,
     name: "productIngredients",
   });
-  const watch = useWatch({ control });
-
-  useEffect(() => {
-    console.log(">>> watch : ", watch);
-    console.log(">>> errors : ", errors);
-    console.log(">>> dirtyFields : ", dirtyFields);
-  }, [watch, errors, dirtyFields]);
 
   useEffect(() => {
     if (!props.open) return;
@@ -142,7 +131,6 @@ export default function useProductForm(props: ProductFormProps) {
     isLoadingGetData;
 
   const onSubmit = async (values: ProductFormValues) => {
-    console.log(">>> values di onSubmit : ", values);
     if (props.id && Object.keys(dirtyFields).length === 0) {
       toast.info("Tidak ada perubahan untuk disimpan");
       return;
@@ -169,7 +157,6 @@ export default function useProductForm(props: ProductFormProps) {
           }),
         };
 
-        console.log(">>> editPayload : ", editPayload);
         await editProduct.mutateAsync(editPayload);
       } else {
         await createProduct.mutateAsync(toCreateProduct(values));

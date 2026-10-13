@@ -66,8 +66,6 @@ export default function useLoginPage() {
       if (response.accessToken) {
         const organizations = await fetchOrganizationsById(response.user.id);
 
-        console.log(">>> organizations : ", organizations);
-
         queryClient.setQueryData(
           userKeys.organizations(response.user.id),
           organizations,

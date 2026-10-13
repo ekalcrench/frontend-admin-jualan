@@ -26,7 +26,7 @@ export const productFormSchema = z.object({
     .min(1, "Tambahkan minimal satu bahan"),
 });
 
-export const emptyProductIngredient: ProductIngredientFormValues = {
+const emptyProductIngredient: ProductIngredientFormValues = {
   inventoryItemId: null,
   quantity: null,
 };

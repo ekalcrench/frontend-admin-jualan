@@ -54,7 +54,6 @@ export default function useUserForm(props: UserFormProps) {
   }, [prefix]);
 
   const onSubmit = async (values: UserFormValues) => {
-    console.log(">>> values : ", values);
     const toastId = toast.loading(
       props.id ? "Updating User..." : "Creating User...",
     );
@@ -64,7 +63,6 @@ export default function useUserForm(props: UserFormProps) {
         userId: values.userId.value,
         status: userOrganizationStatus.PENDING_APPROVAL,
       });
-      console.log(">>> organizationUser : ", organizationUser);
       props.onSuccess?.(organizationUser);
 
       reset();

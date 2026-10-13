@@ -1,11 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   FieldNamesMarkedBoolean,
   Resolver,
   useFieldArray,
   useForm,
-  useWatch,
 } from "react-hook-form";
 import { toast } from "sonner";
 import { useInventoryItemOptionsQuery } from "@/services/inventory-items/inventoryItems.query";
@@ -48,8 +47,6 @@ function toEditPurchaseItems(
   items: PurchaseItemFormValues[],
   dirtyItems: FieldNamesMarkedBoolean<PurchaseFormValues>["purchaseItems"],
 ): EditPurchaseItem[] {
-  console.log(">>> items : ", items);
-  console.log(">>> dirtyItems : ", dirtyItems);
   return items.flatMap<EditPurchaseItem>((item, index): EditPurchaseItem[] => {
     const dirtyItem = dirtyItems?.[index];
     if (!dirtyItem) return [];
@@ -98,12 +95,6 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     control,
     name: "purchaseItems",
   });
-  const watch = useWatch({ control });
-
-  useEffect(() => {
-    console.log(">>> watch : ", watch);
-    console.log(">>> dirtyFields : ", dirtyFields);
-  }, [watch, dirtyFields]);
 
   useEffect(() => {
     if (!props.open) return;
@@ -144,7 +135,6 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     isLoadingGetData;
 
   const onSubmit = async (values: PurchaseFormValues) => {
-    console.log(">>> values di onSubmit : ", values);
     if (props.id && Object.keys(dirtyFields).length === 0) {
       toast.info("Tidak ada perubahan untuk disimpan");
       return;
@@ -171,7 +161,6 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
           }),
         };
 
-        console.log(">>> editPayload : ", editPayload);
         await editPurchase.mutateAsync(editPayload);
       } else {
         await createPurchase.mutateAsync({
