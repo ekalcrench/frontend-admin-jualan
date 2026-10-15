@@ -110,6 +110,10 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
   const purchasedAt = useWatch({ control, name: "purchasedAt" });
   const purchaseItemsValues = useWatch({ control, name: "purchaseItems" });
 
+  const [deletedPurchaseItemIds, setDeletedPurchaseItemIds] = useState<
+    string[]
+  >([]);
+
   useEffect(() => {
     purchaseItemsValues?.forEach((item, index) => {
       if (item.isSameAsPurchaseAt && item.receivedAt !== purchasedAt) {
@@ -169,10 +173,6 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     createPurchase.isPending ||
     editPurchase.isPending ||
     isLoadingGetData;
-
-  const [deletedPurchaseItemIds, setDeletedPurchaseItemIds] = useState<
-    string[]
-  >([]);
 
   const handleRemovePurchaseItem = (index: number) => {
     const item = purchaseItemsValues[index];

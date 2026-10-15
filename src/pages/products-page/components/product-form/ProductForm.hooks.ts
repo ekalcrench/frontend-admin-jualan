@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   FieldNamesMarkedBoolean,
   Resolver,
   useFieldArray,
   useForm,
+  useWatch,
 } from "react-hook-form";
 import { toast } from "sonner";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
@@ -96,9 +97,19 @@ export default function useProductForm(props: ProductFormProps) {
     control,
     name: "productIngredients",
   });
+  const productIngredientsValues = useWatch({
+    control,
+    name: "productIngredients",
+  });
+
+  const [deletedProductIngredientIds, setDeletedProductIngredientIds] =
+    useState<string[]>([]);
 
   useEffect(() => {
-    if (!props.open) return;
+    if (!props.open) {
+      setDeletedProductIngredientIds([]);
+      return;
+    }
     if (!props.id) {
       reset(emptyProductFormValues);
       return;
@@ -129,6 +140,15 @@ export default function useProductForm(props: ProductFormProps) {
     createProduct.isPending ||
     editProduct.isPending ||
     isLoadingGetData;
+  const handleRemoveProductIngredient = (index: number) => {
+    const item = productIngredientsValues[index];
+
+    if (item.id) {
+      setDeletedProductIngredientIds((prev) => [...prev, item.id!]);
+    }
+
+    remove(index);
+  };
 
   const onSubmit = async (values: ProductFormValues) => {
     if (props.id && Object.keys(dirtyFields).length === 0) {
@@ -157,7 +177,12 @@ export default function useProductForm(props: ProductFormProps) {
           }),
         };
 
-        await editProduct.mutateAsync(editPayload);
+        await editProduct.mutateAsync({
+          ...editPayload,
+          ...(deletedProductIngredientIds.length && {
+            deletedProductIngredientIds,
+          }),
+        });
       } else {
         await createProduct.mutateAsync(toCreateProduct(values));
       }
@@ -199,8 +224,8 @@ export default function useProductForm(props: ProductFormProps) {
     isLoading,
     isLoadingGetOptions,
     append,
+    handleRemoveProductIngredient,
     handleSubmit,
-    remove,
     onSubmit,
   };
 }

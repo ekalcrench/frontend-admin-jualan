@@ -20,4 +20,5 @@ export interface EditProduct extends Partial<
 > {
   id: string;
   productIngredients?: EditProductIngredients[];
+  deletedProductIngredientIds?: string[];
 }

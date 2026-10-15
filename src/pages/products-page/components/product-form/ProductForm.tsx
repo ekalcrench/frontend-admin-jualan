@@ -28,8 +28,8 @@ export default function ProductForm(props: ProductFormProps) {
     isLoading,
     isLoadingGetOptions,
     append,
+    handleRemoveProductIngredient,
     handleSubmit,
-    remove,
     onSubmit,
   } = useProductForm(props);
 
@@ -82,7 +82,7 @@ export default function ProductForm(props: ProductFormProps) {
                   aria-label={`Hapus bahan ${index + 1}`}
                   color="error"
                   disabled={isLoading || fields.length === 1}
-                  onClick={() => remove(index)}
+                  onClick={() => handleRemoveProductIngredient(index)}
                   size="small"
                 >
                   <DeleteIcon />
