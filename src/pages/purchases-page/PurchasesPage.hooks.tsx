@@ -1,12 +1,20 @@
+import {
+  purchaseStatusColorMapping,
+  purchaseStatusMapping,
+} from "@/constants/purchase";
 import { defaultParameter } from "@/constants/table";
-import { useDeletePurchaseMutation } from "@/services/purchases/purchases.mutation";
+import {
+  useDeletePurchaseMutation,
+  useFinalizePurchaseMutation,
+} from "@/services/purchases/purchases.mutation";
 import { usePurchasesQuery } from "@/services/purchases/purchases.query";
 import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
-import { PurchaseResponse } from "@/types/purchase";
+import { PurchaseResponse, PurchaseStatus } from "@/types/purchase";
 import { ColumnSort, PaginatedData } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate, formatLocalDateOnly } from "@/utils/dateTime";
+import { Chip } from "@mui/material";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -94,6 +102,18 @@ export default function usePurchasesPage() {
   const columns: MRT_ColumnDef<PurchaseResponse>[] = useMemo(
     () => [
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
+      {
+        accessorKey: "status",
+        header: "Status",
+        size: 100,
+        Cell: ({ cell }) => (
+          <Chip
+            label={purchaseStatusMapping[cell.getValue<PurchaseStatus>()]}
+            size="small"
+            color={purchaseStatusColorMapping[cell.getValue<PurchaseStatus>()]}
+          />
+        ),
+      },
       { accessorKey: "supplierName", header: "Supplier", size: 200 },
       { accessorKey: "invoiceNumber", header: "Nomor Invoice", size: 180 },
       {
@@ -147,6 +167,7 @@ export default function usePurchasesPage() {
   }, [isError, error]);
 
   const deletePurchase = useDeletePurchaseMutation();
+  const finalizePurchase = useFinalizePurchaseMutation();
   const confirm = useConfirmationStore((state) => state.confirm);
 
   const handleClickDelete = async (id: string) => {
@@ -170,22 +191,46 @@ export default function usePurchasesPage() {
     }
   };
 
+  const handleClickFinalize = async (id: string) => {
+    if (
+      !(await confirm({
+        title: "Finalisasi Pembelian",
+        message:
+          "Pembelian yang sudah di-finalisasi tidak dapat diubah atau dihapus, apakah Anda yakin?",
+      }))
+    ) {
+      return;
+    }
+
+    const toastId = toast.loading("Mem-finalisasi pembelian...");
+    try {
+      await finalizePurchase.mutateAsync(id);
+      toast.success("Pembelian berhasil di-finalisasi");
+    } catch (finalizeError) {
+      apiErrorHandler(finalizeError);
+    } finally {
+      toast.dismiss(toastId);
+    }
+  };
+
   return {
     columns,
     data,
+    deletePurchase,
     editingPurchaseId,
+    finalizePurchase,
     isFormOpen,
     isLoading,
     isError,
     search: search ?? "",
     sortBy,
-    deletePurchase,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
+    handleClickFinalize,
     handleResetFilter,
     setIsFormOpen,
   };

@@ -36,6 +36,7 @@ export const api = {
   purchases: {
     base: "/purchases",
     byId: (id: string) => `/purchases/${id}`,
+    finalize: (id: string) => `/purchases/${id}/finalize`,
   },
   products: {
     base: "/products",

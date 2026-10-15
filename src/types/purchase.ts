@@ -24,11 +24,14 @@ interface PurchaseItem {
   inventoryLot: InventoryLot;
 }
 
+export type PurchaseStatus = "DRAFT" | "FINALIZED";
+
 export interface PurchaseResponse extends BaseApiResponse {
   id: string;
   organizationId: string;
   supplierName: string;
   invoiceNumber: string;
+  status: PurchaseStatus;
   purchasedAt: string;
   purchaseItems: PurchaseItem[];
 }

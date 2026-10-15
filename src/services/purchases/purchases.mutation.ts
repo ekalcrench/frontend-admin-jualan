@@ -1,7 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { purchasesKeys } from "./purchases.constants";
 import { CreatePurchase, EditPurchase } from "./purchases.types";
-import { createPurchase, deletePurchase, editPurchase } from "./purchases.api";
+import {
+  createPurchase,
+  deletePurchase,
+  editPurchase,
+  finalizePurchase,
+} from "./purchases.api";
 import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
 import { PurchaseResponse } from "@/types/purchase";
 
@@ -33,6 +38,16 @@ export function useDeletePurchaseMutation() {
     onSuccess: (result, payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: purchasesKeys.all });
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.all });
+    },
+  });
+}
+
+export function useFinalizePurchaseMutation() {
+  return useMutation<PurchaseResponse, Error, string>({
+    mutationFn: finalizePurchase,
+    onSuccess: (result, payload, onMutateResult, context) => {
+      context.client.invalidateQueries({ queryKey: purchasesKeys.lists() });
+      context.client.setQueryData(purchasesKeys.detail(result.id), result);
     },
   });
 }

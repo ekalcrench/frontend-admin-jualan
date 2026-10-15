@@ -48,3 +48,10 @@ export async function deletePurchase(id: string): Promise<boolean> {
   const response = await apiClient.delete<boolean>(api.purchases.byId(id));
   return response.data;
 }
+
+export async function finalizePurchase(id: string): Promise<PurchaseResponse> {
+  const response = await apiClient.post<PurchaseResponse>(
+    api.purchases.finalize(id),
+  );
+  return response.data;
+}

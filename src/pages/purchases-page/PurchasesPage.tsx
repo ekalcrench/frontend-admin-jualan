@@ -22,24 +22,30 @@ import { formatLocalDate } from "@/utils/dateTime";
 import { PurchaseResponse } from "@/types/purchase";
 import { StackDetailPanel } from "./PurchasesPage.styles";
 import { currencyFormatter } from "@/utils/currency";
+import {
+  purchaseStatus,
+  purchaseStatusColorMapping,
+} from "@/constants/purchase";
 
 export default function PurchasesPage() {
   const {
     columns,
     data,
+    deletePurchase,
     editingPurchaseId,
+    finalizePurchase,
     isFormOpen,
     isLoading,
     isError,
     search,
     sortBy,
-    deletePurchase,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
+    handleClickFinalize,
     handleResetFilter,
     setIsFormOpen,
   } = usePurchasesPage();
@@ -56,24 +62,40 @@ export default function PurchasesPage() {
 
   const renderRowActions = (row: MRT_Row<PurchaseResponse>) => (
     <BoxFlex>
-      <IconButton
-        aria-label={`Edit purchase ${row.original.invoiceNumber ?? row.original.id}`}
-        onClick={() => handleClickEditForm(row.original.id)}
-        color="secondary"
-      >
-        <EditIcon />
-      </IconButton>
-      <IconButton
-        aria-label={`Delete purchase ${row.original.invoiceNumber ?? row.original.id}`}
-        onClick={() => handleClickDelete(row.original.id)}
-        color="error"
-        loading={
-          deletePurchase.isPending &&
-          deletePurchase.variables === row.original.id
-        }
-      >
-        <DeleteIcon />
-      </IconButton>
+      {row.original.status === purchaseStatus.DRAFT && (
+        <>
+          <Button
+            color="success"
+            size="small"
+            sx={{ marginRight: "4px" }}
+            onClick={() => handleClickFinalize(row.original.id)}
+            loading={
+              finalizePurchase.isPending &&
+              finalizePurchase.variables === row.original.id
+            }
+          >
+            Finalize
+          </Button>
+          <IconButton
+            aria-label={`Edit purchase ${row.original.invoiceNumber ?? row.original.id}`}
+            onClick={() => handleClickEditForm(row.original.id)}
+            color="secondary"
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            aria-label={`Delete purchase ${row.original.invoiceNumber ?? row.original.id}`}
+            onClick={() => handleClickDelete(row.original.id)}
+            color="error"
+            loading={
+              deletePurchase.isPending &&
+              deletePurchase.variables === row.original.id
+            }
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      )}
     </BoxFlex>
   );
 
@@ -190,7 +212,7 @@ export default function PurchasesPage() {
           handleSearch={handleChangeSearch}
           addButton={renderAddButton()}
           enableRowActions
-          columnRowActionsSize={110}
+          columnRowActionsSize={190}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
           searchPlaceholder="Cari berdasarkan supplier atau nomor invoice"
