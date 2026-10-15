@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   FieldNamesMarkedBoolean,
   Resolver,
@@ -111,24 +111,26 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
   const purchaseItemsValues = useWatch({ control, name: "purchaseItems" });
 
   useEffect(() => {
-    console.log(">>> purchaseItemsValues : ", purchaseItemsValues);
     purchaseItemsValues?.forEach((item, index) => {
       if (item.isSameAsPurchaseAt && item.receivedAt !== purchasedAt) {
         setValue(`purchaseItems.${index}.receivedAt`, purchasedAt, {
-          shouldDirty: true,
+          shouldValidate: true,
         });
       }
 
-      if (item.isHasNoExpired && item.expiredAt !== undefined) {
+      if (item.isHasNoExpired && item.expiredAt != null) {
         setValue(`purchaseItems.${index}.expiredAt`, undefined, {
-          shouldDirty: true,
+          shouldValidate: true,
         });
       }
     });
   }, [purchaseItemsValues, purchasedAt, setValue]);
 
   useEffect(() => {
-    if (!props.open) return;
+    if (!props.open) {
+      setDeletedPurchaseItemIds([]);
+      return;
+    }
     if (!props.id) {
       reset(emptyPurchaseFormValues);
       return;
@@ -168,6 +170,20 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     editPurchase.isPending ||
     isLoadingGetData;
 
+  const [deletedPurchaseItemIds, setDeletedPurchaseItemIds] = useState<
+    string[]
+  >([]);
+
+  const handleRemovePurchaseItem = (index: number) => {
+    const item = purchaseItemsValues[index];
+
+    if (item.id) {
+      setDeletedPurchaseItemIds((prev) => [...prev, item.id!]);
+    }
+
+    remove(index);
+  };
+
   const onSubmit = async (values: PurchaseFormValues) => {
     if (props.id && Object.keys(dirtyFields).length === 0) {
       toast.info("Tidak ada perubahan untuk disimpan");
@@ -196,7 +212,12 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
           }),
         };
 
-        await editPurchase.mutateAsync(editPayload);
+        await editPurchase.mutateAsync({
+          ...editPayload,
+          ...(deletedPurchaseItemIds.length && {
+            deletedPurchaseItemIds,
+          }),
+        });
       } else {
         await createPurchase.mutateAsync({
           ...values,
@@ -243,8 +264,8 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     isLoading,
     isLoadingGetOptions,
     append,
+    handleRemovePurchaseItem,
     handleSubmit,
-    remove,
     onSubmit,
   };
 }

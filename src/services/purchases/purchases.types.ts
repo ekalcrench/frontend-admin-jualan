@@ -25,4 +25,5 @@ export interface EditPurchase extends Partial<
 > {
   id: string;
   purchaseItems?: EditPurchaseItem[];
+  deletedPurchaseItemIds?: string[];
 }

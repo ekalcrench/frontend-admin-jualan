@@ -31,8 +31,8 @@ export default function PurchaseForm(props: PurchaseFormProps) {
     isLoading,
     isLoadingGetOptions,
     append,
+    handleRemovePurchaseItem,
     handleSubmit,
-    remove,
     onSubmit,
   } = usePurchaseForm(props);
 
@@ -92,7 +92,7 @@ export default function PurchaseForm(props: PurchaseFormProps) {
                   aria-label={`Hapus barang ${index + 1}`}
                   color="error"
                   disabled={isLoading || fields.length === 1}
-                  onClick={() => remove(index)}
+                  onClick={() => handleRemovePurchaseItem(index)}
                   size="small"
                 >
                   <DeleteIcon />
