@@ -20,3 +20,9 @@ export interface ProductResponse extends BaseApiResponse {
   sellingPrice: number;
   productIngredients: ProductIngredients[];
 }
+
+export interface ProductOptions {
+  id: string;
+  name: string;
+  sellingPrice: number;
+}

@@ -2,8 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import { fiveMinutes } from "@/constants/time";
 import { PaginatedData } from "@/types/table";
 import { productsKeys } from "./products.constants";
-import { fetchProductById, fetchProducts } from "./products.api";
-import { ProductFilterPayload, ProductResponse } from "@/types/product";
+import {
+  fetchProductById,
+  fetchProductOptions,
+  fetchProducts,
+} from "./products.api";
+import {
+  ProductFilterPayload,
+  ProductOptions,
+  ProductResponse,
+} from "@/types/product";
 
 export function useProductQuery(payload: ProductFilterPayload) {
   return useQuery<PaginatedData<ProductResponse>>({
@@ -13,6 +21,15 @@ export function useProductQuery(payload: ProductFilterPayload) {
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+  });
+}
+
+export function useProductOptionsQuery(enabled: boolean) {
+  return useQuery<ProductOptions[]>({
+    queryKey: productsKeys.options,
+    queryFn: () => fetchProductOptions(),
+    staleTime: fiveMinutes,
+    enabled,
   });
 }
 

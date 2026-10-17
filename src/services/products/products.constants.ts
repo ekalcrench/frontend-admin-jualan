@@ -8,4 +8,6 @@ export const productsKeys = {
 
   details: () => ["products", "detail"] as const,
   detail: (id?: string) => ["products", "detail", id] as const,
+
+  options: ["products", "options"] as const,
 };

@@ -1,7 +1,11 @@
 import { apiClient } from "@/config/api";
 import { api } from "@/constants/api";
 import { PaginatedData } from "@/types/table";
-import { ProductFilterPayload, ProductResponse } from "@/types/product";
+import {
+  ProductFilterPayload,
+  ProductOptions,
+  ProductResponse,
+} from "@/types/product";
 import { CreateProduct, EditProduct } from "./products.types";
 
 export async function fetchProducts(
@@ -13,6 +17,11 @@ export async function fetchProducts(
       params: payload,
     },
   );
+  return response.data;
+}
+
+export async function fetchProductOptions(): Promise<ProductOptions[]> {
+  const response = await apiClient.get<ProductOptions[]>(api.products.options);
   return response.data;
 }
 
