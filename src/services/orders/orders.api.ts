@@ -39,3 +39,8 @@ export async function deleteOrder(id: string): Promise<boolean> {
   const response = await apiClient.delete<boolean>(api.orders.byId(id));
   return response.data;
 }
+
+export async function markPaidOrder(id: string): Promise<OrderResponse> {
+  const response = await apiClient.post<OrderResponse>(api.orders.markPaid(id));
+  return response.data;
+}

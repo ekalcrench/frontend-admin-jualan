@@ -20,6 +20,7 @@ import type { OrderResponse } from "@/types/order";
 import OrderForm from "./components/order-form";
 import useSalesPage from "./SalesPage.hooks";
 import { StackDetailPanel } from "./SalesPage.styles";
+import { orderStatus } from "@/constants/order";
 
 export default function SalesPage() {
   const {
@@ -30,6 +31,7 @@ export default function SalesPage() {
     isFormOpen,
     isLoading,
     isError,
+    markPaidOrder,
     search,
     sortBy,
     handleChangePage,
@@ -38,6 +40,7 @@ export default function SalesPage() {
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
+    handleClickMarkPaid,
     handleResetFilter,
     setIsFormOpen,
   } = useSalesPage();
@@ -54,21 +57,39 @@ export default function SalesPage() {
 
   const renderRowActions = (row: MRT_Row<OrderResponse>) => (
     <BoxFlex>
-      <IconButton
-        aria-label={`Edit penjualan ${row.original.orderNumber}`}
-        onClick={() => handleClickEditForm(row.original.id)}
-        color="secondary"
-      >
-        <EditIcon />
-      </IconButton>
-      <IconButton
-        aria-label={`Hapus penjualan ${row.original.orderNumber}`}
-        onClick={() => handleClickDelete(row.original.id)}
-        color="error"
-        loading={deleteOrder.isPending && deleteOrder.variables === row.original.id}
-      >
-        <DeleteIcon />
-      </IconButton>
+      {row.original.status === orderStatus.UNPAID && (
+        <>
+          <Button
+            color="success"
+            size="small"
+            sx={{ marginRight: "4px" }}
+            onClick={() => handleClickMarkPaid(row.original.id)}
+            loading={
+              markPaidOrder.isPending &&
+              markPaidOrder.variables === row.original.id
+            }
+          >
+            Dibayar
+          </Button>
+          <IconButton
+            aria-label={`Edit penjualan ${row.original.orderNumber}`}
+            onClick={() => handleClickEditForm(row.original.id)}
+            color="secondary"
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            aria-label={`Hapus penjualan ${row.original.orderNumber}`}
+            onClick={() => handleClickDelete(row.original.id)}
+            color="error"
+            loading={
+              deleteOrder.isPending && deleteOrder.variables === row.original.id
+            }
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      )}
     </BoxFlex>
   );
 
@@ -197,7 +218,7 @@ export default function SalesPage() {
           handleSearch={handleChangeSearch}
           addButton={renderAddButton()}
           enableRowActions
-          columnRowActionsSize={120}
+          columnRowActionsSize={190}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
           searchPlaceholder="Cari berdasarkan nomor penjualan atau produk"

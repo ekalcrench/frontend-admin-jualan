@@ -114,30 +114,30 @@ export default function OrderForm(props: OrderFormProps) {
 
               <BoxFlexSpaceBetween>
                 <Typography variant="body2">Harga</Typography>
-                {orderItemsValues?.[index]?.productId?.value && (
-                  <Typography variant="body2">
-                    {currencyFormatter.format(
-                      sellingPriceMapping[
-                        orderItemsValues?.[index]?.productId?.value
-                      ],
-                    )}
-                  </Typography>
-                )}
+                <Typography variant="body2">
+                  {orderItemsValues?.[index]?.productId?.value
+                    ? currencyFormatter.format(
+                        sellingPriceMapping[
+                          orderItemsValues?.[index]?.productId?.value
+                        ],
+                      )
+                    : "-"}
+                </Typography>
               </BoxFlexSpaceBetween>
 
               <BoxFlexSpaceBetween>
                 <Typography variant="body2">Subtotal</Typography>
-                {orderItemsValues?.[index]?.quantity &&
-                  orderItemsValues?.[index]?.productId?.value && (
-                    <Typography variant="body2">
-                      {currencyFormatter.format(
+                <Typography variant="body2">
+                  {orderItemsValues?.[index]?.quantity &&
+                  orderItemsValues?.[index]?.productId?.value
+                    ? currencyFormatter.format(
                         orderItemsValues?.[index]?.quantity *
                           sellingPriceMapping[
                             orderItemsValues?.[index]?.productId?.value
                           ],
-                      )}
-                    </Typography>
-                  )}
+                      )
+                    : "-"}
+                </Typography>
               </BoxFlexSpaceBetween>
             </Box>
           ))}

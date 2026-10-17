@@ -8,13 +8,10 @@ import {
   useWatch,
 } from "react-hook-form";
 import { toast } from "sonner";
+import { useProductOptionsQuery } from "@/services/products/products.query";
 import {
-  useProductOptionsQuery,
-  useProductQuery,
-} from "@/services/products/products.query";
-import {
-  useCreateProductMutation,
-  useEditProductMutation,
+  useCreateOrderMutation,
+  useEditOrderMutation,
 } from "@/services/orders/orders.mutation";
 import { useOrderByIdQuery } from "@/services/orders/orders.query";
 import type {
@@ -61,8 +58,8 @@ function toEditOrderItems(
 }
 
 export default function useOrderForm(props: OrderFormProps) {
-  const createOrder = useCreateProductMutation();
-  const editOrder = useEditProductMutation();
+  const createOrder = useCreateOrderMutation();
+  const editOrder = useEditOrderMutation();
   const orderQuery = useOrderByIdQuery(props.id);
   const {
     data: productOptions,

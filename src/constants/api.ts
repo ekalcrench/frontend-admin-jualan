@@ -46,6 +46,7 @@ export const api = {
   orders: {
     base: "/orders",
     byId: (id: string) => `/orders/${id}`,
+    markPaid: (id: string) => `/orders/${id}/mark-paid`,
   },
 };
 

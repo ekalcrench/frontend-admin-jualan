@@ -12,10 +12,13 @@ interface OrderItems {
   product: { id: string; name: string };
 }
 
+export type OrderStatus = "PAID" | "UNPAID";
+
 export interface OrderResponse extends BaseApiResponse {
   id: string;
   organizationId: string;
   orderNumber: string;
   totalAmount: number;
+  status: OrderStatus;
   orderItems: OrderItems[];
 }

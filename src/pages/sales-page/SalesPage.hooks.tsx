@@ -1,12 +1,17 @@
+import { orderStatusColorMapping, orderStatusMapping } from "@/constants/order";
 import { defaultParameter } from "@/constants/table";
-import { useDeleteProductMutation } from "@/services/orders/orders.mutation";
+import {
+  useDeleteOrderMutation,
+  useMarkPaidOrderMutation,
+} from "@/services/orders/orders.mutation";
 import { useOrderQuery } from "@/services/orders/orders.query";
 import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
-import type { OrderResponse } from "@/types/order";
+import type { OrderResponse, OrderStatus } from "@/types/order";
 import type { ColumnSort, PaginatedData } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate } from "@/utils/dateTime";
+import { Chip } from "@mui/material";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -89,6 +94,18 @@ export default function useSalesPage() {
   const columns: MRT_ColumnDef<OrderResponse>[] = useMemo(
     () => [
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
+      {
+        accessorKey: "status",
+        header: "Status",
+        size: 140,
+        Cell: ({ cell }) => (
+          <Chip
+            label={orderStatusMapping[cell.getValue<OrderStatus>()]}
+            size="small"
+            color={orderStatusColorMapping[cell.getValue<OrderStatus>()]}
+          />
+        ),
+      },
       { accessorKey: "orderNumber", header: "Nomor Penjualan", size: 200 },
       {
         accessorKey: "totalAmount",
@@ -124,7 +141,8 @@ export default function useSalesPage() {
     if (isError && error) apiErrorHandler(error);
   }, [isError, error]);
 
-  const deleteOrder = useDeleteProductMutation();
+  const deleteOrder = useDeleteOrderMutation();
+  const markPaidOrder = useMarkPaidOrderMutation();
   const confirm = useConfirmationStore((state) => state.confirm);
 
   const handleClickDelete = async (id: string) => {
@@ -148,6 +166,28 @@ export default function useSalesPage() {
     }
   };
 
+  const handleClickMarkPaid = async (id: string) => {
+    if (
+      !(await confirm({
+        title: "Ganti Menjadi Dibayar?",
+        message:
+          "Pesanan yang sudah diganti menjadi Dibayar tidak dapat diubah atau dihapus lagi, apakah Anda yakin?",
+      }))
+    ) {
+      return;
+    }
+
+    const toastId = toast.loading("Mengubah status pembelian...");
+    try {
+      await markPaidOrder.mutateAsync(id);
+      toast.success("Pesanan berhasil diubah statusnya");
+    } catch (markPaidError) {
+      apiErrorHandler(markPaidError);
+    } finally {
+      toast.dismiss(toastId);
+    }
+  };
+
   return {
     columns,
     data,
@@ -156,6 +196,7 @@ export default function useSalesPage() {
     isFormOpen,
     isLoading,
     isError,
+    markPaidOrder,
     search: search ?? "",
     sortBy,
     handleChangePage,
@@ -164,6 +205,7 @@ export default function useSalesPage() {
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
+    handleClickMarkPaid,
     handleResetFilter,
     setIsFormOpen,
   };
