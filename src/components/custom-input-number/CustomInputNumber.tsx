@@ -71,6 +71,7 @@ export default function CustomInputNumber<TFieldValues extends FieldValues>({
             <Fragment>
               <NumericFormat
                 {...numberFormatProps}
+                allowNegative={false}
                 customInput={NumericTextField}
                 startAdornment={startAdornment}
                 thousandSeparator="."
