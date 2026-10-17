@@ -100,10 +100,9 @@ export default function PurchaseForm(props: PurchaseFormProps) {
               </BoxFlexSpaceBetween>
 
               <CustomAutocomplete
-                boxFieldWrapperProps={{ sx: { flex: 1 } }}
                 control={control}
                 name={`purchaseItems.${index}.inventoryItemId`}
-                placeholder="Ketik untuk mencari barang"
+                placeholder="Pilih barang"
                 renderErrorMessage
                 disabled={isLoading}
                 autocompleteProps={{

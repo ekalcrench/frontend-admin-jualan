@@ -15,6 +15,7 @@ import InventoryItemsDetailPage from "@/pages/inventory-items-detail-page";
 import PurchasesPage from "@/pages/purchases-page";
 import InventoryTransactionsPage from "@/pages/inventory-transactions-page";
 import ProductsPage from "@/pages/products-page";
+import SalesPage from "@/pages/sales-page";
 
 function ProtectedRoute() {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -61,6 +62,10 @@ export default function RouteLayout() {
           <Route path="/" element={<AdminLayout />}>
             <Route index element={<Navigate to={paths.dashboard} replace />} />
             <Route path={paths.dashboard} element={<DashboardPage />} />
+
+            <Route path={paths.purchases} element={<PurchasesPage />} />
+            <Route path={paths.sales} element={<SalesPage />} />
+
             <Route path={paths.users} element={<UsersPage />} />
             <Route path={paths.products} element={<ProductsPage />} />
             <Route
@@ -75,7 +80,6 @@ export default function RouteLayout() {
               path={paths.inventoryTransactions}
               element={<InventoryTransactionsPage />}
             />
-            <Route path={paths.purchases} element={<PurchasesPage />} />
             <Route path={paths.allUsers} element={<AllUsersPage />} />
             <Route path={paths.umkm} element={<UmkmPage />} />
           </Route>

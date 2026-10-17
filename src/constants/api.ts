@@ -41,6 +41,11 @@ export const api = {
   products: {
     base: "/products",
     byId: (id: string) => `/products/${id}`,
+    options: "/products/options",
+  },
+  orders: {
+    base: "/orders",
+    byId: (id: string) => `/orders/${id}`,
   },
 };
 
