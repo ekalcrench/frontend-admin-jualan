@@ -17,7 +17,6 @@ export interface CreatePurchase {
 export type EditPurchaseItem =
   | (Partial<CreatePurchaseItem> & {
       id: string;
-      inventoryLotId: string;
     })
   | CreatePurchaseItem;
 

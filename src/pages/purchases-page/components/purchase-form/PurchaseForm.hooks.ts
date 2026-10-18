@@ -55,14 +55,13 @@ function toEditPurchaseItems(
     const dirtyItem = dirtyItems?.[index];
     if (!dirtyItem) return [];
 
-    if (!item.id || !item.inventoryLotId) {
+    if (!item.id) {
       return [toCreatePurchaseItem(item, purchasedAt)];
     }
 
     return [
       {
         id: item.id,
-        inventoryLotId: item.inventoryLotId,
         ...(dirtyItem.inventoryItemId && {
           inventoryItemId: item.inventoryItemId?.value ?? "",
         }),
@@ -150,7 +149,6 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
       purchasedAt: purchase.purchasedAt,
       purchaseItems: purchase.purchaseItems?.map((item) => ({
         id: item.id,
-        inventoryLotId: item.inventoryLot.id,
         inventoryItemId: {
           label: `${item.inventoryItem.name} (${inventoryUnitLabels[item.inventoryItem.unit]})`,
           value: item.inventoryItem.id,
@@ -158,11 +156,10 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
         quantity: item.quantity,
         packageSize: item.packageSize,
         totalCost: item.totalCost,
-        isSameAsPurchaseAt:
-          item.inventoryLot.receivedAt === purchase.purchasedAt,
-        receivedAt: item.inventoryLot.receivedAt,
-        isHasNoExpired: !Boolean(item.inventoryLot.expiredAt),
-        expiredAt: item.inventoryLot.expiredAt,
+        isSameAsPurchaseAt: item.receivedAt === purchase.purchasedAt,
+        receivedAt: item.receivedAt,
+        isHasNoExpired: !Boolean(item.expiredAt),
+        expiredAt: item.expiredAt,
       })) ?? [{ ...emptyPurchaseItem }],
     });
   }, [props.id, props.open, purchaseQuery.data, reset]);

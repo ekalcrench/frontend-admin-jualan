@@ -22,7 +22,9 @@ interface PurchaseItem {
   packageSize: number;
   totalCost: number;
   inventoryItem: InventoryItemOptions;
-  inventoryLot: InventoryLot;
+  receivedAt: string;
+  inventoryLot?: InventoryLot;
+  expiredAt?: string;
 }
 
 export type PurchaseStatus = "DRAFT" | "FINALIZED";

@@ -6,7 +6,6 @@ import {
 
 const purchaseItemSchema = z.object({
   id: z.string().optional(),
-  inventoryLotId: z.string().optional(),
   inventoryItemId: z.object(
     {
       label: z.string(),
