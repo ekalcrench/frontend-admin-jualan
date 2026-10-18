@@ -1,6 +1,7 @@
 export interface CreatePurchaseItem {
   inventoryItemId: string;
   quantity: number;
+  packageSize: number;
   totalCost: number;
   receivedAt: string;
   expiredAt?: string;

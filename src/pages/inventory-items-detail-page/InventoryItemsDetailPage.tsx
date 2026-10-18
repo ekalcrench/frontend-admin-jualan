@@ -64,7 +64,7 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
           <Button
             variant="outlined"
             startIcon={<ArrowBackIcon />}
-            onClick={() => navigate(paths.inventoryItems)}
+            onClick={() => navigate(-1)}
           >
             Kembali ke Inventory
           </Button>

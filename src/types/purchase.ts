@@ -19,6 +19,7 @@ interface PurchaseItem {
   id: string;
   inventoryItemId: string;
   quantity: number;
+  packageSize: number;
   totalCost: number;
   inventoryItem: InventoryItemOptions;
   inventoryLot: InventoryLot;

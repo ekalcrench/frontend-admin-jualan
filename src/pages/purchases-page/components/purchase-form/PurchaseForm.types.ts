@@ -12,6 +12,7 @@ export interface PurchaseItemFormValues {
   inventoryLotId?: string;
   inventoryItemId: LabelValue<string> | null;
   quantity: number | null;
+  packageSize: number | null;
   totalCost: number | null;
   isSameAsPurchaseAt: boolean;
   receivedAt: string;

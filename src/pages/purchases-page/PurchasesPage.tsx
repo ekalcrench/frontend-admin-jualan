@@ -110,15 +110,22 @@ export default function PurchasesPage() {
 
       <Box>
         <Grid container columnSpacing={2}>
-          <Grid size={6}>
+          <Grid size={4}>
             <Typography>Stok</Typography>
           </Grid>
-          <Grid size={3}>
-            <Typography>Jumlah</Typography>
+          <Grid size={2}>
+            <BoxFlexEnd>
+              <Typography>Jumlah</Typography>
+            </BoxFlexEnd>
           </Grid>
           <Grid size={3}>
             <BoxFlexEnd>
-              <Typography>Harga</Typography>
+              <Typography>Ukuran Kemasan</Typography>
+            </BoxFlexEnd>
+          </Grid>
+          <Grid size={3}>
+            <BoxFlexEnd>
+              <Typography>Total Harga</Typography>
             </BoxFlexEnd>
           </Grid>
         </Grid>
@@ -126,13 +133,20 @@ export default function PurchasesPage() {
         <Grid container columnSpacing={2}>
           {row.original.purchaseItems.map((item) => (
             <>
-              <Grid size={6}>
+              <Grid size={4}>
                 <Typography>{item.inventoryItem.name}</Typography>
               </Grid>
+              <Grid size={2}>
+                <BoxFlexEnd>
+                  <Typography>{item.quantity}</Typography>
+                </BoxFlexEnd>
+              </Grid>
               <Grid size={3}>
-                <Typography>
-                  {`${item.quantity} ${inventoryUnitLabels[item.inventoryItem.unit]}`}
-                </Typography>
+                <BoxFlexEnd>
+                  <Typography>
+                    {`${item.packageSize} ${inventoryUnitLabels[item.inventoryItem.unit]}`}
+                  </Typography>
+                </BoxFlexEnd>
               </Grid>
               <Grid size={3}>
                 <BoxFlexEnd>

@@ -110,29 +110,36 @@ export default function PurchaseForm(props: PurchaseFormProps) {
                     label: `${item.name} (${inventoryUnitLabels[item.unit]})`,
                     value: item.id,
                   })),
-                  // onInputChange: (_, value, reason) => {
-                  //   if (reason === "input") setPrefix(value);
-                  // },
                   loading: isLoadingGetOptions,
                 }}
               />
 
               <Grid container columnSpacing={1.5}>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid size={{ xs: 12, sm: 3 }}>
                   <CustomInputNumber
                     name={`purchaseItems.${index}.quantity`}
                     control={control}
                     label="Jumlah"
+                    placeholder="2"
+                    renderErrorMessage
+                    disabled={isLoading}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 4 }}>
+                  <CustomInputNumber
+                    name={`purchaseItems.${index}.packageSize`}
+                    control={control}
+                    label="Ukuran"
                     placeholder="500 (Gram (g))"
                     renderErrorMessage
                     disabled={isLoading}
                   />
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid size={{ xs: 12, sm: 5 }}>
                   <CustomInputNumber
                     name={`purchaseItems.${index}.totalCost`}
                     control={control}
-                    label="Harga"
+                    label="Total Harga"
                     placeholder="99.000"
                     startAdornment="Rp."
                     renderErrorMessage

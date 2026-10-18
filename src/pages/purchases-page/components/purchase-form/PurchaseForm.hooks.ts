@@ -39,6 +39,7 @@ function toCreatePurchaseItem(
   return {
     inventoryItemId: item.inventoryItemId?.value ?? "",
     quantity: item.quantity ?? 0,
+    packageSize: item.packageSize ?? 0,
     totalCost: item.totalCost ?? 0,
     receivedAt: item.isSameAsPurchaseAt ? purchasedAt : item.receivedAt,
     expiredAt: item.isHasNoExpired ? undefined : item.expiredAt || undefined,
@@ -65,15 +66,15 @@ function toEditPurchaseItems(
         ...(dirtyItem.inventoryItemId && {
           inventoryItemId: item.inventoryItemId?.value ?? "",
         }),
-        ...(dirtyItem.quantity && dirtyItem.totalCost
-          ? {
-              quantity: item.quantity ?? 0,
-              totalCost: item.totalCost ?? 0,
-            }
-          : (dirtyItem.quantity || dirtyItem.totalCost) && {
-              quantity: item.quantity ?? 0,
-              totalCost: item.totalCost ?? 0,
-            }),
+        ...(dirtyItem.quantity && {
+          quantity: item.quantity ?? 0,
+        }),
+        ...(dirtyItem.packageSize && {
+          packageSize: item.packageSize ?? 0,
+        }),
+        ...(dirtyItem.totalCost && {
+          totalCost: item.totalCost ?? 0,
+        }),
         ...((dirtyItem.receivedAt || dirtyItem.isSameAsPurchaseAt) && {
           receivedAt: item.isSameAsPurchaseAt ? purchasedAt : item.receivedAt,
         }),
@@ -155,6 +156,7 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
           value: item.inventoryItem.id,
         },
         quantity: item.quantity,
+        packageSize: item.packageSize,
         totalCost: item.totalCost,
         isSameAsPurchaseAt:
           item.inventoryLot.receivedAt === purchase.purchasedAt,
