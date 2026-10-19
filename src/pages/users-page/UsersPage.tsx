@@ -1,19 +1,17 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import useUsersPage from "./UsersPage.hooks";
 import CustomTable from "@/components/custom-table";
-import { User, UserOrganization } from "@/types/user";
+import { UserOrganization } from "@/types/user";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex } from "@/styled/CustomBox";
 import {
   userOrganizationRole,
   userOrganizationStatus,
   userRole,
-  userStatus,
 } from "@/constants/user";
 import useAuthStore from "@/store/auth-store";
 import AddIcon from "@mui/icons-material/Add";
 import UserForm from "./components/user-form";
-import { SyntheticEvent } from "react";
 
 export default function UsersPage() {
   const {
