@@ -22,10 +22,9 @@ import { formatLocalDate } from "@/utils/dateTime";
 import { PurchaseResponse } from "@/types/purchase";
 import { StackDetailPanel } from "./PurchasesPage.styles";
 import { currencyFormatter } from "@/utils/currency";
-import {
-  purchaseStatus,
-  purchaseStatusColorMapping,
-} from "@/constants/purchase";
+import { purchaseStatus } from "@/constants/purchase";
+import useAuthStore from "@/store/auth-store";
+import { userOrganizationRole } from "@/constants/user";
 
 export default function PurchasesPage() {
   const {
@@ -49,6 +48,8 @@ export default function PurchasesPage() {
     handleResetFilter,
     setIsFormOpen,
   } = usePurchasesPage();
+
+  const organization = useAuthStore((state) => state.organization);
 
   const renderAddButton = () => (
     <Button
@@ -96,6 +97,20 @@ export default function PurchasesPage() {
           </IconButton>
         </>
       )}
+      {row.original.status === purchaseStatus.FINALIZED &&
+        organization?.role === userOrganizationRole.OWNER && (
+          <IconButton
+            aria-label={`Delete purchase ${row.original.invoiceNumber ?? row.original.id}`}
+            onClick={() => handleClickDelete(row.original.id)}
+            color="error"
+            loading={
+              deletePurchase.isPending &&
+              deletePurchase.variables === row.original.id
+            }
+          >
+            <DeleteIcon />
+          </IconButton>
+        )}
     </BoxFlex>
   );
 
