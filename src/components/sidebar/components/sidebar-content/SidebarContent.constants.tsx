@@ -104,6 +104,16 @@ export const sidebarList: SidebarListItem[] = [
         ],
       },
       {
+        title: "Productions",
+        url: paths.inventoryProductions,
+        params: "page=1&size=20&sortBy=-createdAt",
+        organizationRoleAccess: [
+          organizationRole.ADMIN,
+          organizationRole.OWNER,
+          organizationRole.MEMBER,
+        ],
+      },
+      {
         title: "Transactions",
         url: paths.inventoryTransactions,
         params: "page=1&size=20&sortBy=-createdAt",

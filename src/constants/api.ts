@@ -48,6 +48,9 @@ export const api = {
     byId: (id: string) => `/orders/${id}`,
     markPaid: (id: string) => `/orders/${id}/mark-paid`,
   },
+  inventoryTransactions: {
+    base: "/inventory-transactions",
+  },
 };
 
 export const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
