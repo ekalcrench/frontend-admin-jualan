@@ -8,6 +8,7 @@ export interface CreatePreparation {
   name: string;
   preparedAt: string;
   outputQuantity: number;
+  expiredAt?: string;
   notes?: string;
   preparationItems: CreatePreparationItems[];
 }

@@ -19,19 +19,21 @@ import { BoxCenter, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { TypographyInputLabel } from "@/styled/CustomTypography";
 import usePreparationForm from "./PreparationForm.hooks";
 import { PreparationFormProps } from "./PreparationForm.types";
+import CustomCheckbox from "@/components/custom-checkbox";
 
 export default function PreparationForm(props: PreparationFormProps) {
   const {
     control,
+    emptyPreparationItem,
     fields,
     inventoryItemOptions,
+    isHasNoExpired,
     isLoading,
     isLoadingGetOptions,
     append,
     handleRemovePreparationItem,
     handleSubmit,
     onSubmit,
-    emptyPreparationItem,
   } = usePreparationForm(props);
 
   const itemOptions = (inventoryItemOptions ?? []).map((item) => ({
@@ -91,6 +93,31 @@ export default function PreparationForm(props: PreparationFormProps) {
           renderErrorMessage
           disabled={isLoading}
         />
+
+        <Box>
+          <Typography sx={{ marginBottom: "4px" }}>
+            Tanggal Kedaluwarsa
+          </Typography>
+          <CustomCheckbox
+            control={control}
+            name="isHasNoExpired"
+            label="Tidak memiliki tanggal kedaluwarsa"
+            disabled={isLoading}
+            boxFieldWrapperProps={{
+              sx: {
+                marginBottom: isHasNoExpired ? "16px" : 0,
+              },
+            }}
+          />
+          {!isHasNoExpired && (
+            <CustomDateTimePicker
+              control={control}
+              name="expiredAt"
+              renderErrorMessage
+              disabled={isLoading}
+            />
+          )}
+        </Box>
 
         <CustomInput
           name="notes"

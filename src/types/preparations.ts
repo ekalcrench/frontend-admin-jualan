@@ -31,6 +31,7 @@ export interface PreparationResponse extends BaseApiResponse {
   name: string | null;
   status: PreparationStatus;
   preparedAt: string;
+  expiredAt?: string;
   notes: string | null;
   outputInventoryItemId: string;
   outputQuantity: number;

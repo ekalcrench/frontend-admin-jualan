@@ -21,4 +21,6 @@ export interface PreparationFormValues {
   outputQuantity: number | null;
   notes: string;
   preparationItems: PreparationItemFormValues[];
+  isHasNoExpired: boolean;
+  expiredAt: string | undefined;
 }

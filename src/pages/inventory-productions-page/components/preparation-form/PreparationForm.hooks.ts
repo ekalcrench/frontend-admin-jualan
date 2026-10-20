@@ -41,7 +41,8 @@ export default function usePreparationForm(props: PreparationFormProps) {
     control,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    setValue,
+    formState: { dirtyFields, isSubmitting },
   } = useForm<PreparationFormValues>({
     resolver: zodResolver(
       preparationFormSchema,
@@ -54,6 +55,14 @@ export default function usePreparationForm(props: PreparationFormProps) {
     name: "preparationItems",
   });
   const watch = useWatch({ control });
+  const isHasNoExpired = useWatch({
+    control,
+    name: "isHasNoExpired",
+  });
+  const expiredAt = useWatch({
+    control,
+    name: "expiredAt",
+  });
   const preparationItemsValues = useWatch({
     control,
     name: "preparationItems",
@@ -65,6 +74,14 @@ export default function usePreparationForm(props: PreparationFormProps) {
   useEffect(() => {
     console.log(">>> watch : ", watch);
   }, [watch]);
+
+  useEffect(() => {
+    if (isHasNoExpired && expiredAt != null) {
+      setValue("expiredAt", undefined, {
+        shouldValidate: true,
+      });
+    }
+  }, [isHasNoExpired, expiredAt]);
 
   useEffect(() => {
     if (!props.open) {
@@ -93,6 +110,8 @@ export default function usePreparationForm(props: PreparationFormProps) {
       preparedAt: preparation.preparedAt,
       outputQuantity: preparation.outputQuantity,
       notes: preparation.notes ?? "",
+      isHasNoExpired: !Boolean(preparation.expiredAt),
+      expiredAt: preparation.expiredAt,
       preparationItems: preparation.preparationItems.map((item) => ({
         id: item.id,
         inventoryItemId: toOption(
@@ -133,6 +152,11 @@ export default function usePreparationForm(props: PreparationFormProps) {
   };
 
   const onSubmit = async (values: PreparationFormValues) => {
+    if (props.id && Object.keys(dirtyFields).length === 0) {
+      toast.info("Tidak ada perubahan untuk disimpan");
+      return;
+    }
+
     const toastId = toast.loading(
       props.id ? "Memperbarui produksi..." : "Membuat produksi...",
     );
@@ -143,6 +167,10 @@ export default function usePreparationForm(props: PreparationFormProps) {
       quantity: item.quantity ?? 0,
     }));
 
+    const expiredAt: string | undefined = values.isHasNoExpired
+      ? undefined
+      : values.expiredAt || undefined;
+
     try {
       if (props.id) {
         const editItems: EditPreparationItems[] = preparationItems;
@@ -152,7 +180,8 @@ export default function usePreparationForm(props: PreparationFormProps) {
           name: values.name,
           preparedAt: values.preparedAt,
           outputQuantity: values.outputQuantity ?? 0,
-          notes: values.notes,
+          expiredAt,
+          notes: values.notes ?? null,
           preparationItems: editItems,
           ...(deletedPreparationItemIds.length > 0 && {
             deletedPreparationItemIds,
@@ -165,7 +194,8 @@ export default function usePreparationForm(props: PreparationFormProps) {
           name: values.name,
           preparedAt: values.preparedAt,
           outputQuantity: values.outputQuantity ?? 0,
-          notes: values.notes,
+          expiredAt,
+          notes: values.notes ?? null,
           preparationItems: preparationItems.map((item) => ({
             inventoryItemId: item.inventoryItemId,
             quantity: item.quantity,
@@ -201,15 +231,16 @@ export default function usePreparationForm(props: PreparationFormProps) {
 
   return {
     control,
+    emptyPreparationItem,
     fields,
     preparationItemsValues,
     inventoryItemOptions,
+    isHasNoExpired,
     isLoading,
     isLoadingGetOptions,
     append,
     handleRemovePreparationItem,
     handleSubmit,
     onSubmit,
-    emptyPreparationItem,
   };
 }

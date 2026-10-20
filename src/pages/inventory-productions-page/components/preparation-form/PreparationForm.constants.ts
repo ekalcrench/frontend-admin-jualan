@@ -27,6 +27,8 @@ export const preparationFormSchema = z.object({
   preparationItems: z
     .array(preparationItemSchema)
     .min(1, "Tambahkan minimal satu bahan"),
+  expiredAt: z.string().optional().nullish(),
+  isHasNoExpired: z.boolean().optional(),
 });
 
 export const emptyPreparationItem: PreparationItemFormValues = {
@@ -41,4 +43,6 @@ export const emptyPreparationFormValues: PreparationFormValues = {
   outputQuantity: null,
   notes: "",
   preparationItems: [{ ...emptyPreparationItem }],
+  isHasNoExpired: true,
+  expiredAt: undefined,
 };
