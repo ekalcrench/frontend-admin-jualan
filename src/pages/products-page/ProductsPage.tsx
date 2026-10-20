@@ -207,7 +207,11 @@ export default function ProductsPage() {
           totalPages={data?.pagination?.totalPages}
           handleChangePage={handleChangePage}
           initialState={{
-            columnVisibility: { id: false, createdAt: false, updatedAt: false },
+            columnVisibility: {
+              id: false,
+              createdAt: false,
+              updatedAt: false,
+            },
           }}
           sortBy={{
             direction: getSortDirection(sortBy),

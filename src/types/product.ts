@@ -18,6 +18,7 @@ export interface ProductResponse extends BaseApiResponse {
   organizationId: string;
   name: string;
   sellingPrice: number;
+  stock: number;
   productIngredients: ProductIngredients[];
 }
 

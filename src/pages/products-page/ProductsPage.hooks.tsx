@@ -91,23 +91,9 @@ export default function useProductsPage() {
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       { accessorKey: "name", header: "Nama Produk", size: 240 },
       {
-        accessorKey: "sellingPrice",
-        header: "Harga Jual",
-        size: 180,
-        Cell: ({ cell }) =>
-          currencyFormatter.format(Number(cell.getValue<number>())),
-      },
-      {
-        id: "ingredientCount",
-        header: "Jumlah Bahan",
-        size: 140,
-        enableSorting: false,
-        accessorFn: (row) => row.productIngredients?.length ?? 0,
-      },
-      {
         accessorKey: "capitalCost",
         header: "Harga Modal",
-        size: 140,
+        size: 160,
         enableSorting: false,
         Cell: ({ row }) => {
           const capitalCost = row.original.productIngredients.reduce(
@@ -118,6 +104,25 @@ export default function useProductsPage() {
 
           return capitalCost ? currencyFormatter.format(capitalCost) : "-";
         },
+      },
+      {
+        accessorKey: "sellingPrice",
+        header: "Harga Jual",
+        size: 160,
+        Cell: ({ cell }) =>
+          currencyFormatter.format(Number(cell.getValue<number>())),
+      },
+      {
+        accessorKey: "stock",
+        header: "Jumlah Stok",
+        size: 140,
+      },
+      {
+        id: "ingredientCount",
+        header: "Total Bahan",
+        size: 140,
+        enableSorting: false,
+        accessorFn: (row) => row.productIngredients?.length ?? 0,
       },
       {
         accessorKey: "createdAt",
