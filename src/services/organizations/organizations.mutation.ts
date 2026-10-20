@@ -12,7 +12,7 @@ export function useCreateOrganizationMutation() {
   return useMutation<Organization, Error, CreateOrganization>({
     mutationFn: createOrganization,
     onSuccess: (result, payload, onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: organizationKeys.lists() });
+      context.client.invalidateQueries({ queryKey: organizationKeys.lists });
     },
   });
 }
@@ -27,7 +27,7 @@ export function useEditOrganizationMutation(id?: string) {
       return editOrganization(id, data);
     },
     onSuccess: (result, payload, onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: organizationKeys.lists() });
+      context.client.invalidateQueries({ queryKey: organizationKeys.lists });
       if (id) {
         context.client.setQueryData(organizationKeys.detail(id), result);
       }
@@ -39,7 +39,7 @@ export function useDeleteOrganizationMutation() {
   return useMutation<boolean, Error, string>({
     mutationFn: deleteOrganization,
     onSuccess: (result, payload, onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: organizationKeys.lists() });
+      context.client.invalidateQueries({ queryKey: organizationKeys.lists });
       context.client.invalidateQueries({
         queryKey: organizationKeys.detail(payload),
       });

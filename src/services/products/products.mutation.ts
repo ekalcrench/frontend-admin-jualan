@@ -8,7 +8,7 @@ export function useCreateProductMutation() {
   return useMutation<ProductResponse, Error, CreateProduct>({
     mutationFn: createProduct,
     onSuccess: (result, _payload, _onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: productsKeys.lists() });
+      context.client.invalidateQueries({ queryKey: productsKeys.lists });
       context.client.invalidateQueries({ queryKey: productsKeys.options });
       context.client.setQueryData(productsKeys.detail(result.id), result);
     },
@@ -19,7 +19,7 @@ export function useEditProductMutation() {
   return useMutation<ProductResponse, Error, EditProduct>({
     mutationFn: editProduct,
     onSuccess: (result, _payload, _onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: productsKeys.lists() });
+      context.client.invalidateQueries({ queryKey: productsKeys.lists });
       context.client.invalidateQueries({ queryKey: productsKeys.options });
       context.client.setQueryData(productsKeys.detail(result.id), result);
     },

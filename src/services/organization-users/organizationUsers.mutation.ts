@@ -18,7 +18,7 @@ export function useCreateOrganizationUserMutation() {
     mutationFn: createOrganizationUser,
     onSuccess: (result, payload, onMutateResult, context) => {
       context.client.invalidateQueries({
-        queryKey: organizationUserKeys.lists(),
+        queryKey: organizationUserKeys.lists,
       });
     },
   });
@@ -29,7 +29,7 @@ export function useEditOrganizationUserMutation() {
     mutationFn: editOrganizationUser,
     onSuccess: (result, payload, _onMutateResult, context) => {
       context.client.invalidateQueries({
-        queryKey: organizationUserKeys.lists(),
+        queryKey: organizationUserKeys.lists,
       });
     },
   });
@@ -40,7 +40,7 @@ export function useApproveOrganizationUserMutation() {
     mutationFn: approveOrganizationUser,
     onSuccess: (result, id, onMutateResult, context) => {
       context.client.invalidateQueries({
-        queryKey: organizationUserKeys.lists(),
+        queryKey: organizationUserKeys.lists,
       });
     },
   });
@@ -51,7 +51,7 @@ export function useSuspendOrganizationUserMutation() {
     mutationFn: suspendOrganizationUser,
     onSuccess: (result, id, onMutateResult, context) => {
       context.client.invalidateQueries({
-        queryKey: organizationUserKeys.lists(),
+        queryKey: organizationUserKeys.lists,
       });
     },
   });
@@ -62,7 +62,7 @@ export function useActivateOrganizationUserMutation() {
     mutationFn: activateOrganizationUser,
     onSuccess: (result, id, onMutateResult, context) => {
       context.client.invalidateQueries({
-        queryKey: organizationUserKeys.lists(),
+        queryKey: organizationUserKeys.lists,
       });
     },
   });

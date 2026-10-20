@@ -51,7 +51,7 @@ export function useFinalizePurchaseMutation() {
     mutationFn: finalizePurchase,
     onSuccess: (result, payload, onMutateResult, context) => {
       context.client.invalidateQueries({
-        queryKey: inventoryTransactionKeys.lists(),
+        queryKey: inventoryTransactionKeys.lists,
       });
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
       context.client.invalidateQueries({ queryKey: purchasesKeys.lists });
