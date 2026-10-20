@@ -9,6 +9,8 @@ export const inventoryTransactionTypeLabels: Record<
 > = {
   PURCHASE: "Purchases",
   SALE: "Penjualan",
+  PREPARATION_IN: "Hasil Productions",
+  PREPARATION_OUT: "Bahan Productions",
   ADJUSTMENT_IN: "Penyesuaian Masuk",
   ADJUSTMENT_OUT: "Penyesuaian Keluar",
   WASTE: "Barang Rusak",
@@ -21,6 +23,8 @@ export const inventoryTransactionTypeColors: Record<
 > = {
   PURCHASE: "success",
   SALE: "info",
+  PREPARATION_IN: "success",
+  PREPARATION_OUT: "warning",
   ADJUSTMENT_IN: "success",
   ADJUSTMENT_OUT: "warning",
   WASTE: "error",
@@ -36,6 +40,8 @@ export const inventoryTransactionQuantity = (
   return {
     PURCHASE: `+${localQuantity} ${inventoryUnitLabels[unit]}`,
     SALE: `-${localQuantity} ${inventoryUnitLabels[unit]}`,
+    PREPARATION_IN: `+${localQuantity} ${inventoryUnitLabels[unit]}`,
+    PREPARATION_OUT: `-${localQuantity} ${inventoryUnitLabels[unit]}`,
     ADJUSTMENT_IN: `+${localQuantity} ${inventoryUnitLabels[unit]}`,
     ADJUSTMENT_OUT: `-${localQuantity} ${inventoryUnitLabels[unit]}`,
     WASTE: `-${localQuantity} ${inventoryUnitLabels[unit]}`,

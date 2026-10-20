@@ -5,6 +5,8 @@ import { DefaultFilter } from "./table";
 export type InventoryTransactionType =
   | "PURCHASE"
   | "SALE"
+  | "PREPARATION_IN"
+  | "PREPARATION_OUT"
   | "ADJUSTMENT_IN"
   | "ADJUSTMENT_OUT"
   | "WASTE"

@@ -16,6 +16,7 @@ import PurchasesPage from "@/pages/purchases-page";
 import InventoryTransactionsPage from "@/pages/inventory-transactions-page";
 import ProductsPage from "@/pages/products-page";
 import SalesPage from "@/pages/sales-page";
+import InventoryProductionsPage from "@/pages/inventory-productions-page";
 
 function ProtectedRoute() {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -65,6 +66,10 @@ export default function RouteLayout() {
 
             <Route path={paths.purchases} element={<PurchasesPage />} />
             <Route path={paths.sales} element={<SalesPage />} />
+            <Route
+              path={paths.inventoryProductions}
+              element={<InventoryProductionsPage />}
+            />
 
             <Route path={paths.users} element={<UsersPage />} />
             <Route path={paths.products} element={<ProductsPage />} />
