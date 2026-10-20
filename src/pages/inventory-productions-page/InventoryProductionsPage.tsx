@@ -134,7 +134,9 @@ export default function InventoryProductionsPage() {
           {`Hasil\t: ${row.original.outputInventoryItem.name} (${row.original.outputQuantity} ${inventoryUnitLabels[row.original.outputInventoryItem.unit]})`}
         </TypographyTab>
         {row.original.notes && (
-          <TypographyTab>{`Catatan\t: ${row.original.notes}`}</TypographyTab>
+          <>
+            <TypographyTab>{`Catatan\t:\n${row.original.notes}`}</TypographyTab>
+          </>
         )}
       </Box>
 
@@ -239,7 +241,12 @@ export default function InventoryProductionsPage() {
           totalPages={data?.pagination?.totalPages}
           handleChangePage={handleChangePage}
           initialState={{
-            columnVisibility: { id: false, createdAt: false, updatedAt: false },
+            columnVisibility: {
+              id: false,
+              notes: false,
+              createdAt: false,
+              updatedAt: false,
+            },
           }}
           sortBy={{
             direction: sortBy.startsWith("-") ? "desc" : "asc",
@@ -254,7 +261,7 @@ export default function InventoryProductionsPage() {
           columnRowActionsSize={200}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
-          searchPlaceholder="Cari berdasarkan nama produksi atau barang hasil"
+          searchPlaceholder="Cari berdasarkan nama produksi atau barang"
         />
       </Stack>
     </Box>

@@ -15,8 +15,7 @@ import CustomInput from "@/components/custom-input";
 import CustomInputNumber from "@/components/custom-input-number";
 import FormDrawer from "@/components/form-drawer";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
-import { BoxCenter, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
-import { TypographyInputLabel } from "@/styled/CustomTypography";
+import { BoxCenter, BoxFlexEnd } from "@/styled/CustomBox";
 import usePreparationForm from "./PreparationForm.hooks";
 import { PreparationFormProps } from "./PreparationForm.types";
 import CustomCheckbox from "@/components/custom-checkbox";
@@ -122,8 +121,8 @@ export default function PreparationForm(props: PreparationFormProps) {
         <CustomInput
           name="notes"
           control={control}
-          label="Catatan"
-          placeholder="Catatan tambahan (opsional)"
+          label="Cara Produksi"
+          placeholder="Step by step produksi (optional)"
           renderErrorMessage
           disabled={isLoading}
           textFieldProps={{ multiline: true, minRows: 2 }}

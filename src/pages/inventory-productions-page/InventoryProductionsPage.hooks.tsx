@@ -122,16 +122,22 @@ export default function useInventoryProductionsPage() {
           `${Number(cell.getValue<number>()).toLocaleString("id-ID")} ${inventoryUnitLabels[row.original.outputInventoryItem.unit]}`,
       },
       {
-        accessorKey: "preparedAt",
-        header: "Tanggal Produksi",
-        size: 180,
-        Cell: ({ cell }) => formatLocalDateOnly(cell.getValue<string>()),
-      },
-      {
         accessorKey: "outputTotalCost",
         header: "Total Biaya",
         size: 160,
         Cell: ({ cell }) => currencyFormatter.format(cell.getValue<number>()),
+      },
+      {
+        accessorKey: "outputUnitCost",
+        header: "Harga Satuan",
+        size: 140,
+        Cell: ({ cell }) => currencyFormatter.format(cell.getValue<number>()),
+      },
+      {
+        accessorKey: "preparedAt",
+        header: "Tanggal Produksi",
+        size: 160,
+        Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
       },
       {
         accessorKey: "createdAt",
@@ -144,6 +150,12 @@ export default function useInventoryProductionsPage() {
         header: "Diubah Pada",
         size: 160,
         Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
+      },
+      {
+        id: "notes",
+        header: "Catatan",
+        size: 200,
+        enableSorting: false,
       },
     ],
     [],
