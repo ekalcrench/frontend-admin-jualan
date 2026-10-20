@@ -8,12 +8,22 @@ import {
   editOrder,
   markPaidOrder,
 } from "./orders.api";
+import { productsKeys } from "../products/products.constants";
+import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
+import { inventoryLotKeys } from "../inventory-lots/inventoryLots.constants";
+import { inventoryTransactionKeys } from "../inventory-transactions/inventoryTransactions.constants";
 
 export function useCreateOrderMutation() {
   return useMutation<OrderResponse, Error, CreateOrder>({
     mutationFn: createOrder,
     onSuccess: (result, _payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: ordersKeys.lists });
+      context.client.invalidateQueries({ queryKey: productsKeys.lists });
+      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
+      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
+      context.client.invalidateQueries({
+        queryKey: inventoryTransactionKeys.lists,
+      });
       context.client.setQueryData(ordersKeys.detail(result.id), result);
     },
   });
@@ -24,6 +34,12 @@ export function useEditOrderMutation() {
     mutationFn: editOrder,
     onSuccess: (result, _payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: ordersKeys.lists });
+      context.client.invalidateQueries({ queryKey: productsKeys.lists });
+      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
+      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
+      context.client.invalidateQueries({
+        queryKey: inventoryTransactionKeys.lists,
+      });
       context.client.setQueryData(ordersKeys.detail(result.id), result);
     },
   });
@@ -34,6 +50,12 @@ export function useDeleteOrderMutation() {
     mutationFn: deleteOrder,
     onSuccess: (_result, _payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: ordersKeys.all });
+      context.client.invalidateQueries({ queryKey: productsKeys.lists });
+      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
+      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
+      context.client.invalidateQueries({
+        queryKey: inventoryTransactionKeys.lists,
+      });
     },
   });
 }
@@ -43,6 +65,12 @@ export function useMarkPaidOrderMutation() {
     mutationFn: markPaidOrder,
     onSuccess: (result, payload, onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: ordersKeys.lists });
+      context.client.invalidateQueries({ queryKey: productsKeys.lists });
+      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
+      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
+      context.client.invalidateQueries({
+        queryKey: inventoryTransactionKeys.lists,
+      });
       context.client.setQueryData(ordersKeys.detail(result.id), result);
     },
   });
