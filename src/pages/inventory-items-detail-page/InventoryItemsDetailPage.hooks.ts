@@ -95,9 +95,9 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
         enableSorting: false,
       },
       {
-        accessorKey: "supplierName",
-        header: "Supplier",
-        size: 200,
+        accessorKey: "preparationOutputId",
+        header: "ID Production",
+        size: 180,
         enableSorting: false,
       },
       {
@@ -105,6 +105,15 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
         header: "Nomor Invoice",
         size: 180,
         enableSorting: false,
+        Cell: ({ cell }) => cell.getValue<string | null>() ?? "-",
+      },
+      {
+        accessorKey: "supplierName",
+        header: "Nama Supplier / Production",
+        size: 200,
+        enableSorting: false,
+        Cell: ({ cell, row }) =>
+          cell.getValue<string | null>() ?? row.original.preparationName ?? "-",
       },
       {
         accessorKey: "quantity",
@@ -160,7 +169,7 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
         Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
       },
     ],
-    [],
+    [inventoryItemQuery?.data],
   );
 
   useEffect(() => {

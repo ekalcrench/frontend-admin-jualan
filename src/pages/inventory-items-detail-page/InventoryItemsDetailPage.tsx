@@ -85,6 +85,8 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
               id: false,
               inventoryItemId: false,
               purchaseItemId: false,
+              preparationOutputId: false,
+              invoiceNumber: false,
               createdAt: false,
               updatedAt: false,
             },
