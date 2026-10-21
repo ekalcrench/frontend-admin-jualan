@@ -34,10 +34,10 @@ export const sidebarList: SidebarListItem[] = [
     groupName: "Transactions",
   },
   {
-    title: "Purchases",
-    url: paths.purchases,
+    title: "Sales",
+    url: paths.sales,
     params: "page=1&size=20&sortBy=-createdAt",
-    icon: <ShoppingCartIcon />,
+    icon: <PaidIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,
       organizationRole.OWNER,
@@ -45,10 +45,10 @@ export const sidebarList: SidebarListItem[] = [
     ],
   },
   {
-    title: "Sales",
-    url: paths.sales,
+    title: "Purchases",
+    url: paths.purchases,
     params: "page=1&size=20&sortBy=-createdAt",
-    icon: <PaidIcon />,
+    icon: <ShoppingCartIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,
       organizationRole.OWNER,
@@ -71,17 +71,6 @@ export const sidebarList: SidebarListItem[] = [
     url: paths.products,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <CategoryIcon />,
-    organizationRoleAccess: [
-      organizationRole.ADMIN,
-      organizationRole.OWNER,
-      organizationRole.MEMBER,
-    ],
-  },
-  {
-    title: "Users",
-    url: paths.users,
-    params: "page=1&size=20&sortBy=-createdAt",
-    icon: <GroupIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,
       organizationRole.OWNER,
@@ -124,6 +113,17 @@ export const sidebarList: SidebarListItem[] = [
         ],
       },
     ],
+    organizationRoleAccess: [
+      organizationRole.ADMIN,
+      organizationRole.OWNER,
+      organizationRole.MEMBER,
+    ],
+  },
+  {
+    title: "Users",
+    url: paths.users,
+    params: "page=1&size=20&sortBy=-createdAt",
+    icon: <GroupIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,
       organizationRole.OWNER,

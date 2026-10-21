@@ -9,16 +9,16 @@ export const paths = {
   analytics: "/analytics",
   announcements: "/announcements",
   sales: "/sales",
+  purchases: "/purchases",
   cashFlows: "/cash-flows",
 
   products: "/products",
-  users: "/users",
   inventoryItems: "/inventory-items",
   inventoryItemsDetail: (id: string) => `/inventory-items/${id}`,
   inventoryItemsDetailRoute: "/inventory-items/:inventoryItemId",
   inventoryProductions: "/inventory-productions",
   inventoryTransactions: "/inventory-transactions",
-  purchases: "/purchases",
+  users: "/users",
 
   allUsers: "/all-users",
   umkm: "/umkm",
