@@ -1,4 +1,3 @@
-import AnalyticsIcon from "@mui/icons-material/Analytics";
 import GroupIcon from "@mui/icons-material/Group";
 import PaidIcon from "@mui/icons-material/Paid";
 import { paths } from "@/constants/path";
@@ -10,7 +9,6 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CategoryIcon from "@mui/icons-material/Category";
-import CampaignIcon from "@mui/icons-material/Campaign";
 import HistoryIcon from "@mui/icons-material/History";
 
 export const sidebarList: SidebarListItem[] = [
@@ -19,14 +17,6 @@ export const sidebarList: SidebarListItem[] = [
     url: paths.dashboard,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <DashboardIcon />,
-    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
-    organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
-  },
-  {
-    title: "Analytics",
-    url: paths.analytics,
-    params: "page=1&size=20&sortBy=-createdAt",
-    icon: <AnalyticsIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
     organizationRoleAccess: [organizationRole.ADMIN, organizationRole.OWNER],
   },
@@ -146,13 +136,6 @@ export const sidebarList: SidebarListItem[] = [
     url: paths.umkm,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <StoreIcon />,
-    userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
-  },
-  {
-    title: "Announcements",
-    url: paths.announcements,
-    params: "page=1&size=20&sortBy=-createdAt",
-    icon: <CampaignIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
   },
 ];

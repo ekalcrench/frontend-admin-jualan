@@ -6,8 +6,6 @@ export const paths = {
   selectOrganizations: "/select-organizations",
 
   dashboard: "/dashboard",
-  analytics: "/analytics",
-  announcements: "/announcements",
   sales: "/sales",
   purchases: "/purchases",
   cashFlows: "/cash-flows",
