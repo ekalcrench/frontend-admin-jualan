@@ -29,6 +29,7 @@ export default function OrderForm(props: OrderFormProps) {
     isLoading,
     isLoadingGetOptions,
     sellingPriceMapping,
+    stockMapping,
     append,
     handleRemoveOrderItem,
     handleSubmit,
@@ -111,6 +112,15 @@ export default function OrderForm(props: OrderFormProps) {
                   />
                 </Grid>
               </Grid>
+
+              <BoxFlexSpaceBetween>
+                <Typography variant="body2">Stok</Typography>
+                <Typography variant="body2">
+                  {orderItemsValues?.[index]?.productId?.value
+                    ? stockMapping[orderItemsValues?.[index]?.productId?.value]
+                    : "-"}
+                </Typography>
+              </BoxFlexSpaceBetween>
 
               <BoxFlexSpaceBetween>
                 <Typography variant="body2">Harga</Typography>

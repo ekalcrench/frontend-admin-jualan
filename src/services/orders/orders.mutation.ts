@@ -18,12 +18,6 @@ export function useCreateOrderMutation() {
     mutationFn: createOrder,
     onSuccess: (result, _payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: ordersKeys.lists });
-      context.client.invalidateQueries({ queryKey: productsKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
-      context.client.invalidateQueries({
-        queryKey: inventoryTransactionKeys.lists,
-      });
       context.client.setQueryData(ordersKeys.detail(result.id), result);
     },
   });
@@ -34,12 +28,6 @@ export function useEditOrderMutation() {
     mutationFn: editOrder,
     onSuccess: (result, _payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: ordersKeys.lists });
-      context.client.invalidateQueries({ queryKey: productsKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
-      context.client.invalidateQueries({
-        queryKey: inventoryTransactionKeys.lists,
-      });
       context.client.setQueryData(ordersKeys.detail(result.id), result);
     },
   });
@@ -50,12 +38,6 @@ export function useDeleteOrderMutation() {
     mutationFn: deleteOrder,
     onSuccess: (_result, _payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: ordersKeys.all });
-      context.client.invalidateQueries({ queryKey: productsKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
-      context.client.invalidateQueries({
-        queryKey: inventoryTransactionKeys.lists,
-      });
     },
   });
 }

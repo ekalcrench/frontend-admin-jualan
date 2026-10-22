@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   type FieldNamesMarkedBoolean,
   type Resolver,
@@ -71,24 +71,30 @@ export default function useOrderForm(props: OrderFormProps) {
   const [sellingPriceMapping, setSellingPriceMapping] = useState<
     Record<string, number>
   >({});
+  const [stockMapping, setStockMapping] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    console.log(">>> sellingPriceMapping : ", sellingPriceMapping);
-  }, [sellingPriceMapping]);
-
-  useEffect(() => {
-    console.log(">>> productOptions : ", productOptions);
     if (!productOptions?.length) {
       setSellingPriceMapping({});
+      setStockMapping({});
       return;
     }
+    const _sellingPriceMapping: Record<string, number> = {};
+    const _stockMapping: Record<string, number> = {};
 
-    setSellingPriceMapping(
-      Object.fromEntries(
-        productOptions.map((option) => [option.id, option.sellingPrice]),
-      ),
-    );
+    for (const option of productOptions) {
+      _sellingPriceMapping[option.id] = option.sellingPrice;
+      _stockMapping[option.id] = option.stock;
+    }
+
+    setSellingPriceMapping(_sellingPriceMapping);
+    setStockMapping(_stockMapping);
   }, [productOptions]);
+
+  const customOrderFormSchema = useMemo(
+    () => orderFormSchema(stockMapping),
+    [stockMapping],
+  );
 
   const {
     control,
@@ -96,7 +102,7 @@ export default function useOrderForm(props: OrderFormProps) {
     reset,
     formState: { isSubmitting, dirtyFields },
   } = useForm<OrderFormValues>({
-    resolver: zodResolver(orderFormSchema) as Resolver<OrderFormValues>,
+    resolver: zodResolver(customOrderFormSchema) as Resolver<OrderFormValues>,
     mode: "onBlur",
     defaultValues: emptyOrderFormValues,
   });
@@ -106,10 +112,6 @@ export default function useOrderForm(props: OrderFormProps) {
   });
   const orderItemsValues = useWatch({ control, name: "orderItems" });
   const [deletedOrderItemIds, setDeletedOrderItemIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    console.log(">>> orderItemsValues : ", orderItemsValues);
-  }, [orderItemsValues]);
 
   useEffect(() => {
     if (!props.open) {
@@ -224,6 +226,7 @@ export default function useOrderForm(props: OrderFormProps) {
     isLoading,
     isLoadingGetOptions,
     sellingPriceMapping,
+    stockMapping,
     append,
     handleRemoveOrderItem,
     handleSubmit,

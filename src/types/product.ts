@@ -26,4 +26,5 @@ export interface ProductOptions {
   id: string;
   name: string;
   sellingPrice: number;
+  stock: number;
 }
