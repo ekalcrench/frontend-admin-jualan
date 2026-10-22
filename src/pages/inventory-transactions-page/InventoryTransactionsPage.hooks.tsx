@@ -12,6 +12,7 @@ import type {
 } from "@/types/inventoryTransaction";
 import type { ColumnSort } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
+import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate } from "@/utils/dateTime";
 import { Chip } from "@mui/material";
 import type { MRT_ColumnDef } from "material-react-table";
@@ -83,6 +84,13 @@ export default function useInventoryTransactionsPage() {
     () => [
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       {
+        accessorKey: "referenceId",
+        header: "Referensi ID",
+        size: 180,
+        Cell: ({ cell }) => cell.getValue<string>() || "-",
+        enableSorting: false,
+      },
+      {
         id: "inventoryItemName",
         header: "Nama Barang",
         size: 220,
@@ -116,11 +124,16 @@ export default function useInventoryTransactionsPage() {
           ),
       },
       {
-        accessorKey: "referenceId",
-        header: "Referensi ID",
-        size: 180,
-        Cell: ({ cell }) => cell.getValue<string>() || "-",
-        enableSorting: false,
+        accessorKey: "unitCost",
+        header: "Harga Per Satuan",
+        size: 160,
+        Cell: ({ cell }) => currencyFormatter.format(cell.getValue<number>()),
+      },
+      {
+        accessorKey: "totalCost",
+        header: "Total Harga",
+        size: 170,
+        Cell: ({ cell }) => currencyFormatter.format(cell.getValue<number>()),
       },
       {
         accessorKey: "createdAt",
