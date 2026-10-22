@@ -12,6 +12,7 @@ import { productsKeys } from "../products/products.constants";
 import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
 import { inventoryLotKeys } from "../inventory-lots/inventoryLots.constants";
 import { inventoryTransactionKeys } from "../inventory-transactions/inventoryTransactions.constants";
+import { cashTransactionsKeys } from "../cash-transactions/cashTransactions.constants";
 
 export function useCreateOrderMutation() {
   return useMutation<OrderResponse, Error, CreateOrder>({
@@ -52,6 +53,12 @@ export function useMarkPaidOrderMutation() {
       context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
       context.client.invalidateQueries({
         queryKey: inventoryTransactionKeys.lists,
+      });
+      context.client.invalidateQueries({
+        queryKey: cashTransactionsKeys.lists,
+      });
+      context.client.invalidateQueries({
+        queryKey: cashTransactionsKeys.balances,
       });
       context.client.setQueryData(ordersKeys.detail(result.id), result);
     },

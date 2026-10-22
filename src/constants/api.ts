@@ -56,6 +56,11 @@ export const api = {
   inventoryTransactions: {
     base: "/inventory-transactions",
   },
+  cashTransactions: {
+    base: "/cash-transactions",
+    byId: (id: string) => `/cash-transactions/${id}`,
+    balance: "/cash-transactions/balance",
+  },
 };
 
 export const baseApiUrl = import.meta.env.VITE_API_BASE_URL;

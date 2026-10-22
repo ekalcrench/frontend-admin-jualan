@@ -11,6 +11,7 @@ import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
 import { PurchaseResponse } from "@/types/purchase";
 import { inventoryTransactionKeys } from "../inventory-transactions/inventoryTransactions.constants";
 import { inventoryLotKeys } from "../inventory-lots/inventoryLots.constants";
+import { cashTransactionsKeys } from "../cash-transactions/cashTransactions.constants";
 
 export function useCreatePurchaseMutation() {
   return useMutation<PurchaseResponse, Error, CreatePurchase>({
@@ -41,6 +42,12 @@ export function useDeletePurchaseMutation() {
       });
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
       context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
+      context.client.invalidateQueries({
+        queryKey: cashTransactionsKeys.lists,
+      });
+      context.client.invalidateQueries({
+        queryKey: cashTransactionsKeys.balances,
+      });
       context.client.invalidateQueries({ queryKey: purchasesKeys.all });
     },
   });
@@ -56,6 +63,12 @@ export function useFinalizePurchaseMutation() {
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
       context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
       context.client.invalidateQueries({ queryKey: purchasesKeys.lists });
+      context.client.invalidateQueries({
+        queryKey: cashTransactionsKeys.lists,
+      });
+      context.client.invalidateQueries({
+        queryKey: cashTransactionsKeys.balances,
+      });
       context.client.setQueryData(purchasesKeys.detail(result.id), result);
     },
   });

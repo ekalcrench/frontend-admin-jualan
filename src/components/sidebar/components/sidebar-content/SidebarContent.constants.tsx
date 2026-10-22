@@ -58,7 +58,7 @@ export const sidebarList: SidebarListItem[] = [
   {
     title: "Cash Flows",
     url: paths.cashFlows,
-    params: "page=1&size=20&sortBy=-createdAt",
+    params: "page=1&size=20&sortBy=-transactionAt",
     icon: <HistoryIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
     organizationRoleAccess: [organizationRole.OWNER],
