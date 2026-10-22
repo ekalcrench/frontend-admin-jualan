@@ -10,13 +10,13 @@ import {
 import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
 import { PurchaseResponse } from "@/types/purchase";
 import { inventoryTransactionKeys } from "../inventory-transactions/inventoryTransactions.constants";
+import { inventoryLotKeys } from "../inventory-lots/inventoryLots.constants";
 
 export function useCreatePurchaseMutation() {
   return useMutation<PurchaseResponse, Error, CreatePurchase>({
     mutationFn: createPurchase,
     onSuccess: (result, payload, onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: purchasesKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.all });
       context.client.setQueryData(purchasesKeys.detail(result.id), result);
     },
   });
@@ -27,7 +27,6 @@ export function useEditPurchaseMutation() {
     mutationFn: editPurchase,
     onSuccess: (result, payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: purchasesKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.all });
       context.client.setQueryData(purchasesKeys.detail(result.id), result);
     },
   });
@@ -37,11 +36,12 @@ export function useDeletePurchaseMutation() {
   return useMutation<boolean, Error, string>({
     mutationFn: deletePurchase,
     onSuccess: (result, payload, _onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: purchasesKeys.all });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.all });
       context.client.invalidateQueries({
-        queryKey: inventoryTransactionKeys.all,
+        queryKey: inventoryTransactionKeys.lists,
       });
+      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
+      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
+      context.client.invalidateQueries({ queryKey: purchasesKeys.all });
     },
   });
 }
@@ -54,6 +54,7 @@ export function useFinalizePurchaseMutation() {
         queryKey: inventoryTransactionKeys.lists,
       });
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
+      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
       context.client.invalidateQueries({ queryKey: purchasesKeys.lists });
       context.client.setQueryData(purchasesKeys.detail(result.id), result);
     },
