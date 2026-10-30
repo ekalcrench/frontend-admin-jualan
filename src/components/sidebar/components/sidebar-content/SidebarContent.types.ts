@@ -1,4 +1,4 @@
-import { OrganizationRole } from "@/types/organization";
+import { OrganizationRole } from "@/constants/organization";
 import { UserRole } from "@/types/user";
 
 export interface SidebarListItem {
