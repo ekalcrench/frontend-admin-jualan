@@ -7,9 +7,10 @@ import { BoxFlex } from "@/styled/CustomBox";
 import SavingsIcon from "@mui/icons-material/Savings";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import { CashDetailsProps } from "./CashDetails.types";
 
-export default function CashDetails() {
-  const { data, isLoading } = useCashDetails();
+export default function CashDetails(props: CashDetailsProps) {
+  const { data, isLoading } = useCashDetails(props);
 
   return (
     <Grid container spacing={2}>

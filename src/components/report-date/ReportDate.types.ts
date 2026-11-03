@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface ReportDateFormValues {
   startDate: string;
   endDate: string;
@@ -10,3 +12,8 @@ export type ReportDateType =
   | "A_YEAR"
   | "CUSTOM"
   | undefined;
+
+export interface ReportDateProps {
+  setStartDate: Dispatch<SetStateAction<string>>;
+  setEndDate: Dispatch<SetStateAction<string>>;
+}

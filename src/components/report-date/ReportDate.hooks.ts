@@ -4,9 +4,12 @@ import {
   reportDateFormSchema,
   emptyReportDateFormValues,
 } from "./ReportDate.constants";
-import { ReportDateFormValues, ReportDateType } from "./ReportDate.types";
+import {
+  ReportDateFormValues,
+  ReportDateProps,
+  ReportDateType,
+} from "./ReportDate.types";
 import { useState } from "react";
-import useCashTransactionStore from "@/store/cash-transaction-store";
 
 const formatDate = (date: Date): string => {
   const year = date.getFullYear();
@@ -16,7 +19,10 @@ const formatDate = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-export default function useReportDate() {
+export default function useReportDate({
+  setEndDate,
+  setStartDate,
+}: ReportDateProps) {
   const { control, reset, handleSubmit, setValue } =
     useForm<ReportDateFormValues>({
       resolver: zodResolver(
@@ -25,8 +31,6 @@ export default function useReportDate() {
       mode: "onChange",
       defaultValues: emptyReportDateFormValues,
     });
-
-  const cashTransactionStore = useCashTransactionStore();
 
   const [openCollapse, setOpenCollapse] = useState<boolean>(false);
   const [reportDateType, setReportDateType] = useState<ReportDateType>();
@@ -60,8 +64,8 @@ export default function useReportDate() {
       startDate,
       endDate,
     );
-    cashTransactionStore.setStartDate(formattedStartDate);
-    cashTransactionStore.setEndDate(formattedEndDate);
+    setStartDate(formattedStartDate);
+    setEndDate(formattedEndDate);
     setOpenCollapse(false);
     setReportDateType("TODAY");
   };
@@ -76,8 +80,8 @@ export default function useReportDate() {
       startDate,
       endDate,
     );
-    cashTransactionStore.setStartDate(formattedStartDate);
-    cashTransactionStore.setEndDate(formattedEndDate);
+    setStartDate(formattedStartDate);
+    setEndDate(formattedEndDate);
     setOpenCollapse(false);
     setReportDateType("A_WEEK");
   };
@@ -92,8 +96,8 @@ export default function useReportDate() {
       startDate,
       endDate,
     );
-    cashTransactionStore.setStartDate(formattedStartDate);
-    cashTransactionStore.setEndDate(formattedEndDate);
+    setStartDate(formattedStartDate);
+    setEndDate(formattedEndDate);
     setOpenCollapse(false);
     setReportDateType("A_MONTH");
   };
@@ -108,8 +112,8 @@ export default function useReportDate() {
       startDate,
       endDate,
     );
-    cashTransactionStore.setStartDate(formattedStartDate);
-    cashTransactionStore.setEndDate(formattedEndDate);
+    setStartDate(formattedStartDate);
+    setEndDate(formattedEndDate);
     setOpenCollapse(false);
     setReportDateType("A_YEAR");
   };
@@ -121,8 +125,8 @@ export default function useReportDate() {
   };
 
   const onSubmit = (values: ReportDateFormValues) => {
-    cashTransactionStore.setStartDate(values.startDate);
-    cashTransactionStore.setEndDate(values.endDate);
+    setStartDate(values.startDate);
+    setEndDate(values.endDate);
   };
 
   return {

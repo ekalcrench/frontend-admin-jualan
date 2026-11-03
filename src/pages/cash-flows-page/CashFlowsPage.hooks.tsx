@@ -5,10 +5,7 @@ import {
   isEditableCashTransactionType,
 } from "@/constants/cashTransaction";
 import { useDeleteCashTransactionMutation } from "@/services/cash-transactions/cashTransactions.mutation";
-import {
-  useCashTransactionBalanceQuery,
-  useCashTransactionsQuery,
-} from "@/services/cash-transactions/cashTransactions.query";
+import { useCashTransactionsQuery } from "@/services/cash-transactions/cashTransactions.query";
 import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
 import { CashTransactionResponse } from "@/types/cashTransaction";
 import { ColumnSort } from "@/types/table";
@@ -20,7 +17,6 @@ import { MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import useCashTransactionStore from "@/store/cash-transaction-store";
 
 const defaultCashFlowSort = "-transactionAt";
 
@@ -51,7 +47,9 @@ export default function useCashFlowsPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const { endDate, startDate } = useCashTransactionStore();
+  // const { endDate, startDate } = useCashTransactionStore();
+  const [endDate, setEndDate] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
 
   const { data, isLoading, isError, error } = useCashTransactionsQuery({
     page,
@@ -193,11 +191,13 @@ export default function useCashFlowsPage() {
     data,
     deleteCashTransaction,
     editingCashTransactionId,
+    endDate,
     isFormOpen,
     isLoading,
     isError,
     search: search ?? "",
     sortBy,
+    startDate,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
@@ -205,6 +205,8 @@ export default function useCashFlowsPage() {
     handleClickDelete,
     handleClickEditForm,
     handleResetFilter,
+    setEndDate,
     setIsFormOpen,
+    setStartDate,
   };
 }

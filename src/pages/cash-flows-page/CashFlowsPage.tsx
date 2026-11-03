@@ -11,7 +11,7 @@ import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import CashTransactionForm from "./components/cash-transaction-form";
 import useCashFlowsPage from "./CashFlowsPage.hooks";
 import CashDetails from "./components/cash-details";
-import ReportDate from "./components/report-date";
+import ReportDate from "@/components/report-date";
 
 export default function CashFlowsPage() {
   const {
@@ -19,11 +19,13 @@ export default function CashFlowsPage() {
     data,
     deleteCashTransaction,
     editingCashTransactionId,
+    endDate,
     isFormOpen,
     isLoading,
     isError,
     search,
     sortBy,
+    startDate,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
@@ -31,7 +33,9 @@ export default function CashFlowsPage() {
     handleClickDelete,
     handleClickEditForm,
     handleResetFilter,
+    setEndDate,
     setIsFormOpen,
+    setStartDate,
   } = useCashFlowsPage();
 
   const renderAddButton = () => (
@@ -100,9 +104,9 @@ export default function CashFlowsPage() {
           </Box>
         </Box>
 
-        <ReportDate />
+        <ReportDate setEndDate={setEndDate} setStartDate={setStartDate} />
 
-        <CashDetails />
+        <CashDetails endDate={endDate} startDate={startDate} />
 
         <CustomTable
           columns={columns}

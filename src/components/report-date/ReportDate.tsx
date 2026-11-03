@@ -1,10 +1,4 @@
-import CustomDateTimePicker from "@/components/custom-date-time-picker";
-import {
-  BoxCenter,
-  BoxFlex,
-  BoxFlexEnd,
-  BoxFlexSpaceBetween,
-} from "@/styled/CustomBox";
+import { BoxCenter, BoxFlex, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import {
   Accordion,
   AccordionSummary,
@@ -13,7 +7,6 @@ import {
   ButtonGroup,
   Button,
   Collapse,
-  Grid,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -21,8 +14,9 @@ import useReportDate from "./ReportDate.hooks";
 import SearchIcon from "@mui/icons-material/Search";
 import { boxShadowMain } from "@/constants/styled";
 import CustomDatePicker from "@/components/custom-date-picker";
+import { ReportDateProps } from "./ReportDate.types";
 
-export default function ReportDate() {
+export default function ReportDate(props: ReportDateProps) {
   const {
     control,
     openCollapse,
@@ -34,7 +28,7 @@ export default function ReportDate() {
     handleClickToday,
     handleSubmit,
     onSubmit,
-  } = useReportDate();
+  } = useReportDate(props);
 
   return (
     <Accordion

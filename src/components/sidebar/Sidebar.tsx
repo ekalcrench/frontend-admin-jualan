@@ -2,6 +2,8 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import SidebarContent from "./components/sidebar-content";
+import { IconButton } from "@mui/material";
+import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
 
 const drawerWidth = 240;
 
@@ -29,6 +31,23 @@ export default function Sidebar() {
       component="nav"
       sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
     >
+      {!mobileOpen && (
+        <IconButton
+          onClick={handleDrawerToggle}
+          sx={{
+            display: { sm: "none" },
+            position: "fixed",
+            top: "8px",
+            left: "8px",
+            zIndex: 1300,
+            backgroundColor: "white",
+          }}
+          color="primary"
+        >
+          <ViewSidebarIcon />
+        </IconButton>
+      )}
+
       {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
       <Drawer
         variant="temporary"
