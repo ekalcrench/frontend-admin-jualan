@@ -19,6 +19,7 @@ export interface OrderResponse extends BaseApiResponse {
   organizationId: string;
   orderNumber: string;
   totalAmount: number;
+  totalQuantity: number;
   status: OrderStatus;
   orderItems: OrderItems[];
 }

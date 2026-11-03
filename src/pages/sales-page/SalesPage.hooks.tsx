@@ -114,13 +114,7 @@ export default function useSalesPage() {
         Cell: ({ cell }) =>
           currencyFormatter.format(Number(cell.getValue<number>())),
       },
-      {
-        id: "itemCount",
-        header: "Jumlah Produk",
-        size: 140,
-        enableSorting: false,
-        accessorFn: (row) => row.orderItems?.length ?? 0,
-      },
+      { accessorKey: "totalQuantity", header: "Jumlah Barang", size: 140 },
       {
         accessorKey: "createdAt",
         header: "Tanggal Penjualan",
