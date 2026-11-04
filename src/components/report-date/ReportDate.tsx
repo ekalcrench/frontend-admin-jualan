@@ -1,19 +1,7 @@
-import { BoxCenter, BoxFlex, BoxFlexSpaceBetween } from "@/styled/CustomBox";
-import {
-  Accordion,
-  AccordionSummary,
-  Typography,
-  AccordionDetails,
-  ButtonGroup,
-  Button,
-  Collapse,
-  Box,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { BoxCenter, BoxFlexSpaceBetween } from "@/styled/CustomBox";
+import { Typography, ButtonGroup, Button, Collapse, Box } from "@mui/material";
 import useReportDate from "./ReportDate.hooks";
 import SearchIcon from "@mui/icons-material/Search";
-import { boxShadowMain } from "@/constants/styled";
 import CustomDatePicker from "@/components/custom-date-picker";
 import { ReportDateProps } from "./ReportDate.types";
 
@@ -22,6 +10,7 @@ export default function ReportDate(props: ReportDateProps) {
     control,
     openCollapse,
     reportDateType,
+    handleClickAllTime,
     handleClickCustomDate,
     handleClickOneMonth,
     handleClickOneWeek,
@@ -32,88 +21,76 @@ export default function ReportDate(props: ReportDateProps) {
   } = useReportDate(props);
 
   return (
-    <Box>
-      <Accordion
-        sx={{
-          borderRadius: "16px !important",
-          boxShadow: boxShadowMain,
-          overflow: "hidden",
-          // Menghilangkan garis bawaan MUI
-          "&::before": {
-            display: "none",
-          },
-          "&.Mui-expanded": {
-            margin: 0,
-          },
-        }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          sx={{ paddingTop: "8px", paddingBottom: "8px" }}
+    <Box sx={{ width: "fit-content" }}>
+      <ButtonGroup sx={{ width: "100%" }} size="small">
+        <Button
+          onClick={handleClickToday}
+          variant={reportDateType === "TODAY" ? "contained" : "outlined"}
         >
-          <BoxFlex sx={{ gap: "8px" }}>
-            <CalendarMonthIcon />
-            <Typography sx={{ fontWeight: 600 }}>Periode Laporan</Typography>
-          </BoxFlex>
-        </AccordionSummary>
-        <AccordionDetails sx={{ paddingBottom: "20px", paddingTop: "0px" }}>
-          <ButtonGroup>
-            <Button
-              onClick={handleClickToday}
-              variant={reportDateType === "TODAY" ? "contained" : "outlined"}
-            >
-              Hari ini
-            </Button>
-            <Button
-              onClick={handleClickOneWeek}
-              variant={reportDateType === "A_WEEK" ? "contained" : "outlined"}
-            >
-              1 Minggu
-            </Button>
-            <Button
-              onClick={handleClickOneMonth}
-              variant={reportDateType === "A_MONTH" ? "contained" : "outlined"}
-            >
-              1 Bulan
-            </Button>
-            <Button
-              onClick={handleClickOneYear}
-              variant={reportDateType === "A_YEAR" ? "contained" : "outlined"}
-            >
-              1 Tahun
-            </Button>
-            <Button
-              onClick={handleClickCustomDate}
-              variant={reportDateType === "CUSTOM" ? "contained" : "outlined"}
-            >
-              Custom
-            </Button>
-          </ButtonGroup>
+          Hari ini
+        </Button>
+        <Button
+          onClick={handleClickOneWeek}
+          variant={reportDateType === "A_WEEK" ? "contained" : "outlined"}
+        >
+          1 Minggu
+        </Button>
+        <Button
+          onClick={handleClickOneMonth}
+          variant={reportDateType === "A_MONTH" ? "contained" : "outlined"}
+        >
+          1 Bulan
+        </Button>
+        <Button
+          onClick={handleClickOneYear}
+          variant={reportDateType === "A_YEAR" ? "contained" : "outlined"}
+        >
+          1 Tahun
+        </Button>
+        <Button
+          onClick={handleClickAllTime}
+          variant={reportDateType === "ALL_TIME" ? "contained" : "outlined"}
+        >
+          Semua
+        </Button>
+        <Button
+          onClick={handleClickCustomDate}
+          variant={reportDateType === "CUSTOM" ? "contained" : "outlined"}
+        >
+          Custom
+        </Button>
+      </ButtonGroup>
 
-          <Collapse in={openCollapse}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <BoxFlexSpaceBetween sx={{ gap: "16px", marginTop: "20px" }}>
-                <CustomDatePicker
-                  control={control}
-                  name="startDate"
-                  boxFieldWrapperProps={{ sx: { flex: 1 } }}
-                />
-                <BoxCenter sx={{ height: "100%" }}>
-                  <Typography>-</Typography>
-                </BoxCenter>
-                <CustomDatePicker
-                  control={control}
-                  name="endDate"
-                  boxFieldWrapperProps={{ sx: { flex: 1 } }}
-                />
-                <Button type="submit" startIcon={<SearchIcon />}>
-                  Cari
-                </Button>
-              </BoxFlexSpaceBetween>
-            </form>
-          </Collapse>
-        </AccordionDetails>
-      </Accordion>
+      <Collapse in={openCollapse} sx={{ width: "100%" }}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <BoxFlexSpaceBetween
+            sx={{ width: "100%", gap: "8px", marginTop: "16px" }}
+          >
+            <CustomDatePicker
+              control={control}
+              name="startDate"
+              boxFieldWrapperProps={{ sx: { flex: 1 } }}
+              renderErrorMessage
+            />
+            <BoxCenter sx={{ height: "100%", paddingBottom: "20px" }}>
+              <Typography sx={{ fontSize: "20px" }}>-</Typography>
+            </BoxCenter>
+            <CustomDatePicker
+              control={control}
+              name="endDate"
+              boxFieldWrapperProps={{ sx: { flex: 1 } }}
+              renderErrorMessage
+            />
+            <Button
+              type="submit"
+              startIcon={<SearchIcon />}
+              sx={{ marginLeft: "8px", marginBottom: "20px" }}
+            >
+              Cari
+            </Button>
+          </BoxFlexSpaceBetween>
+        </form>
+      </Collapse>
     </Box>
   );
 }

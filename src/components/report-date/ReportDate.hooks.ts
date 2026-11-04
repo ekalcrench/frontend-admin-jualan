@@ -10,6 +10,7 @@ import {
   ReportDateType,
 } from "./ReportDate.types";
 import { useState } from "react";
+import { getDayDifference } from "@/utils/dateTime";
 
 const formatDate = (date: Date): string => {
   const year = date.getFullYear();
@@ -19,7 +20,25 @@ const formatDate = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
+const getDefaultReportDateType = (
+  startDate?: string,
+  endDate?: string,
+): ReportDateType => {
+  if (!startDate || !endDate) return "ALL_TIME";
+
+  const dayDifference = getDayDifference(startDate, endDate);
+
+  if (dayDifference === 0) return "TODAY";
+  if (dayDifference === 7) return "A_WEEK";
+  if (dayDifference === 31 || dayDifference === 30) return "A_MONTH";
+  if (dayDifference === 365 || dayDifference === 366) return "A_YEAR";
+
+  return "CUSTOM";
+};
+
 export default function useReportDate({
+  endDate,
+  startDate,
   setEndDate,
   setStartDate,
 }: ReportDateProps) {
@@ -33,7 +52,9 @@ export default function useReportDate({
     });
 
   const [openCollapse, setOpenCollapse] = useState<boolean>(false);
-  const [reportDateType, setReportDateType] = useState<ReportDateType>();
+  const [reportDateType, setReportDateType] = useState<ReportDateType>(
+    getDefaultReportDateType(startDate, endDate),
+  );
 
   const setReportDate = (startDate: Date, endDate: Date) => {
     const formattedStartDate = formatDate(startDate);
@@ -50,6 +71,13 @@ export default function useReportDate({
     });
 
     return { formattedStartDate, formattedEndDate };
+  };
+
+  const handleClickAllTime = () => {
+    setStartDate(undefined);
+    setEndDate(undefined);
+    setOpenCollapse(false);
+    setReportDateType("ALL_TIME");
   };
 
   const handleClickToday = () => {
@@ -133,6 +161,7 @@ export default function useReportDate({
     control,
     openCollapse,
     reportDateType,
+    handleClickAllTime,
     handleClickCustomDate,
     handleClickOneMonth,
     handleClickOneWeek,

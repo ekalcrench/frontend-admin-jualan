@@ -3,8 +3,8 @@ import { ReportDateFormValues } from "./ReportDate.types";
 
 export const reportDateFormSchema = z
   .object({
-    startDate: z.string().min(1, "Tanggal mulai wajib diisi"),
-    endDate: z.string().min(1, "Tanggal akhir wajib diisi"),
+    startDate: z.string().min(1, "Wajib diisi"),
+    endDate: z.string().min(1, "Wajib diisi"),
   })
   .superRefine((values, ctx) => {
     const { startDate, endDate } = values;
@@ -17,13 +17,13 @@ export const reportDateFormSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["startDate"],
-        message: "Tanggal mulai tidak boleh melebihi tanggal akhir",
+        message: "Tanggal mulai < tanggal akhir",
       });
 
       ctx.addIssue({
         code: "custom",
         path: ["endDate"],
-        message: "Tanggal akhir tidak boleh kurang dari tanggal mulai",
+        message: "Tanggal akhir > dari tanggal mulai",
       });
     }
   });
