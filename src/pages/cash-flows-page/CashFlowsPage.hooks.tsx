@@ -47,7 +47,6 @@ export default function useCashFlowsPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  // const { endDate, startDate } = useCashTransactionStore();
   const [endDate, setEndDate] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
 
