@@ -3,8 +3,8 @@ import { ReportDateFormValues } from "./ReportDate.types";
 
 export const reportDateFormSchema = z
   .object({
-    startDate: z.string().optional().nullish(),
-    endDate: z.string().optional().nullish(),
+    startDate: z.string().min(1, "Tanggal mulai wajib diisi"),
+    endDate: z.string().min(1, "Tanggal akhir wajib diisi"),
   })
   .superRefine((values, ctx) => {
     const { startDate, endDate } = values;
