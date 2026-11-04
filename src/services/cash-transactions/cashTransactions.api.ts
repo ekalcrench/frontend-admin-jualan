@@ -3,6 +3,8 @@ import { api } from "@/constants/api";
 import {
   CashTransactionBalanceFilter,
   CashTransactionBalanceResponse,
+  CashTransactionCashFlowFilter,
+  CashTransactionCashFlowResponse,
   CashTransactionFilterPayload,
   CashTransactionResponse,
 } from "@/types/cashTransaction";
@@ -38,6 +40,16 @@ export async function fetchCashTransactionBalance(
 ): Promise<CashTransactionBalanceResponse> {
   const response = await apiClient.get<CashTransactionBalanceResponse>(
     api.cashTransactions.balance,
+    { params },
+  );
+  return response.data;
+}
+
+export async function fetchCashTransactionCashFlow(
+  params: CashTransactionCashFlowFilter,
+): Promise<CashTransactionCashFlowResponse> {
+  const response = await apiClient.get<CashTransactionCashFlowResponse>(
+    api.cashTransactions.cashFlow,
     { params },
   );
   return response.data;

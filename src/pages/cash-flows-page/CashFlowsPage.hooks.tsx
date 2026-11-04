@@ -1,4 +1,4 @@
-import { defaultParameter } from "@/constants/table";
+import { defaultParameter, defaultParameterDate } from "@/constants/table";
 import {
   cashTransactionTypeColorMapping,
   cashTransactionTypeLabels,
@@ -26,6 +26,8 @@ export default function useCashFlowsPage() {
   const size = Number(searchParams.get("size") ?? defaultParameter.size);
   const sortBy = searchParams.get("sortBy") ?? defaultCashFlowSort;
   const search = searchParams.get("search") ?? undefined;
+  const startDate = searchParams.get("startDate") ?? undefined;
+  const endDate = searchParams.get("endDate") ?? undefined;
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -47,16 +49,13 @@ export default function useCashFlowsPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const [endDate, setEndDate] = useState<string>("");
-  const [startDate, setStartDate] = useState<string>("");
-
   const { data, isLoading, isError, error } = useCashTransactionsQuery({
     page,
     size,
     sortBy,
     search,
-    endDate: endDate.length ? endDate : undefined,
-    startDate: startDate.length ? startDate : undefined,
+    endDate: endDate?.length ? endDate : undefined,
+    startDate: startDate?.length ? startDate : undefined,
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCashTransactionId, setEditingCashTransactionId] =
@@ -76,9 +75,29 @@ export default function useCashFlowsPage() {
       return previous;
     });
 
+  const setStartDate = (value: string | undefined) => {
+    setSearchParams((prev) => {
+      if (value) prev.set("startDate", value);
+      else prev.delete("startDate");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+  };
+
+  const setEndDate = (value: string | undefined) => {
+    setSearchParams((prev) => {
+      if (value) prev.set("endDate", value);
+      else prev.delete("endDate");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+  };
+
   const handleResetFilter = () =>
     setSearchParams((previous) => {
       previous.delete("search");
+      previous.set("startDate", defaultParameterDate);
+      previous.set("endDate", defaultParameterDate);
       previous.set("page", String(defaultParameter.page));
       return previous;
     });

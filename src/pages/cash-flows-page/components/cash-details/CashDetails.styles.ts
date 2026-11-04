@@ -1,7 +1,7 @@
 import { boxShadowCard } from "@/constants/styled";
 import { Card, CardProps, styled } from "@mui/material";
 
-export const CashDetailsCard = styled(Card)<CardProps>(
+export const BalanceCard = styled(Card)<CardProps>(
   ({ theme: { palette } }) => ({
     background: `linear-gradient(
       135deg,
@@ -10,6 +10,13 @@ export const CashDetailsCard = styled(Card)<CardProps>(
     )`,
     boxShadow: boxShadowCard,
     color: "white",
+    padding: "20px 16px",
+  }),
+);
+
+export const CashFlowCard = styled(Card)<CardProps>(
+  ({ theme: { palette } }) => ({
+    boxShadow: boxShadowCard,
     padding: "20px 16px",
   }),
 );

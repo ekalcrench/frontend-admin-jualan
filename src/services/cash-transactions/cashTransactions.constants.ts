@@ -1,5 +1,6 @@
 import {
   CashTransactionBalanceFilter,
+  CashTransactionCashFlowFilter,
   CashTransactionFilterPayload,
 } from "@/types/cashTransaction";
 
@@ -16,4 +17,8 @@ export const cashTransactionsKeys = {
   balances: ["cash_transactions", "balance"] as const,
   balance: (params: CashTransactionBalanceFilter) =>
     ["cash_transactions", "balance", params] as const,
+
+  cashFlows: ["cash_transactions", "cash_flow"] as const,
+  cashFlow: (params: CashTransactionCashFlowFilter) =>
+    ["cash_transactions", "cash_flow", params] as const,
 };

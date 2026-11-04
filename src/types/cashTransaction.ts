@@ -26,13 +26,21 @@ export interface CashTransactionResponse extends BaseApiResponse {
 }
 
 export interface CashTransactionBalanceFilter {
-  startDate?: string;
   endDate?: string;
 }
 
 export interface CashTransactionBalanceResponse {
-  remainingCash: number;
+  balance: number;
+}
+
+export interface CashTransactionCashFlowFilter {
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface CashTransactionCashFlowResponse {
   cashIn: number;
   cashOut: number;
-  netCashFlow: number;
+  prevCashIn: number;
+  prevCashOut: number;
 }

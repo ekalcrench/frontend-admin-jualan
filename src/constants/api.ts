@@ -62,6 +62,7 @@ export const api = {
     base: "/cash-transactions",
     byId: (id: string) => `/cash-transactions/${id}`,
     balance: "/cash-transactions/balance",
+    cashFlow: "/cash-transactions/cash-flow",
   },
 };
 

@@ -5,11 +5,14 @@ import { cashTransactionsKeys } from "./cashTransactions.constants";
 import {
   fetchCashTransactionBalance,
   fetchCashTransactionById,
+  fetchCashTransactionCashFlow,
   fetchCashTransactions,
 } from "./cashTransactions.api";
 import {
   CashTransactionBalanceFilter,
   CashTransactionBalanceResponse,
+  CashTransactionCashFlowFilter,
+  CashTransactionCashFlowResponse,
   CashTransactionFilterPayload,
   CashTransactionResponse,
 } from "@/types/cashTransaction";
@@ -48,6 +51,19 @@ export function useCashTransactionBalanceQuery(
   return useQuery<CashTransactionBalanceResponse>({
     queryKey: cashTransactionsKeys.balance(params),
     queryFn: () => fetchCashTransactionBalance(params),
+    staleTime: fiveMinutes,
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+}
+
+export function useCashTransactionCashFlowQuery(
+  params: CashTransactionCashFlowFilter,
+) {
+  return useQuery<CashTransactionCashFlowResponse>({
+    queryKey: cashTransactionsKeys.cashFlow(params),
+    queryFn: () => fetchCashTransactionCashFlow(params),
     staleTime: fiveMinutes,
     retry: false,
     refetchOnWindowFocus: false,

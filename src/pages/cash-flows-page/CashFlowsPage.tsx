@@ -85,26 +85,31 @@ export default function CashFlowsPage() {
         id={editingCashTransactionId}
       />
 
-      <Stack spacing={3}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "stretch", md: "center" },
-            justifyContent: "space-between",
-            gap: "16px",
-            padding: "16px 12px",
-          }}
-        >
-          <Box>
+      <Stack spacing={4}>
+        <Stack spacing={3}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: { xs: "stretch", sm: "center" },
+              gap: "8px",
+              padding: "0px 8px",
+            }}
+          >
             <Typography variant="h5">Cash Flows</Typography>
+            <Typography>-</Typography>
             <Typography variant="body2" color="text.secondary">
-              Mengelola arus kas investasi dan bagi hasil
+              Melihat dan mengelola arus kas, investasi, dan bagi hasil
             </Typography>
           </Box>
-        </Box>
 
-        <ReportDate setEndDate={setEndDate} setStartDate={setStartDate} />
+          <ReportDate
+            endDate={endDate}
+            startDate={startDate}
+            setEndDate={setEndDate}
+            setStartDate={setStartDate}
+          />
+        </Stack>
 
         <CashDetails endDate={endDate} startDate={startDate} />
 
