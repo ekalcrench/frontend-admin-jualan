@@ -1,5 +1,5 @@
 import { orderStatusColorMapping, orderStatusMapping } from "@/constants/order";
-import { defaultParameter } from "@/constants/table";
+import { defaultParameter, defaultParameterDate } from "@/constants/table";
 import {
   useDeleteOrderMutation,
   useMarkPaidOrderMutation,
@@ -80,6 +80,8 @@ export default function useSalesPage() {
   const handleResetFilter = () =>
     setSearchParams((prev) => {
       prev.delete("search");
+      prev.set("startDate", defaultParameterDate);
+      prev.set("endDate", defaultParameterDate);
       prev.set("page", String(defaultParameter.page));
       return prev;
     });

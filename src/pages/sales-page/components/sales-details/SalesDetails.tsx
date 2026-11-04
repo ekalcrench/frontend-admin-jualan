@@ -1,11 +1,7 @@
 import { Grid, Typography, Skeleton, Box } from "@mui/material";
 import useSalesDetails from "./SalesDetails.hooks";
 import { currencyFormatter } from "@/utils/currency";
-import {
-  CustomTrendingDownIcon,
-  CustomTrendingUpIcon,
-  SalesDetailsCard,
-} from "./SalesDetails.styles";
+import { SalesDetailsCard } from "./SalesDetails.styles";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { BoxFlex } from "@/styled/CustomBox";
 import SellIcon from "@mui/icons-material/Sell";
@@ -18,6 +14,10 @@ import {
 } from "@/utils/generalUtils";
 import { TypographyTab } from "@/styled/CustomTypography";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+import {
+  CustomTrendingUpIcon,
+  CustomTrendingDownIcon,
+} from "@/styled/CustomIcon";
 
 export default function SalesDetails(props: SalesDetailsProps) {
   const { data, dataOverviewItems, isLoading, isLoadingOverviewItems } =
