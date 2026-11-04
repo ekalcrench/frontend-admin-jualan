@@ -3,6 +3,8 @@ import { DefaultFilter } from "./table";
 
 export interface OrderFilterPayload extends DefaultFilter {
   search?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 interface OrderItems {
@@ -22,4 +24,27 @@ export interface OrderResponse extends BaseApiResponse {
   totalQuantity: number;
   status: OrderStatus;
   orderItems: OrderItems[];
+}
+
+export interface OrderOverviewParams {
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface OrderOverviewResponse {
+  totalAmount: number;
+  totalQuantity: number;
+  totalGrossProfit: number;
+  prevTotalAmount: number;
+  prevTotalQuantity: number;
+  prevTotalGrossProfit: number;
+}
+
+export interface OrderOverviewItemsResponse {
+  mostSellItemsAmount: number;
+  mostSellItemsName: string;
+  mostSellItemsLatestSold: string;
+  leastSellItemsAmount: number;
+  leastSellItemsName: string;
+  leastSellItemsLatestSold: string;
 }

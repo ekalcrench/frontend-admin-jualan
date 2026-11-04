@@ -1,7 +1,13 @@
 import { apiClient } from "@/config/api";
 import { api } from "@/constants/api";
 import { PaginatedData } from "@/types/table";
-import { OrderFilterPayload, OrderResponse } from "@/types/order";
+import {
+  OrderFilterPayload,
+  OrderResponse,
+  OrderOverviewParams,
+  OrderOverviewResponse,
+  OrderOverviewItemsResponse,
+} from "@/types/order";
 import { CreateOrder, EditOrder } from "./orders.types";
 
 export async function fetchOrders(
@@ -11,6 +17,30 @@ export async function fetchOrders(
     api.orders.base,
     {
       params: payload,
+    },
+  );
+  return response.data;
+}
+
+export async function fetchOrderOverview(
+  params: OrderOverviewParams,
+): Promise<OrderOverviewResponse> {
+  const response = await apiClient.get<OrderOverviewResponse>(
+    api.orders.overview,
+    {
+      params,
+    },
+  );
+  return response.data;
+}
+
+export async function fetchOrderOverviewItems(
+  params: OrderOverviewParams,
+): Promise<OrderOverviewItemsResponse> {
+  const response = await apiClient.get<OrderOverviewItemsResponse>(
+    api.orders.overviewItems,
+    {
+      params,
     },
   );
   return response.data;

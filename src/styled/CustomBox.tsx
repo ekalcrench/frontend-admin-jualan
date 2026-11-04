@@ -21,9 +21,22 @@ export const BoxCenter = styled(Box)<BoxProps>(() => ({
   alignItems: "center",
 }));
 
+export const BoxCenterColumn = styled(Box)<BoxProps>(() => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  flexDirection: "column",
+}));
+
 export const BoxFlex = styled(Box)<BoxProps>(() => ({
   display: "flex",
   alignItems: "center",
+}));
+
+export const BoxFlexColumn = styled(Box)<BoxProps>(() => ({
+  display: "flex",
+  justifyContent: "center",
+  flexDirection: "column",
 }));
 
 export const BoxFlexEnd = styled(Box)<BoxProps>(() => ({

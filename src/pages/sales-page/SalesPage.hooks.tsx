@@ -44,12 +44,22 @@ export default function useSalesPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
+  const [endDate, setEndDate] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+
   const {
     data: response,
     isLoading,
     isError,
     error,
-  } = useOrderQuery({ page, size, sortBy, search });
+  } = useOrderQuery({
+    page,
+    size,
+    sortBy,
+    search,
+    endDate: endDate.length ? endDate : undefined,
+    startDate: startDate.length ? startDate : undefined,
+  });
   const data = response as PaginatedData<OrderResponse> | undefined;
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingOrderId, setEditingOrderId] = useState<string>();
@@ -187,12 +197,14 @@ export default function useSalesPage() {
     data,
     deleteOrder,
     editingOrderId,
+    endDate,
     isFormOpen,
     isLoading,
     isError,
     markPaidOrder,
     search: search ?? "",
     sortBy,
+    startDate,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
@@ -201,6 +213,8 @@ export default function useSalesPage() {
     handleClickEditForm,
     handleClickMarkPaid,
     handleResetFilter,
+    setEndDate,
     setIsFormOpen,
+    setStartDate,
   };
 }

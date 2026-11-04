@@ -21,6 +21,8 @@ import OrderForm from "./components/order-form";
 import useSalesPage from "./SalesPage.hooks";
 import { StackDetailPanel } from "./SalesPage.styles";
 import { orderStatus } from "@/constants/order";
+import ReportDate from "@/components/report-date";
+import SalesDetails from "./components/sales-details";
 
 export default function SalesPage() {
   const {
@@ -28,12 +30,14 @@ export default function SalesPage() {
     data,
     deleteOrder,
     editingOrderId,
+    endDate,
     isFormOpen,
     isLoading,
     isError,
     markPaidOrder,
     search,
     sortBy,
+    startDate,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
@@ -42,7 +46,9 @@ export default function SalesPage() {
     handleClickEditForm,
     handleClickMarkPaid,
     handleResetFilter,
+    setEndDate,
     setIsFormOpen,
+    setStartDate,
   } = useSalesPage();
 
   const renderAddButton = () => (
@@ -194,6 +200,10 @@ export default function SalesPage() {
             </Typography>
           </Box>
         </Box>
+
+        <ReportDate setEndDate={setEndDate} setStartDate={setStartDate} />
+
+        <SalesDetails endDate={endDate} startDate={startDate} />
 
         <CustomTable
           columns={columns}

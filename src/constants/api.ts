@@ -52,6 +52,8 @@ export const api = {
     base: "/orders",
     byId: (id: string) => `/orders/${id}`,
     markPaid: (id: string) => `/orders/${id}/mark-paid`,
+    overview: "/orders/overview",
+    overviewItems: "/orders/overview-items",
   },
   inventoryTransactions: {
     base: "/inventory-transactions",
