@@ -10,7 +10,7 @@ import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CategoryIcon from "@mui/icons-material/Category";
 import HistoryIcon from "@mui/icons-material/History";
-import { getCurrentDate } from "@/utils/dateTime";
+import { defaultParameterDate } from "@/constants/table";
 
 export const sidebarList: SidebarListItem[] = [
   {
@@ -27,7 +27,7 @@ export const sidebarList: SidebarListItem[] = [
   {
     title: "Sales",
     url: paths.sales,
-    params: `page=1&size=20&sortBy=-createdAt&startDate=${getCurrentDate()}&endDate=${getCurrentDate()}`,
+    params: `page=1&size=20&sortBy=-createdAt&startDate=${defaultParameterDate}&endDate=${defaultParameterDate}`,
     icon: <PaidIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,
@@ -49,7 +49,7 @@ export const sidebarList: SidebarListItem[] = [
   {
     title: "Cash Flows",
     url: paths.cashFlows,
-    params: "page=1&size=20&sortBy=-transactionAt",
+    params: `page=1&size=20&sortBy=-transactionAt&startDate=${defaultParameterDate}&endDate=${defaultParameterDate}`,
     icon: <HistoryIcon />,
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
     organizationRoleAccess: [organizationRole.OWNER],

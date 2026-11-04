@@ -1,4 +1,5 @@
 import { DefaultFilter } from "@/types/table";
+import { getCurrentDate } from "@/utils/dateTime";
 import { SortDirection } from "@mui/material";
 
 export const ascDirection: SortDirection = "asc";
@@ -11,3 +12,5 @@ export const defaultParameter: DefaultFilter = {
   size: 20,
   sortBy: "-createdDate",
 };
+
+export const defaultParameterDate = getCurrentDate();
