@@ -91,7 +91,7 @@ export default function CustomTable<TData extends MRT_RowData>({
   };
 
   return (
-    <Stack spacing={3}>
+    <Stack spacing={2}>
       <CustomTopToolbar<TData>
         handleClickFilters={hasFilters ? handleClickFilters : undefined}
         handleResetFilter={handleReset}

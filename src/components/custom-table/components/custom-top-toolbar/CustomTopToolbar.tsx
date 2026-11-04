@@ -18,7 +18,7 @@ export default function CustomTopToolbar<TData extends MRT_RowData>({
   searchPlaceholder,
 }: CustomTopToolbarProps<TData>) {
   return (
-    <BoxFlexSpaceBetween>
+    <BoxFlexSpaceBetween sx={{ gap: "12px" }}>
       <BoxFlex sx={{ gap: "12px" }}>
         <CustomSearchInput
           value={search}
