@@ -1,4 +1,4 @@
 export interface SalesDetailsProps {
-  endDate: string;
-  startDate: string;
+  endDate?: string;
+  startDate?: string;
 }

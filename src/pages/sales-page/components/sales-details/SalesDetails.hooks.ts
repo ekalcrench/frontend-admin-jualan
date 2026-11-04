@@ -11,8 +11,8 @@ export default function useSalesDetails({
   startDate,
 }: SalesDetailsProps) {
   const { data, isLoading, isError, error } = useOrderOverviewQuery({
-    endDate: endDate.length ? endDate : undefined,
-    startDate: startDate.length ? startDate : undefined,
+    endDate: endDate?.length ? endDate : undefined,
+    startDate: startDate?.length ? startDate : undefined,
   });
 
   useEffect(() => {
@@ -25,8 +25,8 @@ export default function useSalesDetails({
     isError: isErrorOverviewItems,
     error: errorOverviewItems,
   } = useOrderOverviewItemsQuery({
-    endDate: endDate.length ? endDate : undefined,
-    startDate: startDate.length ? startDate : undefined,
+    endDate: endDate?.length ? endDate : undefined,
+    startDate: startDate?.length ? startDate : undefined,
   });
 
   useEffect(() => {

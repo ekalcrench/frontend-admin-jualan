@@ -24,8 +24,8 @@ export default function SalesDetails(props: SalesDetailsProps) {
     useSalesDetails(props);
 
   const previousPeriodLabel = getPreviousPeriodLabel(
-    props.startDate,
-    props.endDate,
+    props.startDate ?? "",
+    props.endDate ?? "",
   );
   const amountPercentage =
     data === undefined
@@ -53,7 +53,7 @@ export default function SalesDetails(props: SalesDetailsProps) {
         <Grid size={{ xs: 6, sm: 3 }}>
           <SalesDetailsCard>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-              <CurrencyExchangeIcon />
+              <CurrencyExchangeIcon color="primary" />
               <Typography>Omset Penjualan</Typography>
             </BoxFlex>
             {isLoading ? (
@@ -107,7 +107,7 @@ export default function SalesDetails(props: SalesDetailsProps) {
         <Grid size={{ xs: 6, sm: 3 }}>
           <SalesDetailsCard>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-              <MonetizationOnIcon />
+              <MonetizationOnIcon color="success" />
               <Typography>Keuntungan Kotor</Typography>
             </BoxFlex>
             {isLoading ? (
@@ -162,7 +162,7 @@ export default function SalesDetails(props: SalesDetailsProps) {
         <Grid size={{ xs: 6, sm: 3 }}>
           <SalesDetailsCard>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-              <SellIcon />
+              <SellIcon color="action" />
               <Typography>Barang Terjual</Typography>
             </BoxFlex>
             {isLoading ? (
@@ -221,7 +221,7 @@ export default function SalesDetails(props: SalesDetailsProps) {
         <Grid size={{ xs: 12, sm: 6 }}>
           <SalesDetailsCard>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-              <SellIcon />
+              <SellIcon color="primary" />
               <Typography>Paling Laku</Typography>
             </BoxFlex>
 
@@ -275,7 +275,7 @@ export default function SalesDetails(props: SalesDetailsProps) {
         <Grid size={{ xs: 12, sm: 6 }}>
           <SalesDetailsCard>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-              <SellIcon />
+              <SellIcon color="error" />
               <Typography>Paling Tidak Laku</Typography>
             </BoxFlex>
             <Box>

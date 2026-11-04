@@ -182,26 +182,31 @@ export default function SalesPage() {
         id={editingOrderId}
       />
 
-      <Stack spacing={3}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "stretch", md: "center" },
-            justifyContent: "space-between",
-            gap: "16px",
-            padding: "16px 12px",
-          }}
-        >
-          <Box>
+      <Stack spacing={4}>
+        <Stack spacing={3}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: { xs: "stretch", sm: "center" },
+              gap: "8px",
+              padding: "0px 8px",
+            }}
+          >
             <Typography variant="h5">Penjualan</Typography>
+            <Typography>-</Typography>
             <Typography variant="body2" color="text.secondary">
-              Mengelola transaksi penjualan produk
+              Mengelola dan melihat keseluruhan transaksi penjualan produk
             </Typography>
           </Box>
-        </Box>
 
-        <ReportDate setEndDate={setEndDate} setStartDate={setStartDate} />
+          <ReportDate
+            endDate={endDate}
+            startDate={startDate}
+            setEndDate={setEndDate}
+            setStartDate={setStartDate}
+          />
+        </Stack>
 
         <SalesDetails endDate={endDate} startDate={startDate} />
 

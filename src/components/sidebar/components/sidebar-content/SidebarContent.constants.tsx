@@ -10,6 +10,7 @@ import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CategoryIcon from "@mui/icons-material/Category";
 import HistoryIcon from "@mui/icons-material/History";
+import { getCurrentDate } from "@/utils/dateTime";
 
 export const sidebarList: SidebarListItem[] = [
   {
@@ -26,7 +27,7 @@ export const sidebarList: SidebarListItem[] = [
   {
     title: "Sales",
     url: paths.sales,
-    params: "page=1&size=20&sortBy=-createdAt",
+    params: `page=1&size=20&sortBy=-createdAt&startDate=${getCurrentDate()}&endDate=${getCurrentDate()}`,
     icon: <PaidIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,

@@ -23,6 +23,8 @@ export default function useSalesPage() {
   const size = Number(searchParams.get("size") ?? defaultParameter.size);
   const sortBy = searchParams.get("sortBy") ?? defaultParameter.sortBy;
   const search = searchParams.get("search") ?? undefined;
+  const startDate = searchParams.get("startDate") ?? undefined;
+  const endDate = searchParams.get("endDate") ?? undefined;
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -44,9 +46,6 @@ export default function useSalesPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const [endDate, setEndDate] = useState<string>("");
-  const [startDate, setStartDate] = useState<string>("");
-
   const {
     data: response,
     isLoading,
@@ -57,8 +56,8 @@ export default function useSalesPage() {
     size,
     sortBy,
     search,
-    endDate: endDate.length ? endDate : undefined,
-    startDate: startDate.length ? startDate : undefined,
+    endDate: endDate?.length ? endDate : undefined,
+    startDate: startDate?.length ? startDate : undefined,
   });
   const data = response as PaginatedData<OrderResponse> | undefined;
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -99,6 +98,24 @@ export default function useSalesPage() {
   const handleClickEditForm = (id: string) => {
     setEditingOrderId(id);
     setIsFormOpen(true);
+  };
+
+  const setStartDate = (value: string | undefined) => {
+    setSearchParams((prev) => {
+      if (value) prev.set("startDate", value);
+      else prev.delete("startDate");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+  };
+
+  const setEndDate = (value: string | undefined) => {
+    setSearchParams((prev) => {
+      if (value) prev.set("endDate", value);
+      else prev.delete("endDate");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
   };
 
   const columns: MRT_ColumnDef<OrderResponse>[] = useMemo(
