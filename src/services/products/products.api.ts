@@ -3,6 +3,7 @@ import { api } from "@/constants/api";
 import { PaginatedData } from "@/types/table";
 import {
   ProductFilterPayload,
+  ProductLowestStock,
   ProductOptions,
   ProductResponse,
 } from "@/types/product";
@@ -22,6 +23,15 @@ export async function fetchProducts(
 
 export async function fetchProductOptions(): Promise<ProductOptions[]> {
   const response = await apiClient.get<ProductOptions[]>(api.products.options);
+  return response.data;
+}
+
+export async function fetchProductLowestStocks(): Promise<
+  ProductLowestStock[]
+> {
+  const response = await apiClient.get<ProductLowestStock[]>(
+    api.products.lowestStocks,
+  );
   return response.data;
 }
 

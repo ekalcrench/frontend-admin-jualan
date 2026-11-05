@@ -4,11 +4,13 @@ import { PaginatedData } from "@/types/table";
 import { productsKeys } from "./products.constants";
 import {
   fetchProductById,
+  fetchProductLowestStocks,
   fetchProductOptions,
   fetchProducts,
 } from "./products.api";
 import {
   ProductFilterPayload,
+  ProductLowestStock,
   ProductOptions,
   ProductResponse,
 } from "@/types/product";
@@ -45,5 +47,16 @@ export function useProductByIdQuery(id?: string) {
     },
     enabled: Boolean(id),
     staleTime: fiveMinutes,
+  });
+}
+
+export function useProductLowestStocksQuery() {
+  return useQuery<ProductLowestStock[]>({
+    queryKey: productsKeys.lowestStocks,
+    queryFn: () => fetchProductLowestStocks(),
+    staleTime: fiveMinutes,
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 }

@@ -10,4 +10,5 @@ export const productsKeys = {
   detail: (id?: string) => ["products", "detail", id] as const,
 
   options: ["products", "options"] as const,
+  lowestStocks: ["products", "lowestStocks"] as const,
 };

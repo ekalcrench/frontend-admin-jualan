@@ -28,3 +28,8 @@ export interface ProductOptions {
   sellingPrice: number;
   stock: number;
 }
+
+export interface ProductLowestStock {
+  name: string;
+  stock: number;
+}
