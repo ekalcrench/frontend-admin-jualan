@@ -6,10 +6,10 @@ export default function PageTitle({ title, subTitle }: PageTitleProps) {
     <Box
       sx={{
         display: "flex",
-        flexDirection: { xs: "column", sm: "row" },
-        alignItems: { xs: "stretch", sm: "center" },
-        gap: "8px",
-        padding: "0px 8px",
+        flexDirection: { xs: "column", md: "row" },
+        alignItems: { xs: "stretch", md: "center" },
+        columnGap: "8px",
+        padding: { xs: "12px 8px 0px", sm: "0px 8px" },
       }}
     >
       <Typography variant="h5">{title}</Typography>
