@@ -4,12 +4,12 @@ import {
 } from "@/services/cash-transactions/cashTransactions.query";
 import { apiErrorHandler } from "@/utils/api";
 import { useEffect } from "react";
-import { CashDetailsProps } from "./CashDetails.types";
+import { CashOverviewProps } from "./CashOverview.types";
 
-export default function useCashDetails({
+export default function useCashOverview({
   endDate,
   startDate,
-}: CashDetailsProps) {
+}: CashOverviewProps) {
   const { data, isLoading, isError, error } = useCashTransactionBalanceQuery({
     endDate: endDate?.length ? endDate : undefined,
   });

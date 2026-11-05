@@ -1,12 +1,12 @@
 import { Grid, Typography, Skeleton } from "@mui/material";
-import useCashDetails from "./CashDetails.hooks";
+import useCashOverview from "./CashOverview.hooks";
 import { currencyFormatter } from "@/utils/currency";
-import { BalanceCard, CashFlowCard } from "./CashDetails.styles";
+import { BalanceCard } from "./CashOverview.styles";
 import { BoxFlex } from "@/styled/CustomBox";
 import SavingsIcon from "@mui/icons-material/Savings";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import { CashDetailsProps } from "./CashDetails.types";
+import { CashOverviewProps } from "./CashOverview.types";
 import {
   calculatePercentageDifference,
   formatPercentageDifference,
@@ -20,10 +20,11 @@ import {
   CustomTrendingUpIcon,
   CustomTrendingDownIcon,
 } from "@/styled/CustomIcon";
+import { CardOverview } from "@/styled/CustomCard";
 
-export default function CashDetails(props: CashDetailsProps) {
+export default function CashOverview(props: CashOverviewProps) {
   const { data, dataCashFlow, isLoading, isLoadingCashFlow } =
-    useCashDetails(props);
+    useCashOverview(props);
 
   const previousPeriodLabel = getPreviousPeriodLabel(
     props.startDate ?? "",
@@ -74,7 +75,7 @@ export default function CashDetails(props: CashDetailsProps) {
         </BalanceCard>
       </Grid>
       <Grid size={{ xs: 12, md: 4, xl: 3 }}>
-        <CashFlowCard>
+        <CardOverview>
           <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
             <SavingsIcon color="success" />
             <Typography>Cash masuk</Typography>
@@ -127,10 +128,10 @@ export default function CashDetails(props: CashDetailsProps) {
               </Typography>
             )
           ) : null}
-        </CashFlowCard>
+        </CardOverview>
       </Grid>
       <Grid size={{ xs: 12, md: 4, xl: 3 }}>
-        <CashFlowCard>
+        <CardOverview>
           <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
             <ShoppingCartIcon color="error" />
             <Typography>Cash keluar</Typography>
@@ -183,7 +184,7 @@ export default function CashDetails(props: CashDetailsProps) {
               </Typography>
             )
           ) : null}
-        </CashFlowCard>
+        </CardOverview>
       </Grid>
     </Grid>
   );

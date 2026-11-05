@@ -13,10 +13,3 @@ export const BalanceCard = styled(Card)<CardProps>(
     padding: "20px 16px",
   }),
 );
-
-export const CashFlowCard = styled(Card)<CardProps>(
-  ({ theme: { palette } }) => ({
-    boxShadow: boxShadowCard,
-    padding: "20px 16px",
-  }),
-);

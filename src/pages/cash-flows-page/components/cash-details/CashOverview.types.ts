@@ -1,4 +1,4 @@
-export interface CashDetailsProps {
+export interface CashOverviewProps {
   endDate?: string;
   startDate?: string;
 }
