@@ -1,7 +1,6 @@
 import { Grid, Typography, Skeleton, Box } from "@mui/material";
 import useSalesOverview from "./SalesOverview.hooks";
 import { currencyFormatter } from "@/utils/currency";
-import { SalesOverviewCard } from "./SalesOverview.styles";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { BoxFlex } from "@/styled/CustomBox";
 import SellIcon from "@mui/icons-material/Sell";
@@ -18,6 +17,7 @@ import {
   CustomTrendingUpIcon,
   CustomTrendingDownIcon,
 } from "@/styled/CustomIcon";
+import { CardOverview } from "@/styled/CustomCard";
 
 export default function SalesOverview(props: SalesOverviewProps) {
   const { data, dataOverviewItems, isLoading, isLoadingOverviewItems } =
@@ -50,8 +50,8 @@ export default function SalesOverview(props: SalesOverviewProps) {
     <Grid container spacing={2}>
       {/* Overview */}
       <Grid container spacing={2} size={12}>
-        <Grid size={{ xs: 6, sm: 3 }}>
-          <SalesOverviewCard>
+        <Grid size={{ xs: 12, md: 4, xl: 3 }}>
+          <CardOverview>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
               <CurrencyExchangeIcon color="primary" />
               <Typography>Omset Penjualan</Typography>
@@ -102,10 +102,10 @@ export default function SalesOverview(props: SalesOverviewProps) {
                 </Typography>
               )
             ) : null}
-          </SalesOverviewCard>
+          </CardOverview>
         </Grid>
-        <Grid size={{ xs: 6, sm: 3 }}>
-          <SalesOverviewCard>
+        <Grid size={{ xs: 12, md: 4, xl: 3 }}>
+          <CardOverview>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
               <MonetizationOnIcon color="success" />
               <Typography>Keuntungan Kotor</Typography>
@@ -157,10 +157,10 @@ export default function SalesOverview(props: SalesOverviewProps) {
                 </Typography>
               )
             ) : null}
-          </SalesOverviewCard>
+          </CardOverview>
         </Grid>
-        <Grid size={{ xs: 6, sm: 3 }}>
-          <SalesOverviewCard>
+        <Grid size={{ xs: 12, md: 4, xl: 3 }}>
+          <CardOverview>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
               <SellIcon color="action" />
               <Typography>Barang Terjual</Typography>
@@ -212,14 +212,14 @@ export default function SalesOverview(props: SalesOverviewProps) {
                 </Typography>
               )
             ) : null}
-          </SalesOverviewCard>
+          </CardOverview>
         </Grid>
       </Grid>
 
       {/* Overview Items */}
       <Grid container spacing={2} size={12}>
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <SalesOverviewCard>
+        <Grid size={{ xs: 12, md: 6, xl: 4 }}>
+          <CardOverview>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
               <SellIcon color="primary" />
               <Typography>Paling Laku</Typography>
@@ -270,10 +270,10 @@ export default function SalesOverview(props: SalesOverviewProps) {
                 )}
               </TypographyTab>
             </Box>
-          </SalesOverviewCard>
+          </CardOverview>
         </Grid>
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <SalesOverviewCard>
+        <Grid size={{ xs: 12, md: 6, xl: 4 }}>
+          <CardOverview>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
               <SellIcon color="error" />
               <Typography>Paling Tidak Laku</Typography>
@@ -323,7 +323,7 @@ export default function SalesOverview(props: SalesOverviewProps) {
                 )}
               </TypographyTab>
             </Box>
-          </SalesOverviewCard>
+          </CardOverview>
         </Grid>
       </Grid>
     </Grid>

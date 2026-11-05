@@ -47,6 +47,7 @@ export const api = {
     base: "/products",
     byId: (id: string) => `/products/${id}`,
     options: "/products/options",
+    lowestStocks: "/products/lowest-stocks",
   },
   orders: {
     base: "/orders",

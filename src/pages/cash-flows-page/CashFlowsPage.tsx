@@ -12,6 +12,7 @@ import CashTransactionForm from "./components/cash-transaction-form";
 import useCashFlowsPage from "./CashFlowsPage.hooks";
 import CashDetails from "./components/cash-details";
 import ReportDate from "@/components/report-date";
+import PageTitle from "@/components/page-title";
 
 export default function CashFlowsPage() {
   const {
@@ -87,21 +88,10 @@ export default function CashFlowsPage() {
 
       <Stack spacing={4}>
         <Stack spacing={3}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              alignItems: { xs: "stretch", sm: "center" },
-              gap: "8px",
-              padding: "0px 8px",
-            }}
-          >
-            <Typography variant="h5">Cash Flows</Typography>
-            <Typography>-</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Melihat dan mengelola arus kas, investasi, dan bagi hasil
-            </Typography>
-          </Box>
+          <PageTitle
+            title="Arus Kas"
+            subTitle="Melihat dan mengelola arus kas, investasi, dan bagi hasil"
+          />
 
           <ReportDate
             endDate={endDate}

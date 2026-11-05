@@ -46,7 +46,7 @@ export default function CashDetails(props: CashDetailsProps) {
 
   return (
     <Grid container spacing={2}>
-      <Grid size={{ xs: 6, sm: 3 }}>
+      <Grid size={{ xs: 12, md: 4, xl: 3 }}>
         <BalanceCard>
           <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
             <AccountBalanceIcon />
@@ -73,7 +73,7 @@ export default function CashDetails(props: CashDetailsProps) {
           )}
         </BalanceCard>
       </Grid>
-      <Grid size={{ xs: 6, sm: 3 }}>
+      <Grid size={{ xs: 12, md: 4, xl: 3 }}>
         <CashFlowCard>
           <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
             <SavingsIcon color="success" />
@@ -129,7 +129,7 @@ export default function CashDetails(props: CashDetailsProps) {
           ) : null}
         </CashFlowCard>
       </Grid>
-      <Grid size={{ xs: 6, sm: 3 }}>
+      <Grid size={{ xs: 12, md: 4, xl: 3 }}>
         <CashFlowCard>
           <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
             <ShoppingCartIcon color="error" />

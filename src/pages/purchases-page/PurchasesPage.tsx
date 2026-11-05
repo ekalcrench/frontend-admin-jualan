@@ -25,6 +25,7 @@ import { currencyFormatter } from "@/utils/currency";
 import { purchaseStatus } from "@/constants/purchase";
 import useAuthStore from "@/store/auth-store";
 import { userOrganizationRole } from "@/constants/user";
+import PageTitle from "@/components/page-title";
 
 export default function PurchasesPage() {
   const {
@@ -199,24 +200,11 @@ export default function PurchasesPage() {
         id={editingPurchaseId}
       />
 
-      <Stack spacing={3}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "stretch", md: "center" },
-            justifyContent: "space-between",
-            gap: "16px",
-            padding: "16px 12px",
-          }}
-        >
-          <Box>
-            <Typography variant="h5">Purchases</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Mengelola pembelian stok inventory
-            </Typography>
-          </Box>
-        </Box>
+      <Stack spacing={4}>
+        <PageTitle
+          title="Belanja"
+          subTitle="Mengelola seluruh pembelian stok inventory"
+        />
 
         <CustomTable
           columns={columns}
