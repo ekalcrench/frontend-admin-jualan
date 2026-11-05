@@ -22,7 +22,8 @@ import useSalesPage from "./SalesPage.hooks";
 import { StackDetailPanel } from "./SalesPage.styles";
 import { orderStatus } from "@/constants/order";
 import ReportDate from "@/components/report-date";
-import SalesDetails from "./components/sales-details";
+import SalesOverview from "./components/sales-overview";
+import PageTitle from "@/components/page-title";
 
 export default function SalesPage() {
   const {
@@ -184,21 +185,10 @@ export default function SalesPage() {
 
       <Stack spacing={4}>
         <Stack spacing={3}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              alignItems: { xs: "stretch", sm: "center" },
-              gap: "8px",
-              padding: "0px 8px",
-            }}
-          >
-            <Typography variant="h5">Penjualan</Typography>
-            <Typography>-</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Mengelola dan melihat keseluruhan transaksi penjualan produk
-            </Typography>
-          </Box>
+          <PageTitle
+            title="Penjualan"
+            subTitle="Mengelola dan melihat keseluruhan transaksi penjualan produk"
+          />
 
           <ReportDate
             endDate={endDate}
@@ -208,7 +198,7 @@ export default function SalesPage() {
           />
         </Stack>
 
-        <SalesDetails endDate={endDate} startDate={startDate} />
+        <SalesOverview endDate={endDate} startDate={startDate} />
 
         <CustomTable
           columns={columns}

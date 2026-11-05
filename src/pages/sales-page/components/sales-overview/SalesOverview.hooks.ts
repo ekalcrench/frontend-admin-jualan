@@ -1,15 +1,15 @@
 import { apiErrorHandler } from "@/utils/api";
 import { useEffect } from "react";
-import { SalesDetailsProps } from "./SalesDetails.types";
+import { SalesOverviewProps } from "./SalesOverview.types";
 import {
   useOrderOverviewItemsQuery,
   useOrderOverviewQuery,
 } from "@/services/orders/orders.query";
 
-export default function useSalesDetails({
+export default function useSalesOverview({
   endDate,
   startDate,
-}: SalesDetailsProps) {
+}: SalesOverviewProps) {
   const { data, isLoading, isError, error } = useOrderOverviewQuery({
     endDate: endDate?.length ? endDate : undefined,
     startDate: startDate?.length ? startDate : undefined,
