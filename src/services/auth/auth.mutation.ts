@@ -17,6 +17,7 @@ import {
   AuthResendOtp,
   AuthResendOtpResponse,
 } from "./auth.types";
+import { userKeys } from "../users/users.constants";
 
 export function useLoginMutation() {
   return useMutation<AuthLoginResponse, Error, AuthLogin>({
@@ -38,7 +39,9 @@ export function useRegisterMutation() {
   return useMutation<AuthRegisterResponse, Error, AuthRegister>({
     mutationFn: register,
     onSuccess: (result, variables, onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: ["users", result.email] });
+      context.client.invalidateQueries({
+        queryKey: userKeys.email(result.email),
+      });
     },
   });
 }
@@ -47,7 +50,9 @@ export function useRegisterVerifyMutation() {
   return useMutation<AuthRegisterResponse, Error, AuthRegisterVerify>({
     mutationFn: registerVerify,
     onSuccess: (result, variables, onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: ["users", result.email] });
+      context.client.invalidateQueries({
+        queryKey: userKeys.email(result.email),
+      });
     },
   });
 }
@@ -57,7 +62,7 @@ export function useResendOtpMutation() {
     mutationFn: resendOtp,
     onSuccess: (result, variables, onMutateResult, context) => {
       context.client.invalidateQueries({
-        queryKey: ["users", result.user.email],
+        queryKey: userKeys.email(result.user.email),
       });
     },
   });
