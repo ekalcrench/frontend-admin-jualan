@@ -1,7 +1,7 @@
 import { BaseApiResponse } from "./api";
 import { DefaultFilter } from "./table";
 
-export interface InventoryLotsResponse extends BaseApiResponse {
+export interface InventoryLotResponse extends BaseApiResponse {
   id: string;
   inventoryItemId: string;
   purchaseItemId: string | null;

@@ -3,13 +3,13 @@ import { fiveMinutes } from "@/constants/time";
 import { PaginatedData } from "@/types/table";
 import {
   InventoryLotFilterPayload,
-  InventoryLotsResponse,
+  InventoryLotResponse,
 } from "@/types/inventoryLot";
 import { inventoryLotKeys } from "./inventoryLots.constants";
 import { fetchInventoryLots } from "./inventoryLots.api";
 
 export function useInventoryLotsQuery(payload: InventoryLotFilterPayload) {
-  return useQuery<PaginatedData<InventoryLotsResponse>>({
+  return useQuery<PaginatedData<InventoryLotResponse>>({
     queryKey: inventoryLotKeys.list(payload),
     queryFn: () => fetchInventoryLots(payload),
     staleTime: fiveMinutes,

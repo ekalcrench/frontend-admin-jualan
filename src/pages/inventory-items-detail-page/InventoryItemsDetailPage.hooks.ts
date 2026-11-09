@@ -1,10 +1,10 @@
 import { useInventoryLotsQuery } from "@/services/inventory-lots/inventoryLots.query";
 import { ColumnSort } from "@/types/table";
-import { InventoryLotsResponse } from "@/types/inventoryLot";
+import { InventoryLotResponse } from "@/types/inventoryLot";
 import { apiErrorHandler } from "@/utils/api";
 import { formatLocalDate, formatLocalDateOnly } from "@/utils/dateTime";
 import { type MRT_ColumnDef } from "material-react-table";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useInventoryItemByIdQuery } from "@/services/inventory-items/inventoryItems.query";
 import { inventoryLotsDefaultParameter } from "./InventoryItemsDetailPage.constants";
@@ -79,7 +79,7 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
       return prev;
     });
 
-  const columns: MRT_ColumnDef<InventoryLotsResponse>[] = useMemo(
+  const columns: MRT_ColumnDef<InventoryLotResponse>[] = useMemo(
     () => [
       { accessorKey: "id", header: "ID Lot", size: 160, enableSorting: false },
       {
@@ -182,17 +182,29 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
     }
   }, [inventoryItemQuery.isError, inventoryItemQuery.error]);
 
+  const [editingLot, setEditingLot] = useState<InventoryLotResponse>();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleClickEditForm = (lot: InventoryLotResponse) => {
+    setEditingLot(lot);
+    setIsFormOpen(true);
+  };
+
   return {
     columns,
     data,
+    editingLot,
     inventoryItemQuery,
-    isLoading,
     isError,
+    isFormOpen,
+    isLoading,
     search: search ?? "",
     sortBy,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleClickEditForm,
     handleResetFilter,
+    setIsFormOpen,
   };
 }

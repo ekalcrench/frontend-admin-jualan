@@ -107,7 +107,7 @@ export default function useInventoryItemsPage() {
       },
       {
         accessorKey: "totalCost",
-        header: "Total Biaya",
+        header: "Total Nilai Asset",
         size: 180,
         Cell: ({ row }) =>
           currencyFormatter.format(

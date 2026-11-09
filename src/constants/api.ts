@@ -33,6 +33,7 @@ export const api = {
   },
   inventoryLots: {
     base: "/inventory-lots",
+    byId: (id: string) => `/inventory-lots/${id}`,
   },
   purchases: {
     base: "/purchases",
