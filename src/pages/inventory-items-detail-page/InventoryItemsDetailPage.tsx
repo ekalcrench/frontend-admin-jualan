@@ -13,7 +13,7 @@ import { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { paths } from "@/constants/path";
 import CustomTable from "@/components/custom-table";
-import { BoxFlex } from "@/styled/CustomBox";
+import { BoxFlex, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import type { InventoryLotResponse } from "@/types/inventoryLot";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import InventoryLotForm from "./components/inventory-lot-form";
@@ -31,6 +31,7 @@ export default function InventoryItemsDetailPage() {
 }
 
 function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
+  const navigate = useNavigate();
   const {
     columns,
     data,
@@ -73,21 +74,45 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
         />
       )}
       <Stack spacing={4}>
-        <PageTitle
-          title="Detail Inventory Item"
-          subTitle={`Lot stok untuk barang ${
-            inventoryItemQuery.isLoading ? (
-              <Skeleton
-                component="span"
-                variant="text"
-                width={160}
-                sx={{ display: "inline-block", verticalAlign: "middle" }}
-              />
-            ) : (
-              (inventoryItemQuery.data?.name ?? "-")
-            )
-          }`}
-        />
+        <BoxFlexSpaceBetween
+          sx={{
+            columnGap: "8px",
+            flexDirection: { xs: "column-reverse", sm: "row" },
+            alignItems: { xs: "flex-start", sm: "center" },
+          }}
+        >
+          <PageTitle
+            title="Detail Inventory Item"
+            subTitle={`Lot stok untuk barang ${
+              inventoryItemQuery.isLoading ? (
+                <Skeleton
+                  component="span"
+                  variant="text"
+                  width={160}
+                  sx={{ display: "inline-block", verticalAlign: "middle" }}
+                />
+              ) : (
+                (inventoryItemQuery.data?.name ?? "-")
+              )
+            }`}
+          />
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "flex-end",
+              width: "100%",
+            }}
+          >
+            <Button
+              variant="outlined"
+              startIcon={<ArrowBackIcon />}
+              onClick={() => navigate(-1)}
+            >
+              Kembali
+            </Button>
+          </Box>
+        </BoxFlexSpaceBetween>
 
         <CustomTable<InventoryLotResponse>
           columns={columns}
