@@ -65,6 +65,12 @@ export async function login(data: AuthLogin): Promise<AuthLoginResponse> {
   return response.data;
 }
 
+export async function logout(): Promise<boolean> {
+  const response = await apiClient.post<boolean>(api.auth.logout);
+
+  return response.data;
+}
+
 export async function loginOrganization(
   data: AuthLoginOrganization,
 ): Promise<AuthLoginOrganizationResponse> {

@@ -2,6 +2,7 @@ export const api = {
   auth: {
     login: "/auth/login",
     loginOrganization: "/auth/login/organization",
+    logout: "/auth/logout",
     register: "/auth/register",
     registerVerify: "/auth/register/verify",
     resendOtp: "/auth/resend-otp",
