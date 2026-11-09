@@ -13,6 +13,7 @@ import { InventoryItemResponse } from "@/types/inventoryItem";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate } from "react-router-dom";
 import { paths } from "@/constants/path";
+import PageTitle from "@/components/page-title";
 
 export default function InventoryItemsPage() {
   const {
@@ -90,24 +91,11 @@ export default function InventoryItemsPage() {
         item={editingItem}
       />
 
-      <Stack spacing={3}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "stretch", md: "center" },
-            justifyContent: "space-between",
-            gap: "16px",
-            padding: "16px 12px",
-          }}
-        >
-          <Box>
-            <Typography variant="h5">Inventory Items</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Melihat stok dan mengelola daftar barang
-            </Typography>
-          </Box>
-        </Box>
+      <Stack spacing={4}>
+        <PageTitle
+          title="Inventory Items"
+          subTitle="Melihat stok dan mengelola daftar barang"
+        />
 
         <CustomTable<InventoryItemResponse>
           columns={columns}

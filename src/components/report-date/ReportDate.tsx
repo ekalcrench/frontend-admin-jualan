@@ -21,8 +21,16 @@ export default function ReportDate(props: ReportDateProps) {
   } = useReportDate(props);
 
   return (
-    <Box sx={{ width: "fit-content" }}>
-      <ButtonGroup sx={{ width: "100%" }} size="small">
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: "100%",
+        overflowX: "auto",
+        overflowY: "hidden",
+        WebkitOverflowScrolling: "touch",
+      }}
+    >
+      <ButtonGroup sx={{ width: "max-content", flexWrap: "nowrap" }} size="small">
         <Button
           onClick={handleClickToday}
           variant={reportDateType === "TODAY" ? "contained" : "outlined"}
@@ -64,7 +72,12 @@ export default function ReportDate(props: ReportDateProps) {
       <Collapse in={openCollapse} sx={{ width: "100%" }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <BoxFlexSpaceBetween
-            sx={{ width: "100%", gap: "8px", marginTop: "16px" }}
+            sx={{
+              width: { xs: "560px", sm: "100%" },
+              minWidth: { xs: "560px", sm: 0 },
+              gap: "8px",
+              marginTop: "16px",
+            }}
           >
             <CustomDatePicker
               control={control}

@@ -10,6 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import useAuthStore from "@/store/auth-store/authStore";
 import { userRole } from "@/constants/user";
+import PageTitle from "@/components/page-title";
 
 export default function UmkmPage() {
   const {
@@ -84,24 +85,11 @@ export default function UmkmPage() {
         id={editFormId}
       />
 
-      <Stack spacing={3}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "stretch", md: "center" },
-            justifyContent: "space-between",
-            gap: "16px",
-            padding: "16px 12px",
-          }}
-        >
-          <Box>
-            <Typography variant="h5">UMKM</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Mengatur UMKM yang sudah, maupun akan terdaftar dalam sistem
-            </Typography>
-          </Box>
-        </Box>
+      <Stack spacing={4}>
+        <PageTitle
+          title="UMKM"
+          subTitle="Mengatur UMKM yang sudah, maupun akan terdaftar dalam sistem"
+        />
 
         <CustomTable<Organization>
           columns={columns}

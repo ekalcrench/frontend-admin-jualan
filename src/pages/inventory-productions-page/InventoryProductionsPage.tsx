@@ -22,6 +22,7 @@ import useInventoryProductionsPage from "./InventoryProductionsPage.hooks";
 import { preparationStatus } from "@/constants/production";
 import useAuthStore from "@/store/auth-store";
 import { userOrganizationRole } from "@/constants/user";
+import PageTitle from "@/components/page-title";
 
 export default function InventoryProductionsPage() {
   const {
@@ -210,25 +211,12 @@ export default function InventoryProductionsPage() {
         id={editingPreparationId}
       />
 
-      <Stack spacing={3}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "stretch", md: "center" },
-            justifyContent: "space-between",
-            gap: "16px",
-            padding: "16px 12px",
-          }}
-        >
-          <Box>
-            <Typography variant="h5">Inventory Productions</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Mengelola inventory tingkat lanjut, yaitu inventory yang merupakan
-              bahan jadi sebelum dijual
-            </Typography>
-          </Box>
-        </Box>
+      <Stack spacing={4}>
+        <PageTitle
+          title="Inventory Productions"
+          subTitle="Mengelola inventory tingkat lanjut, yaitu inventory yang merupakan
+              bahan jadi sebelum dijual"
+        />
 
         <CustomTable<PreparationResponse>
           columns={columns}

@@ -6,6 +6,7 @@ import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex } from "@/styled/CustomBox";
 import { userRole, userStatus } from "@/constants/user";
 import useAuthStore from "@/store/auth-store/authStore";
+import PageTitle from "@/components/page-title";
 
 export default function AllUsersPage() {
   const {
@@ -96,24 +97,12 @@ export default function AllUsersPage() {
 
   return (
     <Box>
-      <Stack spacing={3}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "stretch", md: "center" },
-            justifyContent: "space-between",
-            gap: "16px",
-            padding: "16px 12px",
-          }}
-        >
-          <Box>
-            <Typography variant="h5">Users</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Mengatur semua user dari semua UMKM
-            </Typography>
-          </Box>
-        </Box>
+      <Stack spacing={4}>
+        <PageTitle
+          title="Users"
+          subTitle="Mengatur semua user dari semua UMKM"
+        />
+
         <CustomTable<User>
           columns={columns}
           data={data?.items ?? []}

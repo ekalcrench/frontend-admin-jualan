@@ -3,6 +3,7 @@ import CustomTable from "@/components/custom-table";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import type { InventoryTransactionResponse } from "@/types/inventoryTransaction";
 import useInventoryTransactionsPage from "./InventoryTransactionsPage.hooks";
+import PageTitle from "@/components/page-title";
 
 export default function InventoryTransactionsPage() {
   const {
@@ -20,24 +21,11 @@ export default function InventoryTransactionsPage() {
 
   return (
     <Box>
-      <Stack spacing={3}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "stretch", md: "center" },
-            justifyContent: "space-between",
-            gap: "16px",
-            padding: "16px 12px",
-          }}
-        >
-          <Box>
-            <Typography variant="h5">Inventory Transactions</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Melihat riwayat transaksi stok inventory
-            </Typography>
-          </Box>
-        </Box>
+      <Stack spacing={4}>
+        <PageTitle
+          title="Inventory Transactions"
+          subTitle="Melihat riwayat transaksi stok inventory"
+        />
 
         <CustomTable<InventoryTransactionResponse>
           columns={columns}

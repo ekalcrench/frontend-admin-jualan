@@ -12,6 +12,7 @@ import {
 import useAuthStore from "@/store/auth-store";
 import AddIcon from "@mui/icons-material/Add";
 import UserForm from "./components/user-form";
+import PageTitle from "@/components/page-title";
 
 export default function UsersPage() {
   const {
@@ -145,25 +146,12 @@ export default function UsersPage() {
         // id={editFormId}
       />
 
-      <Stack spacing={3}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "stretch", md: "center" },
-            justifyContent: "space-between",
-            gap: "16px",
-            padding: "16px 12px",
-          }}
-        >
-          <Box>
-            <Typography variant="h5">Users</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Mengatur semua user yang terdaftar di{" "}
-              {organization?.name ?? "UMKM"}
-            </Typography>
-          </Box>
-        </Box>
+      <Stack spacing={4}>
+        <PageTitle
+          title="Users"
+          subTitle={`Mengatur semua user yang terdaftar di ${organization?.name ?? "UMKM"}`}
+        />
+
         <CustomTable<UserOrganization>
           columns={columns}
           data={data?.items ?? []}
