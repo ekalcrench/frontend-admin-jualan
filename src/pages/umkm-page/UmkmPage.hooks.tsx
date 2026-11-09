@@ -3,7 +3,7 @@ import { defaultParameter } from "@/constants/table";
 import { useDeleteOrganizationMutation } from "@/services/organizations/organizations.mutation";
 import { useOrganizationsQuery } from "@/services/organizations/organizations.query";
 import useConfirmationStore from "@/store/confirmation-store";
-import { Organization } from "@/types/organization";
+import { OrganizationResponse } from "@/types/organization";
 import { ColumnSort } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { formatLocalDate } from "@/utils/dateTime";
@@ -93,7 +93,7 @@ export default function useUmkmPage() {
     });
   };
 
-  const columns: MRT_ColumnDef<Organization>[] = useMemo(
+  const columns: MRT_ColumnDef<OrganizationResponse>[] = useMemo(
     () => [
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       {

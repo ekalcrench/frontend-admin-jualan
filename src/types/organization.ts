@@ -1,7 +1,7 @@
 import { BaseApiResponse } from "./api";
 import { DefaultFilter } from "./table";
 
-export interface Organization extends BaseApiResponse {
+export interface OrganizationResponse extends BaseApiResponse {
   id: string;
   name: string;
   address: string;

@@ -1,16 +1,21 @@
 import { orderStatusColorMapping, orderStatusMapping } from "@/constants/order";
 import { defaultParameter, defaultParameterDate } from "@/constants/table";
+import { useThermalPrinter } from "@/hooks/useThermalPrinter";
 import {
   useDeleteOrderMutation,
   useMarkPaidOrderMutation,
 } from "@/services/orders/orders.mutation";
 import { useOrderQuery } from "@/services/orders/orders.query";
+import { useOrganizationByIdQuery } from "@/services/organizations/organizations.query";
+import { ReceiptBlock } from "@/services/printer/printer.types";
+import useAuthStore from "@/store/auth-store";
 import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
 import type { OrderResponse, OrderStatus } from "@/types/order";
 import type { ColumnSort, PaginatedData } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate } from "@/utils/dateTime";
+import { buildReceipt } from "@/utils/print";
 import { Chip } from "@mui/material";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
@@ -211,15 +216,45 @@ export default function useSalesPage() {
     }
   };
 
+  const organizationStore = useAuthStore((state) => state.organization);
+
+  const organization = useOrganizationByIdQuery(organizationStore?.id);
+
+  const { connectionStatus, isChecking, isPrinting, refreshPrinter, print } =
+    useThermalPrinter();
+
+  const handlePrint = async (order: OrderResponse) => {
+    if (!organization.data)
+      return toast.error("UMKM tidak ditemukan, silakan hubungi CS");
+
+    const toastId = toast.loading("Mengubah status pembelian...");
+    try {
+      const result = await print(buildReceipt(order, organization.data), {
+        paperWidth: 58,
+        cut: true,
+        reference: order.orderNumber,
+      });
+
+      toast.success(`Struk berhasil dicetak! Job ID: ${result.jobId}`);
+    } catch (err) {
+      apiErrorHandler(err);
+    } finally {
+      toast.dismiss(toastId);
+    }
+  };
+
   return {
     columns,
+    connectionStatus,
     data,
     deleteOrder,
     editingOrderId,
     endDate,
+    isChecking,
+    isError,
     isFormOpen,
     isLoading,
-    isError,
+    isPrinting,
     markPaidOrder,
     search: search ?? "",
     sortBy,
@@ -231,7 +266,9 @@ export default function useSalesPage() {
     handleClickDelete,
     handleClickEditForm,
     handleClickMarkPaid,
+    handlePrint,
     handleResetFilter,
+    refreshPrinter,
     setEndDate,
     setIsFormOpen,
     setStartDate,

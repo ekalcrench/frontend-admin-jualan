@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { fiveMinutes } from "@/constants/time";
-import { Organization, OrganizationFilterPayload } from "@/types/organization";
+import {
+  OrganizationResponse,
+  OrganizationFilterPayload,
+} from "@/types/organization";
 import { fetchOrganizationById, fetchOrganizations } from "./organizations.api";
 import { PaginatedData } from "@/types/table";
 import { organizationKeys } from "./organizations.constants";
 
 export function useOrganizationsQuery(payload: OrganizationFilterPayload) {
-  return useQuery<PaginatedData<Organization>>({
+  return useQuery<PaginatedData<OrganizationResponse>>({
     queryKey: organizationKeys.list(payload),
     queryFn: () => fetchOrganizations(payload),
     staleTime: fiveMinutes,
@@ -17,11 +20,11 @@ export function useOrganizationsQuery(payload: OrganizationFilterPayload) {
 }
 
 export function useOrganizationByIdQuery(id?: string) {
-  return useQuery<Organization>({
+  return useQuery<OrganizationResponse>({
     queryKey: organizationKeys.detail(id),
     queryFn: () => {
       if (!id) {
-        throw new Error("Organization id is required");
+        throw new Error("OrganizationResponse id is required");
       }
 
       return fetchOrganizationById(id);

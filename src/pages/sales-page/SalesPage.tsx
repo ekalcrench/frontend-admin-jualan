@@ -24,17 +24,22 @@ import { orderStatus } from "@/constants/order";
 import ReportDate from "@/components/report-date";
 import SalesOverview from "./components/sales-overview";
 import PageTitle from "@/components/page-title";
+import PrintIcon from "@mui/icons-material/Print";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 export default function SalesPage() {
   const {
     columns,
+    connectionStatus,
     data,
     deleteOrder,
     editingOrderId,
     endDate,
+    isChecking,
+    isError,
     isFormOpen,
     isLoading,
-    isError,
+    isPrinting,
     markPaidOrder,
     search,
     sortBy,
@@ -46,7 +51,9 @@ export default function SalesPage() {
     handleClickDelete,
     handleClickEditForm,
     handleClickMarkPaid,
+    handlePrint,
     handleResetFilter,
+    refreshPrinter,
     setEndDate,
     setIsFormOpen,
     setStartDate,
@@ -64,7 +71,7 @@ export default function SalesPage() {
 
   const renderRowActions = (row: MRT_Row<OrderResponse>) => (
     <BoxFlex>
-      {row.original.status === orderStatus.UNPAID && (
+      {row.original.status === orderStatus.UNPAID ? (
         <>
           <Button
             color="success"
@@ -96,6 +103,25 @@ export default function SalesPage() {
             <DeleteIcon />
           </IconButton>
         </>
+      ) : connectionStatus !== "ready" && connectionStatus !== "checking" ? (
+        <Button
+          color="warning"
+          startIcon={<RefreshIcon />}
+          onClick={() => refreshPrinter()}
+          size="small"
+        >
+          Printer
+        </Button>
+      ) : (
+        <Button
+          disabled={connectionStatus !== "ready"}
+          startIcon={<PrintIcon />}
+          onClick={() => handlePrint(row.original)}
+          loading={isPrinting || isChecking}
+          size="small"
+        >
+          Print
+        </Button>
       )}
     </BoxFlex>
   );

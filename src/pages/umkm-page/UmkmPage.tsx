@@ -3,7 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import useUmkmPage from "./UmkmPage.hooks";
 import UmkmForm from "./components/umkm-form";
 import CustomTable from "@/components/custom-table";
-import { Organization } from "@/types/organization";
+import { OrganizationResponse } from "@/types/organization";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex } from "@/styled/CustomBox";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -91,7 +91,7 @@ export default function UmkmPage() {
           subTitle="Mengatur UMKM yang sudah, maupun akan terdaftar dalam sistem"
         />
 
-        <CustomTable<Organization>
+        <CustomTable<OrganizationResponse>
           columns={columns}
           data={data?.items ?? []}
           isLoading={isLoading}

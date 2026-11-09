@@ -1,21 +1,26 @@
 import { apiClient } from "@/config/api";
 import { api } from "@/constants/api";
-import { Organization, OrganizationFilterPayload } from "@/types/organization";
+import {
+  OrganizationResponse,
+  OrganizationFilterPayload,
+} from "@/types/organization";
 import { CreateOrganization, EditOrganization } from "./organizations.types";
 import { PaginatedData } from "@/types/table";
 
 export async function fetchOrganizations(
   payload: OrganizationFilterPayload,
-): Promise<PaginatedData<Organization>> {
-  const response = await apiClient.get<PaginatedData<Organization>>(
+): Promise<PaginatedData<OrganizationResponse>> {
+  const response = await apiClient.get<PaginatedData<OrganizationResponse>>(
     api.organizations.base,
     { params: payload },
   );
   return response.data;
 }
 
-export async function fetchOrganizationById(id: string): Promise<Organization> {
-  const response = await apiClient.get<Organization>(
+export async function fetchOrganizationById(
+  id: string,
+): Promise<OrganizationResponse> {
+  const response = await apiClient.get<OrganizationResponse>(
     api.organizations.byId(id),
   );
   return response.data;
@@ -23,7 +28,7 @@ export async function fetchOrganizationById(id: string): Promise<Organization> {
 
 export async function createOrganization(
   data: CreateOrganization,
-): Promise<Organization> {
+): Promise<OrganizationResponse> {
   const formData = new FormData();
   formData.append("name", data.name);
   formData.append("address", data.address);
@@ -31,7 +36,7 @@ export async function createOrganization(
   formData.append("phone", data.phone);
   formData.append("file", data.file);
 
-  const response = await apiClient.post<Organization>(
+  const response = await apiClient.post<OrganizationResponse>(
     api.organizations.base,
     formData,
   );
@@ -42,7 +47,7 @@ export async function createOrganization(
 export async function editOrganization(
   id: string,
   data: EditOrganization,
-): Promise<Organization> {
+): Promise<OrganizationResponse> {
   const formData = new FormData();
 
   Object.entries(data).forEach(([key, value]) => {
@@ -51,7 +56,7 @@ export async function editOrganization(
     }
   });
 
-  const response = await apiClient.patch<Organization>(
+  const response = await apiClient.patch<OrganizationResponse>(
     api.organizations.byId(id),
     formData,
   );
