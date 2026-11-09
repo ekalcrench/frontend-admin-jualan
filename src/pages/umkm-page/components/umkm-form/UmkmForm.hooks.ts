@@ -15,6 +15,29 @@ import { toast } from "sonner";
 import { useOrganizationByIdQuery } from "@/services/organizations/organizations.query";
 import { useEffect } from "react";
 
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result !== "string") {
+        reject(new Error("Could not read the selected logo"));
+        return;
+      }
+
+      const base64 = reader.result.split(",")[1];
+      if (!base64) {
+        reject(new Error("Could not encode the selected logo"));
+        return;
+      }
+
+      resolve(base64);
+    };
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("Could not read the selected logo"));
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function useUmkmForm(props: UmkmFormProps) {
   const createOrganization = useCreateOrganizationMutation();
   const editOrganization = useEditOrganizationMutation(props.id);
@@ -45,7 +68,6 @@ export default function useUmkmForm(props: UmkmFormProps) {
       address: getOrganizationById.data.address,
       phone: getOrganizationById.data.phone,
       file: undefined as unknown as File,
-      logoUrl: getOrganizationById.data.logoUrl ?? "",
     });
   }, [getOrganizationById.data, reset]);
 
@@ -66,16 +88,28 @@ export default function useUmkmForm(props: UmkmFormProps) {
     );
     try {
       if (props.id) {
-        const changedValues = Object.fromEntries(
-          Object.keys(dirtyFields).map((field) => [
-            field,
-            values[field as keyof UmkmFormValues],
-          ]),
+        const changedValues: Record<string, string> = {};
+        (Object.keys(dirtyFields) as Array<keyof UmkmFormValues>).forEach(
+          (field) => {
+            if (field !== "file") {
+              changedValues[field] = values[field];
+            }
+          },
         );
+
+        if (dirtyFields.file && values.file) {
+          changedValues.logoBase64 = await fileToBase64(values.file);
+        }
 
         await editOrganization.mutateAsync(changedValues);
       } else {
-        const organization = await createOrganization.mutateAsync(values);
+        const organization = await createOrganization.mutateAsync({
+          name: values.name,
+          email: values.email,
+          address: values.address,
+          phone: values.phone,
+          logoBase64: await fileToBase64(values.file),
+        });
         props.onSuccess?.(organization);
       }
 
@@ -93,6 +127,6 @@ export default function useUmkmForm(props: UmkmFormProps) {
     isLoading,
     handleSubmit,
     onSubmit,
-    logoUrl: getOrganizationById.data?.logoUrl,
+    logoBase64: getOrganizationById.data?.logoBase64,
   };
 }

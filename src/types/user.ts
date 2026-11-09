@@ -44,7 +44,7 @@ export interface SelectedUserOrganization extends Pick<
   "id" | "role" | "status"
 > {
   name: string;
-  logoUrl: string;
+  logoBase64: string;
 }
 
 export interface UserOrganizationDetail extends BaseApiResponse {

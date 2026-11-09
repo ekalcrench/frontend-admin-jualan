@@ -4,7 +4,7 @@ import { TypographyCenter } from "@/styled/CustomTypography";
 import useSelectOrganizationsPage from "./SelectOrganizationsPage.hooks";
 import CustomAutocomplete from "@/components/custom-autocomplete";
 import { BoxFlex } from "@/styled/CustomBox";
-import { storageBaseUrl } from "@/constants/api";
+import { getImageDataUrl } from "@/utils/image";
 
 export default function SelectOrganizationsPage() {
   const {
@@ -49,7 +49,7 @@ export default function SelectOrganizationsPage() {
                     <li {...props}>
                       <BoxFlex sx={{ gap: "12px" }}>
                         <Avatar
-                          src={`${storageBaseUrl}${option.logoUrl}`}
+                          src={getImageDataUrl(option.logoBase64)}
                           alt={option.name}
                           sx={{ width: 32, height: 32 }}
                         />

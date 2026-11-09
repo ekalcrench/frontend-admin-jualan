@@ -16,7 +16,7 @@ const organizationSchema = z.object(
     name: z.string(),
     role: z.enum(organizationRoles),
     status: z.enum(organizationStatuses),
-    logoUrl: z.string(),
+    logoBase64: z.string(),
   },
   {
     error: "Pilih UMKM dahulu untuk login",

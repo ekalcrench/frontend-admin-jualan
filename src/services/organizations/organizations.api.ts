@@ -29,16 +29,9 @@ export async function fetchOrganizationById(
 export async function createOrganization(
   data: CreateOrganization,
 ): Promise<OrganizationResponse> {
-  const formData = new FormData();
-  formData.append("name", data.name);
-  formData.append("address", data.address);
-  formData.append("email", data.email);
-  formData.append("phone", data.phone);
-  formData.append("file", data.file);
-
   const response = await apiClient.post<OrganizationResponse>(
     api.organizations.base,
-    formData,
+    data,
   );
 
   return response.data;
@@ -48,17 +41,9 @@ export async function editOrganization(
   id: string,
   data: EditOrganization,
 ): Promise<OrganizationResponse> {
-  const formData = new FormData();
-
-  Object.entries(data).forEach(([key, value]) => {
-    if (value !== undefined) {
-      formData.append(key, value);
-    }
-  });
-
   const response = await apiClient.patch<OrganizationResponse>(
     api.organizations.byId(id),
-    formData,
+    data,
   );
 
   return response.data;

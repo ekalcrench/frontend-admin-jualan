@@ -10,7 +10,7 @@ import { SidebarListItem } from "./SidebarContent.types";
 import useSidebarContent from "./SidebarContent.hooks";
 import { CustomLink } from "@/styled/CustomLink";
 import LogoutButton from "../logout-button";
-import { storageBaseUrl } from "@/constants/api";
+import { getImageDataUrl } from "@/utils/image";
 import { OrganizationName, TopSidebar } from "./SidebarContent.styles";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -72,7 +72,7 @@ export default function SidebarContent() {
       <TopSidebar>
         <Avatar
           alt="umkm"
-          src={`${storageBaseUrl}${organization?.logoUrl}`}
+          src={getImageDataUrl(organization?.logoBase64)}
           sx={{ width: 32, height: 32 }}
         />
         <OrganizationName>{organization?.name ?? ""}</OrganizationName>

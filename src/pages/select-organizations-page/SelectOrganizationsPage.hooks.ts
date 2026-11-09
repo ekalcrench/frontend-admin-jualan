@@ -6,7 +6,6 @@ import { paths } from "@/constants/path";
 import { SelectOrganizationFormValues } from "./SelectOrganizationsPage.types";
 import { selectOrganizationSchema } from "./SelectOrganizationsPage.constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectedUserOrganization } from "@/types/user";
 import { useLoginOrganizationMutation } from "@/services/auth";
 import { toast } from "sonner";
 import { apiErrorHandler } from "@/utils/api";

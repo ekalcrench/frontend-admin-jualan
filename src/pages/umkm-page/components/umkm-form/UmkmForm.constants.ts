@@ -15,7 +15,6 @@ const umkmFormFields = {
   phone: z
     .string("Masukkan nomor yang bisa dihubungi")
     .min(1, "Masukkan nomor yang bisa dihubungi"),
-  logoUrl: z.string().optional(),
 };
 
 export const umkmFormSchema = z.object({
@@ -34,5 +33,4 @@ export const emptyUmkmFormValues: UmkmFormValues = {
   phone: "",
   address: "",
   file: undefined as unknown as File,
-  logoUrl: "",
 };

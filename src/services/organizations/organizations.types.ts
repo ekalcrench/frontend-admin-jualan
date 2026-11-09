@@ -3,9 +3,7 @@ export interface CreateOrganization {
   address: string;
   email: string;
   phone: string;
-  file: File;
+  logoBase64: string;
 }
 
-export interface EditOrganization extends Partial<CreateOrganization> {
-  logoUrl?: string;
-}
+export type EditOrganization = Partial<CreateOrganization>;

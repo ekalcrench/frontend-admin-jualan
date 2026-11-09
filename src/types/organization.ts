@@ -7,7 +7,7 @@ export interface OrganizationResponse extends BaseApiResponse {
   address: string;
   phone: string;
   email: string;
-  logoUrl: string;
+  logoBase64: string;
 }
 
 export interface OrganizationFilterPayload extends DefaultFilter {

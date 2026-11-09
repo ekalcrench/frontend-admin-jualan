@@ -10,17 +10,21 @@ export function buildReceipt(
   organization: OrganizationResponse,
 ): ReceiptBlock[] {
   return [
-    // {
-    //   type: "image",
-    //   base64: string,
-    //   align: "center",
-    //   // dither: false,
-    // },
+    {
+      type: "image",
+      base64: organization.logoBase64,
+      align: "center",
+      dither: false,
+    },
+
+    { type: "feed" },
+
     {
       type: "text",
-      text: organization.name,
+      text: "Soto Padang Uni Nurul",
       align: "center",
       bold: true,
+      size: "large",
     },
 
     { type: "feed" },

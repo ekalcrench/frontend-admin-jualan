@@ -4,10 +4,10 @@ import FormDrawer from "@/components/form-drawer";
 import useUmkmForm from "./UmkmForm.hooks";
 import CustomInput from "@/components/custom-input";
 import CustomImageSelect from "@/components/custom-image-select";
-import { storageBaseUrl } from "@/constants/api";
+import { getImageDataUrl } from "@/utils/image";
 
 export default function UmkmForm(props: UmkmFormProps) {
-  const { control, isLoading, handleSubmit, onSubmit, logoUrl } =
+  const { control, isLoading, handleSubmit, onSubmit, logoBase64 } =
     useUmkmForm(props);
 
   return (
@@ -66,7 +66,7 @@ export default function UmkmForm(props: UmkmFormProps) {
           label="Logo"
           renderErrorMessage
           disabled={isLoading}
-          existingImageUrl={logoUrl ? `${storageBaseUrl}${logoUrl}` : undefined}
+          existingImageUrl={getImageDataUrl(logoBase64)}
         />
 
         <Button

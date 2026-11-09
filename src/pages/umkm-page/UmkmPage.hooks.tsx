@@ -1,4 +1,3 @@
-import { storageBaseUrl } from "@/constants/api";
 import { defaultParameter } from "@/constants/table";
 import { useDeleteOrganizationMutation } from "@/services/organizations/organizations.mutation";
 import { useOrganizationsQuery } from "@/services/organizations/organizations.query";
@@ -12,6 +11,7 @@ import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+import { getImageDataUrl } from "@/utils/image";
 
 export default function useUmkmPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -97,7 +97,7 @@ export default function useUmkmPage() {
     () => [
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       {
-        accessorKey: "logoUrl",
+        accessorKey: "logoBase64",
         header: "Logo",
         size: 80,
         minSize: 80,
@@ -105,7 +105,7 @@ export default function useUmkmPage() {
         Cell: ({ cell, row }) => (
           <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
             <Avatar
-              src={`${storageBaseUrl}${cell.getValue<string>()}`}
+              src={getImageDataUrl(cell.getValue<string>())}
               alt={row.original.name}
               sx={{ width: 32, height: 32 }}
             />

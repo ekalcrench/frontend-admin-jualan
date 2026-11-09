@@ -70,4 +70,3 @@ export const api = {
 };
 
 export const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
-export const storageBaseUrl = import.meta.env.VITE_API_STORAGE_BASE_URL;
