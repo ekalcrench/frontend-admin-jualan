@@ -14,29 +14,8 @@ import { Resolver, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useOrganizationByIdQuery } from "@/services/organizations/organizations.query";
 import { useEffect } from "react";
-
-function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result !== "string") {
-        reject(new Error("Could not read the selected logo"));
-        return;
-      }
-
-      const base64 = reader.result.split(",")[1];
-      if (!base64) {
-        reject(new Error("Could not encode the selected logo"));
-        return;
-      }
-
-      resolve(base64);
-    };
-    reader.onerror = () =>
-      reject(reader.error ?? new Error("Could not read the selected logo"));
-    reader.readAsDataURL(file);
-  });
-}
+import { fileToBase64 } from "@/utils/image";
+import useAuthStore from "@/store/auth-store";
 
 export default function useUmkmForm(props: UmkmFormProps) {
   const createOrganization = useCreateOrganizationMutation();
@@ -82,6 +61,11 @@ export default function useUmkmForm(props: UmkmFormProps) {
     editOrganization.isPending ||
     isLoadingGetData;
 
+  const organization = useAuthStore((state) => state.organization);
+  const renewalOrganizationData = useAuthStore(
+    (state) => state.renewalOrganizationData,
+  );
+
   const onSubmit = async (values: UmkmFormValues) => {
     const toastId = toast.loading(
       props.id ? "Updating UMKM..." : "Creating UMKM...",
@@ -101,7 +85,14 @@ export default function useUmkmForm(props: UmkmFormProps) {
           changedValues.logoBase64 = await fileToBase64(values.file);
         }
 
-        await editOrganization.mutateAsync(changedValues);
+        const res = await editOrganization.mutateAsync(changedValues);
+        if (organization?.id === res.id) {
+          renewalOrganizationData({
+            ...organization,
+            logoBase64: res.logoBase64,
+            name: res.name,
+          });
+        }
       } else {
         const organization = await createOrganization.mutateAsync({
           name: values.name,

@@ -10,4 +10,5 @@ export interface AuthState {
     accessToken: string,
   ) => void;
   logout: () => void;
+  renewalOrganizationData: (organization: SelectedUserOrganization) => void;
 }

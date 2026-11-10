@@ -13,6 +13,7 @@ const useAuthStore = create<AuthState>()(
       loginOrganization: (organization, accessToken) =>
         set({ organization, accessToken }),
       logout: () => set({ accessToken: null, user: null, organization: null }),
+      renewalOrganizationData: (organization) => set({ organization }),
     }),
     {
       name: "admin-jualan-auth",
