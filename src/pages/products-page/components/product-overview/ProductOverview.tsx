@@ -1,6 +1,6 @@
 import { CardOverview } from "@/styled/CustomCard";
 import useProductOverview from "./ProductOverview.hooks";
-import { BoxFlex } from "@/styled/CustomBox";
+import { BoxCenter, BoxFlex } from "@/styled/CustomBox";
 import { TypographyTab } from "@/styled/CustomTypography";
 import { numberFormat } from "@/utils/number";
 import { Grid, Typography, Box, Skeleton, Stack } from "@mui/material";
@@ -32,7 +32,9 @@ export default function ProductOverview() {
                 >
                   {`(${numberFormat.format(data.length)} produk)`}
                 </Typography>
-              ) : null}
+              ) : (
+                <Typography component={"span"}>(0 produk)</Typography>
+              )}
             </Typography>
           </BoxFlex>
 
@@ -69,7 +71,11 @@ export default function ProductOverview() {
                   </TypographyTab>
                 </Box>
               ))
-            ) : null}
+            ) : (
+              <BoxCenter>
+                <Typography>Data tidak ditemukan</Typography>
+              </BoxCenter>
+            )}
           </Stack>
         </CardOverview>
       </Grid>
