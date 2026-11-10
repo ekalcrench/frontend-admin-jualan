@@ -2,8 +2,16 @@ import { ReceiptBlock } from "@/services/printer/printer.types";
 import { OrderResponse } from "@/types/order";
 import { currencyFormatter } from "./currency";
 import { OrganizationResponse } from "@/types/organization";
-import { formatLocalDate } from "./dateTime";
+import { formatLocalDatePrint } from "./dateTime";
 import { numberFormat } from "./number";
+
+export function formatReceiptLabel(
+  label: string,
+  value: string,
+  width = 14,
+): string {
+  return `${label.padEnd(width)}: ${value}`;
+}
 
 export function buildReceipt(
   order: OrderResponse,
@@ -21,10 +29,8 @@ export function buildReceipt(
 
     {
       type: "text",
-      text: "Soto Padang Uni Nurul",
+      text: organization.name,
       align: "center",
-      bold: true,
-      size: "large",
     },
 
     { type: "feed" },
@@ -40,12 +46,33 @@ export function buildReceipt(
       text: `No. Telp ${organization.phone}`,
     },
 
+    { type: "divider", char: "=" },
+
+    {
+      type: "text",
+      align: "center",
+      text: "Jenis Order:",
+    },
+    {
+      type: "text",
+      align: "center",
+      text: "Delivery",
+      size: "large",
+    },
+
     { type: "divider" },
 
     {
-      type: "row" as const,
-      left: formatLocalDate(new Date()),
-      right: `${order.orderNumber}`,
+      type: "text",
+      text: formatReceiptLabel("Nomor Order", order.orderNumber),
+    },
+    {
+      type: "text",
+      text: formatReceiptLabel("Waktu", formatLocalDatePrint(new Date())),
+    },
+    {
+      type: "text",
+      text: formatReceiptLabel("Kasir", "Haekal Azmi"),
     },
 
     { type: "divider" },
@@ -75,17 +102,58 @@ export function buildReceipt(
 
     {
       type: "row",
+      left: "Subtotal",
+      right: currencyFormatter.format(order.totalAmount),
+    },
+    {
+      type: "row",
+      left: "Biaya Pengiriman",
+      right: currencyFormatter.format(5000),
+    },
+    {
+      type: "row",
       left: "Total",
       right: currencyFormatter.format(order.totalAmount),
       bold: true,
     },
-    { type: "text", align: "right", text: "Lunas" },
+    // {
+    //   type: "text",
+    //   text: "*Harga yang tertera sudah termasuk PPN",
+    // },
+
+    { type: "divider" },
+
+    {
+      type: "row",
+      left: "Tunai",
+      right: currencyFormatter.format(order.totalAmount),
+    },
+    {
+      type: "row",
+      left: "Kembalian",
+      right: currencyFormatter.format(0),
+    },
+
+    { type: "divider", char: "=" },
 
     { type: "feed" },
 
     {
       type: "text",
       text: `Terima kasih telah berbelanja di ${organization.name}`,
+      align: "center",
+    },
+
+    { type: "feed" },
+
+    {
+      type: "text",
+      text: "Instagram: sotopadanguninurul",
+      align: "center",
+    },
+    {
+      type: "text",
+      text: "TikTok: sotopadanguninurul",
       align: "center",
     },
   ];

@@ -16,6 +16,24 @@ export function formatLocalDate(date: string | Date): string {
   return `${time}, ${datePart}`;
 }
 
+export function formatLocalDatePrint(date: string | Date): string {
+  const value = new Date(date);
+
+  const time = new Intl.DateTimeFormat("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(value);
+
+  const datePart = new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  }).format(value);
+
+  return `${time} ${datePart}`;
+}
+
 export function formatLocalTime(date: string | Date): string {
   return new Intl.DateTimeFormat("id-ID", {
     hour: "2-digit",
