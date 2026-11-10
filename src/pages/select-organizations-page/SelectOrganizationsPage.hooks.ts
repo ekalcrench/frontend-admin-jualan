@@ -6,13 +6,18 @@ import { paths } from "@/constants/path";
 import { SelectOrganizationFormValues } from "./SelectOrganizationsPage.types";
 import { selectOrganizationSchema } from "./SelectOrganizationsPage.constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLoginOrganizationMutation } from "@/services/auth";
+import {
+  useLoginOrganizationMutation,
+  useLogoutMutation,
+} from "@/services/auth";
 import { toast } from "sonner";
 import { apiErrorHandler } from "@/utils/api";
 
 export default function useSelectOrganizationsPage() {
   const user = useAuthStore((state) => state.user);
   const loginOrganization = useAuthStore((state) => state.loginOrganization);
+  const logout = useAuthStore((state) => state.logout);
+  const logoutMutation = useLogoutMutation();
 
   const navigate = useNavigate();
 
@@ -46,11 +51,25 @@ export default function useSelectOrganizationsPage() {
     }
   };
 
+  const handleClickBack = async () => {
+    const toastId = toast.loading("Mohon ditunggu...");
+    try {
+      await logoutMutation.mutateAsync(undefined);
+    } catch (error) {
+      apiErrorHandler(error);
+    } finally {
+      toast.dismiss(toastId);
+      logout();
+      navigate(-1);
+    }
+  };
+
   return {
     control,
     isLoading: organizationsQuery.isLoading,
     isSubmitting,
     organizations: organizationsQuery.data ?? [],
+    handleClickBack,
     handleSubmit,
     onSubmit,
   };
