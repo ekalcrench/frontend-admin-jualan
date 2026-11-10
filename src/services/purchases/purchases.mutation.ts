@@ -12,6 +12,7 @@ import { PurchaseResponse } from "@/types/purchase";
 import { inventoryTransactionKeys } from "../inventory-transactions/inventoryTransactions.constants";
 import { inventoryLotKeys } from "../inventory-lots/inventoryLots.constants";
 import { cashTransactionsKeys } from "../cash-transactions/cashTransactions.constants";
+import { productsKeys } from "../products/products.constants";
 
 export function useCreatePurchaseMutation() {
   return useMutation<PurchaseResponse, Error, CreatePurchase>({
@@ -69,6 +70,7 @@ export function useFinalizePurchaseMutation() {
       context.client.invalidateQueries({
         queryKey: cashTransactionsKeys.balances,
       });
+      context.client.invalidateQueries({ queryKey: productsKeys.lists });
       context.client.setQueryData(purchasesKeys.detail(result.id), result);
     },
   });
