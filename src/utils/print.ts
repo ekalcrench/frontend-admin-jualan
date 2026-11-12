@@ -4,6 +4,7 @@ import { currencyFormatter } from "./currency";
 import { OrganizationResponse } from "@/types/organization";
 import { formatLocalDatePrint } from "./dateTime";
 import { numberFormat } from "./number";
+import { orderType, orderTypePrintLabels } from "@/constants/order";
 
 export function formatReceiptLabel(
   label: string,
@@ -25,13 +26,13 @@ export function buildReceipt(
       dither: false,
     },
 
-    { type: "feed" },
+    // { type: "feed" },
 
-    {
-      type: "text",
-      text: organization.name,
-      align: "center",
-    },
+    // {
+    //   type: "text",
+    //   text: organization.name,
+    //   align: "center",
+    // },
 
     { type: "feed" },
 
@@ -56,7 +57,7 @@ export function buildReceipt(
     {
       type: "text",
       align: "center",
-      text: "Delivery",
+      text: orderTypePrintLabels[order.type],
       size: "large",
     },
 
@@ -72,7 +73,7 @@ export function buildReceipt(
     },
     {
       type: "text",
-      text: formatReceiptLabel("Kasir", "Haekal Azmi"),
+      text: formatReceiptLabel("Kasir", order.cashierName),
     },
 
     { type: "divider" },
@@ -105,15 +106,21 @@ export function buildReceipt(
       left: "Subtotal",
       right: currencyFormatter.format(order.totalAmount),
     },
-    {
-      type: "row",
-      left: "Biaya Pengiriman",
-      right: currencyFormatter.format(5000),
-    },
+    ...(order.type === orderType.DELIVERY && order.deliveryOrder
+      ? [
+          {
+            type: "row" as const,
+            left: "Biaya Pengiriman",
+            right: currencyFormatter.format(order.deliveryOrder.deliveryFee),
+          },
+        ]
+      : []),
     {
       type: "row",
       left: "Total",
-      right: currencyFormatter.format(order.totalAmount),
+      right: currencyFormatter.format(
+        order.totalAmount + (order.deliveryOrder?.deliveryFee ?? 0),
+      ),
       bold: true,
     },
     // {
@@ -126,13 +133,15 @@ export function buildReceipt(
     {
       type: "row",
       left: "Tunai",
-      right: currencyFormatter.format(order.totalAmount),
+      right: currencyFormatter.format(
+        order.totalAmount + (order.deliveryOrder?.deliveryFee ?? 0),
+      ),
     },
-    {
-      type: "row",
-      left: "Kembalian",
-      right: currencyFormatter.format(0),
-    },
+    // {
+    //   type: "row",
+    //   left: "Kembalian",
+    //   right: currencyFormatter.format(0),
+    // },
 
     { type: "divider", char: "=" },
 

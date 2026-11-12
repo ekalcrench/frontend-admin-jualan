@@ -1,4 +1,8 @@
-import { orderStatusColorMapping, orderStatusMapping } from "@/constants/order";
+import {
+  orderStatusColorMapping,
+  orderStatusMapping,
+  orderTypeLabels,
+} from "@/constants/order";
 import { defaultParameter, defaultParameterDate } from "@/constants/table";
 import { useThermalPrinter } from "@/hooks/useThermalPrinter";
 import {
@@ -7,11 +11,10 @@ import {
 } from "@/services/orders/orders.mutation";
 import { useOrderQuery } from "@/services/orders/orders.query";
 import { useOrganizationByIdQuery } from "@/services/organizations/organizations.query";
-import { ReceiptBlock } from "@/services/printer/printer.types";
 import useAuthStore from "@/store/auth-store";
 import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
-import type { OrderResponse, OrderStatus } from "@/types/order";
-import type { ColumnSort, PaginatedData } from "@/types/table";
+import { OrderResponse, OrderStatus, OrderType } from "@/types/order";
+import { ColumnSort, PaginatedData } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate } from "@/utils/dateTime";
@@ -141,6 +144,12 @@ export default function useSalesPage() {
         ),
       },
       { accessorKey: "orderNumber", header: "Nomor Penjualan", size: 200 },
+      {
+        accessorKey: "type",
+        header: "Jenis Pesanan",
+        size: 160,
+        Cell: ({ cell }) => orderTypeLabels[cell.getValue<OrderType>()],
+      },
       {
         accessorKey: "totalAmount",
         header: "Total Penjualan",

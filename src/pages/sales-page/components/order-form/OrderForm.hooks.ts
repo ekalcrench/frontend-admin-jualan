@@ -22,11 +22,85 @@ import type {
   OrderItemFormValues,
 } from "./OrderForm.types";
 import {
-  CreateOrderItems,
-  EditOrderItems,
-  EditOrder,
+  CreateDeliveryOrder,
+  CreateDineInOrder,
   CreateOrder,
+  CreateOrderItems,
+  CreateTakeawayOrder,
+  EditDeliveryOrder,
+  EditDineInOrder,
+  EditOrder,
+  EditOrderItems,
+  EditTakeawayOrder,
 } from "@/types/order";
+
+type DirtyOrderFields = FieldNamesMarkedBoolean<OrderFormValues>;
+
+function toDeliveryOrder(
+  order: OrderFormValues["deliveryOrder"],
+): CreateDeliveryOrder {
+  return {
+    ...order,
+    deliveryFee: order.deliveryFee!,
+    latitude: order.latitude!,
+    longitude: order.longitude!,
+  };
+}
+
+function toTakeawayOrder(
+  order: OrderFormValues["takeawayOrder"],
+): CreateTakeawayOrder {
+  return {
+    ...order,
+    phone: order.phone || undefined,
+  };
+}
+
+function toDineInOrder(
+  order: OrderFormValues["dineInOrder"],
+): CreateDineInOrder {
+  return {
+    tableId: order.tableId,
+    ...(order.name && { name: order.name }),
+    guestCount: order.guestCount!,
+  };
+}
+
+function toEditDeliveryOrder(
+  order: OrderFormValues["deliveryOrder"],
+  dirtyFields: DirtyOrderFields["deliveryOrder"],
+): EditDeliveryOrder {
+  return {
+    ...(dirtyFields?.deliveryFee && { deliveryFee: order.deliveryFee! }),
+    ...(dirtyFields?.name && { name: order.name }),
+    ...(dirtyFields?.address && { address: order.address }),
+    ...(dirtyFields?.phone && { phone: order.phone }),
+    ...(dirtyFields?.latitude && { latitude: order.latitude! }),
+    ...(dirtyFields?.longitude && { longitude: order.longitude! }),
+  };
+}
+
+function toEditTakeawayOrder(
+  order: OrderFormValues["takeawayOrder"],
+  dirtyFields: DirtyOrderFields["takeawayOrder"],
+): EditTakeawayOrder {
+  return {
+    ...(dirtyFields?.name && { name: order.name }),
+    ...(dirtyFields?.phone && { phone: order.phone }),
+    ...(dirtyFields?.pickUpTime && { pickUpTime: order.pickUpTime }),
+  };
+}
+
+function toEditDineInOrder(
+  order: OrderFormValues["dineInOrder"],
+  dirtyFields: DirtyOrderFields["dineInOrder"],
+): EditDineInOrder {
+  return {
+    ...(dirtyFields?.tableId && { tableId: order.tableId }),
+    ...(dirtyFields?.name && { name: order.name }),
+    ...(dirtyFields?.guestCount && { guestCount: order.guestCount! }),
+  };
+}
 
 function toCreateOrderItem(item: OrderItemFormValues): CreateOrderItems {
   return {
@@ -111,6 +185,7 @@ export default function useOrderForm(props: OrderFormProps) {
     name: "orderItems",
   });
   const orderItemsValues = useWatch({ control, name: "orderItems" });
+  const orderType = useWatch({ control, name: "type" });
   const [deletedOrderItemIds, setDeletedOrderItemIds] = useState<string[]>([]);
 
   useEffect(() => {
@@ -124,9 +199,33 @@ export default function useOrderForm(props: OrderFormProps) {
     }
     if (!orderQuery.data) return;
 
+    const order = orderQuery.data;
     reset({
-      orderNumber: orderQuery.data.orderNumber,
-      orderItems: orderQuery.data.orderItems.map((item) => ({
+      type: order.type,
+      orderNumber: order.orderNumber,
+      deliveryOrder: {
+        deliveryFee: order.deliveryOrder?.deliveryFee ?? null,
+        name: order.deliveryOrder?.name ?? "",
+        address: order.deliveryOrder?.address ?? "",
+        phone: order.deliveryOrder?.phone ?? "",
+        latitude: order.deliveryOrder
+          ? Number(order.deliveryOrder.latitude)
+          : null,
+        longitude: order.deliveryOrder
+          ? Number(order.deliveryOrder.longitude)
+          : null,
+      },
+      takeawayOrder: {
+        name: order.takeawayOrder?.name ?? "",
+        phone: order.takeawayOrder?.phone ?? "",
+        pickUpTime: order.takeawayOrder?.pickUpTime ?? "",
+      },
+      dineInOrder: {
+        tableId: order.dineInOrder?.tableId ?? "",
+        name: order.dineInOrder?.name ?? "",
+        guestCount: order.dineInOrder?.guestCount ?? null,
+      },
+      orderItems: order.orderItems.map((item) => ({
         id: item.id,
         productId: {
           value: item.product.id,
@@ -171,11 +270,40 @@ export default function useOrderForm(props: OrderFormProps) {
     try {
       if (props.id) {
         const hasNewOrderItems = values.orderItems.some((item) => !item.id);
+        const typeChanged = values.type !== orderQuery.data?.type;
         const editPayload: EditOrder = {
           id: props.id,
+          ...(dirtyFields.type && values.type != null && { type: values.type }),
           ...(dirtyFields.orderNumber && {
             orderNumber: values.orderNumber,
           }),
+          ...(values.type === "DELIVERY" &&
+            (typeChanged || dirtyFields.deliveryOrder) && {
+              deliveryOrder: typeChanged
+                ? toDeliveryOrder(values.deliveryOrder)
+                : toEditDeliveryOrder(
+                    values.deliveryOrder,
+                    dirtyFields.deliveryOrder,
+                  ),
+            }),
+          ...(values.type === "TAKEAWAY" &&
+            (typeChanged || dirtyFields.takeawayOrder) && {
+              takeawayOrder: typeChanged
+                ? toTakeawayOrder(values.takeawayOrder)
+                : toEditTakeawayOrder(
+                    values.takeawayOrder,
+                    dirtyFields.takeawayOrder,
+                  ),
+            }),
+          ...(values.type === "DINE_IN" &&
+            (typeChanged || dirtyFields.dineInOrder) && {
+              dineInOrder: typeChanged
+                ? toDineInOrder(values.dineInOrder)
+                : toEditDineInOrder(
+                    values.dineInOrder,
+                    dirtyFields.dineInOrder,
+                  ),
+            }),
           ...((dirtyFields.orderItems ||
             hasNewOrderItems ||
             deletedOrderItemIds.length > 0) && {
@@ -189,9 +317,19 @@ export default function useOrderForm(props: OrderFormProps) {
         await editOrder.mutateAsync(editPayload);
       } else {
         const createPayload: CreateOrder = {
+          type: values.type ?? "DELIVERY",
           orderNumber: values.orderNumber,
           orderItems: values.orderItems.map(toCreateOrderItem),
         };
+        if (values.type === "DELIVERY") {
+          createPayload.deliveryOrder = toDeliveryOrder(values.deliveryOrder);
+        }
+        if (values.type === "TAKEAWAY") {
+          createPayload.takeawayOrder = toTakeawayOrder(values.takeawayOrder);
+        }
+        if (values.type === "DINE_IN") {
+          createPayload.dineInOrder = toDineInOrder(values.dineInOrder);
+        }
         await createOrder.mutateAsync(createPayload);
       }
 
@@ -222,6 +360,7 @@ export default function useOrderForm(props: OrderFormProps) {
     control,
     fields,
     productOptions,
+    orderType,
     orderItemsValues,
     isLoading,
     isLoadingGetOptions,

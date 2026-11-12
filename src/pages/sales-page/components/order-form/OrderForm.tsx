@@ -3,28 +3,34 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Box,
   Button,
+  Collapse,
   Divider,
+  Fade,
   Grid,
   IconButton,
   Stack,
   Typography,
 } from "@mui/material";
 import CustomAutocomplete from "@/components/custom-autocomplete";
+import CustomDateTimePicker from "@/components/custom-date-time-picker";
 import CustomInput from "@/components/custom-input";
 import CustomInputNumber from "@/components/custom-input-number";
 import FormDrawer from "@/components/form-drawer";
-import { BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
+import { BoxCenter, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { TypographyInputLabel } from "@/styled/CustomTypography";
 import { currencyFormatter } from "@/utils/currency";
 import useOrderForm from "./OrderForm.hooks";
-import type { OrderFormProps } from "./OrderForm.types";
+import { OrderFormProps } from "./OrderForm.types";
 import { emptyOrderItem } from "./OrderForm.constants";
+import { orderTypeLabels, orderTypeOptions } from "@/constants/order";
+import { OrderType } from "@/types/order";
 
 export default function OrderForm(props: OrderFormProps) {
   const {
     control,
     fields,
     productOptions,
+    orderType,
     orderItemsValues,
     isLoading,
     isLoadingGetOptions,
@@ -35,6 +41,138 @@ export default function OrderForm(props: OrderFormProps) {
     handleSubmit,
     onSubmit,
   } = useOrderForm(props);
+
+  const renderTypeFields = () => {
+    const disabled = isLoading;
+
+    switch (orderType) {
+      case "DELIVERY":
+        return (
+          <>
+            <CustomInput
+              name="deliveryOrder.name"
+              control={control}
+              label="Nama Penerima"
+              placeholder="John Doe"
+              renderErrorMessage
+              disabled={disabled}
+            />
+            <CustomInput
+              name="deliveryOrder.phone"
+              control={control}
+              label="Nomor Telepon"
+              placeholder="08xxxxxxxxxx"
+              renderErrorMessage
+              disabled={disabled}
+            />
+            <CustomInput
+              name="deliveryOrder.address"
+              control={control}
+              label="Alamat Pengiriman"
+              placeholder="Alamat lengkap"
+              renderErrorMessage
+              disabled={disabled}
+              textFieldProps={{ multiline: true, minRows: 2 }}
+            />
+            <CustomInputNumber
+              name="deliveryOrder.deliveryFee"
+              control={control}
+              label="Ongkos Kirim"
+              placeholder="0"
+              startAdornment="Rp."
+              renderErrorMessage
+              disabled={disabled}
+            />
+            <Grid container columnSpacing={1.5}>
+              <Grid size={6}>
+                <CustomInputNumber
+                  name="deliveryOrder.latitude"
+                  control={control}
+                  label="Latitude"
+                  placeholder="Contoh: -6,2"
+                  renderErrorMessage
+                  disabled={disabled}
+                  allowNegative
+                  decimalScale={7}
+                />
+              </Grid>
+              <Grid size={6}>
+                <CustomInputNumber
+                  name="deliveryOrder.longitude"
+                  control={control}
+                  label="Longitude"
+                  placeholder="Contoh: 106,8"
+                  renderErrorMessage
+                  disabled={disabled}
+                  allowNegative
+                  decimalScale={7}
+                />
+              </Grid>
+            </Grid>
+          </>
+        );
+      case "TAKEAWAY":
+        return (
+          <>
+            <CustomInput
+              name="takeawayOrder.name"
+              control={control}
+              label="Nama Pelanggan"
+              placeholder="Nama pelanggan"
+              renderErrorMessage
+              disabled={disabled}
+            />
+            <CustomInput
+              name="takeawayOrder.phone"
+              control={control}
+              label="Nomor Telepon (Opsional)"
+              placeholder="08xxxxxxxxxx"
+              renderErrorMessage
+              disabled={disabled}
+            />
+            <CustomDateTimePicker
+              name="takeawayOrder.pickUpTime"
+              control={control}
+              label="Waktu Pengambilan"
+              renderErrorMessage
+              disabled={disabled}
+            />
+          </>
+        );
+      case "DINE_IN":
+        return (
+          <>
+            <CustomInput
+              name="dineInOrder.tableId"
+              control={control}
+              label="ID Meja (Fitur Nanti)"
+              placeholder="Masukkan ID meja (Fitur Nanti)"
+              renderErrorMessage
+              disabled={disabled}
+            />
+            <CustomInput
+              name="dineInOrder.name"
+              control={control}
+              label="Nama Pelanggan (Opsional)"
+              placeholder="Nama pelanggan"
+              renderErrorMessage
+              disabled={disabled}
+            />
+            <CustomInputNumber
+              name="dineInOrder.guestCount"
+              control={control}
+              label="Jumlah Tamu"
+              placeholder="1"
+              decimalScale={0}
+              renderErrorMessage
+              disabled={disabled}
+            />
+          </>
+        );
+      default:
+        return <BoxCenter>Pilih Pesanan Anda</BoxCenter>;
+    }
+  };
 
   const total = (orderItemsValues ?? []).reduce(
     (sum, item) =>
@@ -61,6 +199,25 @@ export default function OrderForm(props: OrderFormProps) {
           renderErrorMessage
           disabled={isLoading}
         />
+
+        <CustomAutocomplete
+          control={control}
+          name="type"
+          label="Jenis Pesanan"
+          placeholder="Pilih jenis pesanan"
+          renderErrorMessage
+          disabled={isLoading}
+          autocompleteProps={{
+            options: orderTypeOptions,
+            getOptionLabel: (unit) => orderTypeLabels[unit as OrderType],
+          }}
+        />
+
+        <Collapse in={orderType !== null} timeout={300} unmountOnExit>
+          <Fade key={orderType} in={orderType !== null} timeout={250}>
+            <Box>{renderTypeFields()}</Box>
+          </Fade>
+        </Collapse>
 
         <Typography
           sx={{ fontWeight: 600, marginBottom: "16px", marginTop: "8px" }}

@@ -21,7 +21,6 @@ export type CustomInputNumberProps<TFieldValues extends FieldValues> = {
   | "defaultValue"
   | "disabled"
   | "getInputRef"
-  | "allowNegative"
   | "name"
   | "onBlur"
   | "onChange"

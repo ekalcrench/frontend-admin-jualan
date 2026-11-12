@@ -45,6 +45,7 @@ export default function CustomInputNumber<TFieldValues extends FieldValues>({
   label,
   placeholder,
   startAdornment,
+  allowNegative = false,
   disabled = false,
   boxFieldWrapperProps,
   renderErrorMessage,
@@ -71,7 +72,7 @@ export default function CustomInputNumber<TFieldValues extends FieldValues>({
             <Fragment>
               <NumericFormat
                 {...numberFormatProps}
-                allowNegative={false}
+                allowNegative={allowNegative}
                 customInput={NumericTextField}
                 startAdornment={startAdornment}
                 thousandSeparator="."

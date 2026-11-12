@@ -16,11 +16,11 @@ import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { formatLocalDate } from "@/utils/dateTime";
 import { currencyFormatter } from "@/utils/currency";
-import type { OrderResponse } from "@/types/order";
+import { OrderResponse } from "@/types/order";
 import OrderForm from "./components/order-form";
 import useSalesPage from "./SalesPage.hooks";
 import { StackDetailPanel } from "./SalesPage.styles";
-import { orderStatus } from "@/constants/order";
+import { orderStatus, orderTypeLabels } from "@/constants/order";
 import ReportDate from "@/components/report-date";
 import SalesOverview from "./components/sales-overview";
 import PageTitle from "@/components/page-title";
@@ -132,7 +132,46 @@ export default function SalesPage() {
 
       <Box>
         <Typography>{`Dibuat\t: ${formatLocalDate(row.original.createdAt)}`}</Typography>
+        <Typography>{`ID Referensi\t: ${row.original.referenceId}`}</Typography>
       </Box>
+
+      {row.original.type === "DELIVERY" && row.original.deliveryOrder && (
+        <Box>
+          <Typography sx={{ fontWeight: 600 }}>
+            {orderTypeLabels[row.original.type]}
+          </Typography>
+          <Typography>{`Penerima\t: ${row.original.deliveryOrder.name}`}</Typography>
+          <Typography>{`Telepon\t: ${row.original.deliveryOrder.phone}`}</Typography>
+          <Typography>{`Alamat\t: ${row.original.deliveryOrder.address}`}</Typography>
+          <Typography>{`Ongkos Kirim\t: ${currencyFormatter.format(Number(row.original.deliveryOrder.deliveryFee))}`}</Typography>
+        </Box>
+      )}
+
+      {row.original.type === "TAKEAWAY" && row.original.takeawayOrder && (
+        <Box>
+          <Typography sx={{ fontWeight: 600 }}>
+            {orderTypeLabels[row.original.type]}
+          </Typography>
+          <Typography>{`Pelanggan\t: ${row.original.takeawayOrder.name}`}</Typography>
+          {row.original.takeawayOrder.phone && (
+            <Typography>{`Telepon\t: ${row.original.takeawayOrder.phone}`}</Typography>
+          )}
+          <Typography>{`Waktu Pengambilan\t: ${formatLocalDate(row.original.takeawayOrder.pickUpTime)}`}</Typography>
+        </Box>
+      )}
+
+      {row.original.type === "DINE_IN" && row.original.dineInOrder && (
+        <Box>
+          <Typography sx={{ fontWeight: 600 }}>
+            {orderTypeLabels[row.original.type]}
+          </Typography>
+          <Typography>{`Meja\t: ${row.original.dineInOrder.table.tableNumber}`}</Typography>
+          {row.original.dineInOrder.name && (
+            <Typography>{`Pelanggan\t: ${row.original.dineInOrder.name}`}</Typography>
+          )}
+          <Typography>{`Jumlah Tamu\t: ${row.original.dineInOrder.guestCount}`}</Typography>
+        </Box>
+      )}
 
       <Box>
         <Grid container columnSpacing={2}>
