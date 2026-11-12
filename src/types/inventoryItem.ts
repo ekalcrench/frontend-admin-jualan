@@ -3,6 +3,15 @@ import { DefaultFilter } from "./table";
 
 export type InventoryUnit = "GRAM" | "ML" | "PCS";
 
+export interface CreateInventoryItem {
+  name: string;
+  unit: InventoryUnit;
+}
+
+export interface EditInventoryItem extends Partial<CreateInventoryItem> {
+  id: string;
+}
+
 export interface InventoryItemResponse extends BaseApiResponse {
   id: string;
   organizationId: string;

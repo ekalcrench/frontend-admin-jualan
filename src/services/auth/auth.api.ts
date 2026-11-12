@@ -1,16 +1,16 @@
 import { apiClient } from "@/config/api";
+import { api } from "@/constants/api";
 import {
-  AuthLogin,
-  AuthLoginOrganization,
-  AuthLoginOrganizationResponse,
-  AuthLoginResponse,
   AuthRegister,
   AuthRegisterResponse,
   AuthRegisterVerify,
-  AuthResendOtp,
   AuthResendOtpResponse,
-} from "./auth.types";
-import { api } from "@/constants/api";
+  AuthResendOtp,
+  AuthLogin,
+  AuthLoginResponse,
+  AuthLoginOrganization,
+  AuthLoginOrganizationResponse,
+} from "@/types/auth";
 
 export async function register(
   data: AuthRegister,

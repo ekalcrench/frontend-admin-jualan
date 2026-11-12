@@ -1,9 +1,12 @@
+import {
+  OrganizationUserRole,
+  OrganizationUserStatus,
+} from "@/types/organizationUser";
 import z from "zod";
-import { UserOrganizationRole, UserOrganizationStatus } from "@/types/user";
 
-const organizationRoles: UserOrganizationRole[] = ["MEMBER", "ADMIN", "OWNER"];
+const organizationRoles: OrganizationUserRole[] = ["MEMBER", "ADMIN", "OWNER"];
 
-const organizationStatuses: UserOrganizationStatus[] = [
+const organizationStatuses: OrganizationUserStatus[] = [
   "PENDING_APPROVAL",
   "APPROVED",
   "REJECTED",

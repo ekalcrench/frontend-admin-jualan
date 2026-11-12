@@ -1,11 +1,6 @@
 import { defaultParameter } from "@/constants/table";
 import CustomAutocomplete from "@/components/custom-autocomplete";
 import useConfirmationStore from "@/store/confirmation-store";
-import {
-  UserOrganization,
-  UserOrganizationRole,
-  UserOrganizationStatus,
-} from "@/types/user";
 import { ColumnSort } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { formatLocalDate } from "@/utils/dateTime";
@@ -28,6 +23,11 @@ import {
   useEditOrganizationUserMutation,
   useSuspendOrganizationUserMutation,
 } from "@/services/organization-users/organizationUsers.mutation";
+import {
+  OrganizationUserResponse,
+  OrganizationUserRole,
+  OrganizationUserStatus,
+} from "@/types/organizationUser";
 
 export default function useUsersPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -63,7 +63,7 @@ export default function useUsersPage() {
 
   const [editingRoleId, setEditingRoleId] = useState<string | null>(null);
   const { control, getValues, reset } = useForm<{
-    role: UserOrganizationRole;
+    role: OrganizationUserRole;
   }>();
 
   const suspendOrganizationUser = useSuspendOrganizationUserMutation();
@@ -99,12 +99,12 @@ export default function useUsersPage() {
       return prev;
     });
 
-  const handleClickChangeRole = (id: string, role: UserOrganizationRole) => {
+  const handleClickChangeRole = (id: string, role: OrganizationUserRole) => {
     setEditingRoleId(id);
     reset({ role });
   };
 
-  const onSaveChangeRole = async (id: string, role: UserOrganizationRole) => {
+  const onSaveChangeRole = async (id: string, role: OrganizationUserRole) => {
     if (
       !(await confirm({
         title: "Mengganti Role User",
@@ -124,7 +124,7 @@ export default function useUsersPage() {
     }
   };
 
-  const columns: MRT_ColumnDef<UserOrganization>[] = useMemo(
+  const columns: MRT_ColumnDef<OrganizationUserResponse>[] = useMemo(
     () => [
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       {
@@ -167,7 +167,7 @@ export default function useUsersPage() {
             <Chip
               label={
                 userOrganizationRoleMapping[
-                  cell.getValue<UserOrganizationRole>()
+                  cell.getValue<OrganizationUserRole>()
                 ]
               }
               size="small"
@@ -182,13 +182,13 @@ export default function useUsersPage() {
           <Chip
             label={
               userOrganizationStatusMapping[
-                cell.getValue<UserOrganizationStatus>()
+                cell.getValue<OrganizationUserStatus>()
               ]
             }
             size="small"
             color={
               userOrganizationStatusColorMapping[
-                cell.getValue<UserOrganizationStatus>()
+                cell.getValue<OrganizationUserStatus>()
               ]
             }
           />

@@ -7,10 +7,6 @@ import {
   useEditCashTransactionMutation,
 } from "@/services/cash-transactions/cashTransactions.mutation";
 import { useCashTransactionByIdQuery } from "@/services/cash-transactions/cashTransactions.query";
-import {
-  CreateCashTransaction,
-  EditCashTransaction,
-} from "@/services/cash-transactions/cashTransactions.types";
 import { apiErrorHandler } from "@/utils/api";
 import {
   cashTransactionFormSchema,
@@ -24,6 +20,10 @@ import {
   cashTransactionType,
   isEditableCashTransactionType,
 } from "@/constants/cashTransaction";
+import {
+  EditCashTransaction,
+  CreateCashTransaction,
+} from "@/types/cashTransaction";
 
 export default function useCashTransactionForm(
   props: CashTransactionFormProps,

@@ -5,8 +5,11 @@ import {
   deleteInventoryItem,
   editInventoryItem,
 } from "./inventoryItems.api";
-import { CreateInventoryItem, EditInventoryItem } from "./inventoryItems.types";
-import { InventoryItemResponse } from "@/types/inventoryItem";
+import {
+  CreateInventoryItem,
+  EditInventoryItem,
+  InventoryItemResponse,
+} from "@/types/inventoryItem";
 
 export function useCreateInventoryItemMutation() {
   return useMutation<InventoryItemResponse, Error, CreateInventoryItem>({

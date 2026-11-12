@@ -2,10 +2,10 @@ import { apiClient } from "@/config/api";
 import { api } from "@/constants/api";
 import { PaginatedData } from "@/types/table";
 import {
+  EditInventoryLot,
   InventoryLotFilterPayload,
   InventoryLotResponse,
 } from "@/types/inventoryLot";
-import { EditInventoryLot } from "./inventoryLots.types";
 
 export async function fetchInventoryLots(
   payload: InventoryLotFilterPayload,

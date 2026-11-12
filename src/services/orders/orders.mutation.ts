@@ -1,6 +1,5 @@
-import { OrderResponse } from "@/types/order";
+import { CreateOrder, EditOrder, OrderResponse } from "@/types/order";
 import { useMutation } from "@tanstack/react-query";
-import { CreateOrder, EditOrder } from "./orders.types";
 import { ordersKeys } from "./orders.constants";
 import {
   createOrder,

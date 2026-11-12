@@ -7,14 +7,36 @@ export interface OrderFilterPayload extends DefaultFilter {
   endDate?: string;
 }
 
+export type OrderStatus = "PAID" | "UNPAID";
+
+export interface CreateOrderItems {
+  productId: string;
+  quantity: number;
+}
+
+export interface CreateOrder {
+  orderNumber: string;
+  orderItems: CreateOrderItems[];
+}
+
+export type EditOrderItems =
+  | (Partial<CreateOrderItems> & {
+      id: string;
+    })
+  | CreateOrderItems;
+
+export interface EditOrder extends Partial<Omit<CreateOrder, "orderItems">> {
+  id: string;
+  orderItems?: EditOrderItems[];
+  deletedOrderItemIds?: string[];
+}
+
 interface OrderItems {
   id: string;
   quantity: number;
   unitPrice: number;
   product: { id: string; name: string };
 }
-
-export type OrderStatus = "PAID" | "UNPAID";
 
 export interface OrderResponse extends BaseApiResponse {
   id: string;

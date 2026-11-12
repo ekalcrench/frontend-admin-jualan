@@ -1,14 +1,17 @@
 import { SwipeableDrawerProps } from "@mui/material";
 import { Dispatch } from "react";
 import { LabelValue } from "@/types/generalTypes";
-import { UserOrganizationDetail, UserOrganizationRole } from "@/types/user";
+import {
+  OrganizationUserResponse,
+  OrganizationUserRole,
+} from "@/types/organizationUser";
 
 export interface UserFormProps extends SwipeableDrawerProps {
   setIsFormOpen: Dispatch<boolean>;
-  onSuccess?: (organization: UserOrganizationDetail) => void;
+  onSuccess?: (organization: OrganizationUserResponse) => void;
 }
 
 export interface UserFormValues {
   userId: LabelValue<string>;
-  role: LabelValue<UserOrganizationRole>;
+  role: LabelValue<OrganizationUserRole>;
 }

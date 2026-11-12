@@ -14,12 +14,6 @@ import {
   useEditOrderMutation,
 } from "@/services/orders/orders.mutation";
 import { useOrderByIdQuery } from "@/services/orders/orders.query";
-import type {
-  CreateOrder,
-  CreateOrderItems,
-  EditOrder,
-  EditOrderItems,
-} from "@/services/orders/orders.types";
 import { apiErrorHandler } from "@/utils/api";
 import { emptyOrderFormValues, orderFormSchema } from "./OrderForm.constants";
 import type {
@@ -27,6 +21,12 @@ import type {
   OrderFormValues,
   OrderItemFormValues,
 } from "./OrderForm.types";
+import {
+  CreateOrderItems,
+  EditOrderItems,
+  EditOrder,
+  CreateOrder,
+} from "@/types/order";
 
 function toCreateOrderItem(item: OrderItemFormValues): CreateOrderItems {
   return {

@@ -1,10 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { User, UserOrganizationDetail } from "@/types/user";
 import { organizationUserKeys } from "./organizationUsers.constants";
-import {
-  CreateOrganizationUser,
-  EditOrganizationUser,
-} from "./organizationUsers.types";
 import {
   activateOrganizationUser,
   approveOrganizationUser,
@@ -12,9 +7,14 @@ import {
   editOrganizationUser,
   suspendOrganizationUser,
 } from "./organizationUsers.api";
+import {
+  CreateOrganizationUser,
+  EditOrganizationUser,
+  OrganizationUserResponse,
+} from "@/types/organizationUser";
 
 export function useCreateOrganizationUserMutation() {
-  return useMutation<UserOrganizationDetail, Error, CreateOrganizationUser>({
+  return useMutation<OrganizationUserResponse, Error, CreateOrganizationUser>({
     mutationFn: createOrganizationUser,
     onSuccess: (result, payload, onMutateResult, context) => {
       context.client.invalidateQueries({
@@ -25,7 +25,7 @@ export function useCreateOrganizationUserMutation() {
 }
 
 export function useEditOrganizationUserMutation() {
-  return useMutation<UserOrganizationDetail, Error, EditOrganizationUser>({
+  return useMutation<OrganizationUserResponse, Error, EditOrganizationUser>({
     mutationFn: editOrganizationUser,
     onSuccess: (result, payload, _onMutateResult, context) => {
       context.client.invalidateQueries({
@@ -36,7 +36,7 @@ export function useEditOrganizationUserMutation() {
 }
 
 export function useApproveOrganizationUserMutation() {
-  return useMutation<UserOrganizationDetail, Error, string>({
+  return useMutation<OrganizationUserResponse, Error, string>({
     mutationFn: approveOrganizationUser,
     onSuccess: (result, id, onMutateResult, context) => {
       context.client.invalidateQueries({
@@ -47,7 +47,7 @@ export function useApproveOrganizationUserMutation() {
 }
 
 export function useSuspendOrganizationUserMutation() {
-  return useMutation<UserOrganizationDetail, Error, string>({
+  return useMutation<OrganizationUserResponse, Error, string>({
     mutationFn: suspendOrganizationUser,
     onSuccess: (result, id, onMutateResult, context) => {
       context.client.invalidateQueries({
@@ -58,7 +58,7 @@ export function useSuspendOrganizationUserMutation() {
 }
 
 export function useActivateOrganizationUserMutation() {
-  return useMutation<UserOrganizationDetail, Error, string>({
+  return useMutation<OrganizationUserResponse, Error, string>({
     mutationFn: activateOrganizationUser,
     onSuccess: (result, id, onMutateResult, context) => {
       context.client.invalidateQueries({

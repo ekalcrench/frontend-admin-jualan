@@ -1,6 +1,13 @@
 import { BaseApiResponse } from "./api";
 import { DefaultFilter } from "./table";
 
+export interface EditInventoryLot {
+  id: string;
+  remainingQuantity?: number;
+  receivedAt?: string;
+  expiredAt?: string | null;
+}
+
 export interface InventoryLotResponse extends BaseApiResponse {
   id: string;
   inventoryItemId: string;

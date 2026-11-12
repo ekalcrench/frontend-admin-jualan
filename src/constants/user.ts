@@ -1,10 +1,9 @@
 import { LabelValue } from "@/types/generalTypes";
 import {
-  UserOrganizationRole,
-  UserOrganizationStatus,
-  UserRole,
-  UserStatus,
-} from "@/types/user";
+  OrganizationUserRole,
+  OrganizationUserStatus,
+} from "@/types/organizationUser";
+import { UserRole, UserStatus } from "@/types/user";
 import { ChipProps } from "@mui/material";
 
 export const userStatus: Record<UserStatus, UserStatus> = {
@@ -14,8 +13,8 @@ export const userStatus: Record<UserStatus, UserStatus> = {
 };
 
 export const userOrganizationStatus: Record<
-  UserOrganizationStatus,
-  UserOrganizationStatus
+  OrganizationUserStatus,
+  OrganizationUserStatus
 > = {
   APPROVED: "APPROVED",
   PENDING_APPROVAL: "PENDING_APPROVAL",
@@ -30,8 +29,8 @@ export const userRole: Record<UserRole, UserRole> = {
 };
 
 export const userOrganizationRole: Record<
-  UserOrganizationRole,
-  UserOrganizationRole
+  OrganizationUserRole,
+  OrganizationUserRole
 > = {
   ADMIN: "ADMIN",
   MEMBER: "MEMBER",
@@ -44,7 +43,7 @@ export const userRoleMapping: Record<UserRole, string> = {
   USER: "User",
 };
 
-export const userOrganizationRoleMapping: Record<UserOrganizationRole, string> =
+export const userOrganizationRoleMapping: Record<OrganizationUserRole, string> =
   {
     ADMIN: "Admin",
     MEMBER: "User",
@@ -64,7 +63,7 @@ export const userStatusColorMapping: Record<UserStatus, ChipProps["color"]> = {
 };
 
 export const userOrganizationStatusMapping: Record<
-  UserOrganizationStatus,
+  OrganizationUserStatus,
   string
 > = {
   APPROVED: "Approved",
@@ -74,7 +73,7 @@ export const userOrganizationStatusMapping: Record<
 };
 
 export const userOrganizationStatusColorMapping: Record<
-  UserOrganizationStatus,
+  OrganizationUserStatus,
   ChipProps["color"]
 > = {
   APPROVED: "primary",
@@ -83,7 +82,7 @@ export const userOrganizationStatusColorMapping: Record<
   SUSPENDED: "error",
 };
 
-export const userOrganizationRoleOptions: LabelValue<UserOrganizationRole>[] = [
+export const userOrganizationRoleOptions: LabelValue<OrganizationUserRole>[] = [
   {
     value: "OWNER",
     label: "Pemilik Usaha (Punya akses penuh)",
@@ -92,7 +91,7 @@ export const userOrganizationRoleOptions: LabelValue<UserOrganizationRole>[] = [
   { value: "MEMBER", label: "User (Hanya bisa melihat data)" },
 ];
 
-export const userOrganizationStatusOptions: LabelValue<UserOrganizationStatus>[] =
+export const userOrganizationStatusOptions: LabelValue<OrganizationUserStatus>[] =
   [
     { value: "APPROVED", label: "Approved" },
     { value: "PENDING_APPROVAL", label: "Pending Approval" },

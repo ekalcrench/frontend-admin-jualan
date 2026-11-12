@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { EditInventoryLot } from "./inventoryLots.types";
-import { InventoryLotResponse } from "@/types/inventoryLot";
+import { EditInventoryLot, InventoryLotResponse } from "@/types/inventoryLot";
 import { editInventoryLot } from "./inventoryLots.api";
 import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
 import { inventoryLotKeys } from "./inventoryLots.constants";

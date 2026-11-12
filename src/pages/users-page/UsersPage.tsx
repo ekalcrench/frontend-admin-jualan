@@ -1,7 +1,6 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import useUsersPage from "./UsersPage.hooks";
 import CustomTable from "@/components/custom-table";
-import { UserOrganization } from "@/types/user";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex } from "@/styled/CustomBox";
 import {
@@ -13,6 +12,7 @@ import useAuthStore from "@/store/auth-store";
 import AddIcon from "@mui/icons-material/Add";
 import UserForm from "./components/user-form";
 import PageTitle from "@/components/page-title";
+import { OrganizationUserResponse } from "@/types/organizationUser";
 
 export default function UsersPage() {
   const {
@@ -45,7 +45,7 @@ export default function UsersPage() {
   const organization = useAuthStore((state) => state.organization);
   const userState = useAuthStore((state) => state.user);
 
-  const renderRowActions = (user: UserOrganization) => (
+  const renderRowActions = (user: OrganizationUserResponse) => (
     <BoxFlex sx={{ gap: "4px" }}>
       {user.status === userOrganizationStatus.PENDING_APPROVAL &&
         organization?.role === userOrganizationRole.OWNER && (
@@ -103,7 +103,7 @@ export default function UsersPage() {
     </BoxFlex>
   );
 
-  const renderSaveAndCancelChangeRole = (user: UserOrganization) => (
+  const renderSaveAndCancelChangeRole = (user: OrganizationUserResponse) => (
     <BoxFlex sx={{ gap: "4px" }}>
       <Button
         size="small"
@@ -152,7 +152,7 @@ export default function UsersPage() {
           subTitle={`Mengatur semua user yang terdaftar di ${organization?.name ?? "UMKM"}`}
         />
 
-        <CustomTable<UserOrganization>
+        <CustomTable<OrganizationUserResponse>
           columns={columns}
           data={data?.items ?? []}
           isLoading={isLoading}

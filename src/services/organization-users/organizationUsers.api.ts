@@ -1,20 +1,17 @@
 import { apiClient } from "@/config/api";
 import { api } from "@/constants/api";
-import { PaginatedData } from "@/types/table";
-import {
-  UserOrganization,
-  UserOrganizationDetail,
-  UserOrganizationFilterPayload,
-} from "@/types/user";
 import {
   CreateOrganizationUser,
   EditOrganizationUser,
-} from "./organizationUsers.types";
+  OrganizationUserFilterPayload,
+  OrganizationUserResponse,
+} from "@/types/organizationUser";
+import { PaginatedData } from "@/types/table";
 
 export async function fetchOrganizationUsers(
-  payload: UserOrganizationFilterPayload,
-): Promise<PaginatedData<UserOrganization>> {
-  const response = await apiClient.get<PaginatedData<UserOrganization>>(
+  payload: OrganizationUserFilterPayload,
+): Promise<PaginatedData<OrganizationUserResponse>> {
+  const response = await apiClient.get<PaginatedData<OrganizationUserResponse>>(
     api.organizationUsers.base,
     {
       params: payload,
@@ -25,8 +22,8 @@ export async function fetchOrganizationUsers(
 
 export async function createOrganizationUser(
   data: CreateOrganizationUser,
-): Promise<UserOrganizationDetail> {
-  const response = await apiClient.post<UserOrganizationDetail>(
+): Promise<OrganizationUserResponse> {
+  const response = await apiClient.post<OrganizationUserResponse>(
     api.organizationUsers.base,
     data,
   );
@@ -35,9 +32,9 @@ export async function createOrganizationUser(
 
 export async function editOrganizationUser(
   data: EditOrganizationUser,
-): Promise<UserOrganizationDetail> {
+): Promise<OrganizationUserResponse> {
   const { id, ...remainingData } = data;
-  const response = await apiClient.patch<UserOrganizationDetail>(
+  const response = await apiClient.patch<OrganizationUserResponse>(
     api.organizationUsers.byId(data.id),
     remainingData,
   );
@@ -46,8 +43,8 @@ export async function editOrganizationUser(
 
 export async function approveOrganizationUser(
   id: string,
-): Promise<UserOrganizationDetail> {
-  const response = await apiClient.post<UserOrganizationDetail>(
+): Promise<OrganizationUserResponse> {
+  const response = await apiClient.post<OrganizationUserResponse>(
     api.organizationUsers.approve(id),
   );
   return response.data;
@@ -55,8 +52,8 @@ export async function approveOrganizationUser(
 
 export async function suspendOrganizationUser(
   id: string,
-): Promise<UserOrganizationDetail> {
-  const response = await apiClient.post<UserOrganizationDetail>(
+): Promise<OrganizationUserResponse> {
+  const response = await apiClient.post<OrganizationUserResponse>(
     api.organizationUsers.suspend(id),
   );
   return response.data;
@@ -64,8 +61,8 @@ export async function suspendOrganizationUser(
 
 export async function activateOrganizationUser(
   id: string,
-): Promise<UserOrganizationDetail> {
-  const response = await apiClient.post<UserOrganizationDetail>(
+): Promise<OrganizationUserResponse> {
+  const response = await apiClient.post<OrganizationUserResponse>(
     api.organizationUsers.activate(id),
   );
   return response.data;

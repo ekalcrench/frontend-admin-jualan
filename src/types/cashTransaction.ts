@@ -15,6 +15,17 @@ export type CashTransactionType =
 
 export type EditableCashTransactionType = "INVESTMENT" | "PROFIT_SHARING";
 
+export interface CreateCashTransaction {
+  type: CashTransactionType;
+  amount: number;
+  transactionAt: string;
+  description?: string;
+}
+
+export interface EditCashTransaction extends Partial<CreateCashTransaction> {
+  id: string;
+}
+
 export interface CashTransactionResponse extends BaseApiResponse {
   id: string;
   organizationId: string;

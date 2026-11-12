@@ -7,17 +7,6 @@ import {
   registerVerify,
   resendOtp,
 } from "./auth.api";
-import {
-  AuthLogin,
-  AuthLoginOrganization,
-  AuthLoginOrganizationResponse,
-  AuthLoginResponse,
-  AuthRegister,
-  AuthRegisterResponse,
-  AuthRegisterVerify,
-  AuthResendOtp,
-  AuthResendOtpResponse,
-} from "./auth.types";
 import { userKeys } from "../users/users.constants";
 import { cashTransactionsKeys } from "../cash-transactions/cashTransactions.constants";
 import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
@@ -28,6 +17,17 @@ import { organizationUserKeys } from "../organization-users/organizationUsers.co
 import { preparationsKeys } from "../preparations/preparations.constants";
 import { productsKeys } from "../products/products.constants";
 import { purchasesKeys } from "../purchases/purchases.constants";
+import {
+  AuthLoginResponse,
+  AuthLogin,
+  AuthLoginOrganizationResponse,
+  AuthLoginOrganization,
+  AuthRegisterResponse,
+  AuthRegister,
+  AuthRegisterVerify,
+  AuthResendOtpResponse,
+  AuthResendOtp,
+} from "@/types/auth";
 
 export function useLoginMutation() {
   return useMutation<AuthLoginResponse, Error, AuthLogin>({

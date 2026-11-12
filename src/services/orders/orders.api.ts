@@ -7,8 +7,9 @@ import {
   OrderOverviewParams,
   OrderOverviewResponse,
   OrderOverviewItemsResponse,
+  CreateOrder,
+  EditOrder,
 } from "@/types/order";
-import { CreateOrder, EditOrder } from "./orders.types";
 
 export async function fetchOrders(
   payload: OrderFilterPayload,

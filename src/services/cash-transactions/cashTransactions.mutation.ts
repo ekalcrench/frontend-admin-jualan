@@ -1,15 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import { cashTransactionsKeys } from "./cashTransactions.constants";
-import { CashTransactionResponse } from "@/types/cashTransaction";
+import {
+  CashTransactionResponse,
+  CreateCashTransaction,
+  EditCashTransaction,
+} from "@/types/cashTransaction";
 import {
   createCashTransaction,
   editCashTransaction,
   deleteCashTransaction,
 } from "./cashTransactions.api";
-import {
-  CreateCashTransaction,
-  EditCashTransaction,
-} from "./cashTransactions.types";
 
 export function useCreateCashTransactionMutation() {
   return useMutation<CashTransactionResponse, Error, CreateCashTransaction>({

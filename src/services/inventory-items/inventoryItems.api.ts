@@ -1,8 +1,9 @@
 import { apiClient } from "@/config/api";
 import { api } from "@/constants/api";
 import { PaginatedData } from "@/types/table";
-import { CreateInventoryItem, EditInventoryItem } from "./inventoryItems.types";
 import {
+  CreateInventoryItem,
+  EditInventoryItem,
   InventoryItemFilterPayload,
   InventoryItemOptions,
   InventoryItemResponse,

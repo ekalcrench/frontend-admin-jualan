@@ -7,12 +7,10 @@ import {
   CashTransactionCashFlowResponse,
   CashTransactionFilterPayload,
   CashTransactionResponse,
-} from "@/types/cashTransaction";
-import { PaginatedData } from "@/types/table";
-import {
   CreateCashTransaction,
   EditCashTransaction,
-} from "./cashTransactions.types";
+} from "@/types/cashTransaction";
+import { PaginatedData } from "@/types/table";
 
 export async function fetchCashTransactions(
   payload: CashTransactionFilterPayload,
