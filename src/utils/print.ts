@@ -9,7 +9,7 @@ import { orderType, orderTypePrintLabels } from "@/constants/order";
 export function formatReceiptLabel(
   label: string,
   value: string,
-  width = 14,
+  width = 11,
 ): string {
   return `${label.padEnd(width)}: ${value}`;
 }
