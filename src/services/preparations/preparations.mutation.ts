@@ -12,6 +12,7 @@ import { inventoryTransactionKeys } from "../inventory-transactions/inventoryTra
 import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
 import { inventoryLotKeys } from "../inventory-lots/inventoryLots.constants";
 import { productsKeys } from "../products/products.constants";
+import { ordersKeys } from "../orders/orders.constants";
 
 export function useCreatePreparationMutation() {
   return useMutation<PreparationResponse, Error, CreatePreparation>({
@@ -43,6 +44,8 @@ export function useDeletePreparationMutation() {
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
       context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
       context.client.invalidateQueries({ queryKey: preparationsKeys.all });
+      context.client.invalidateQueries({ queryKey: productsKeys.lists });
+      context.client.invalidateQueries({ queryKey: ordersKeys.lists });
     },
   });
 }
@@ -58,6 +61,7 @@ export function useCompletePreparationMutation() {
       context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
       context.client.invalidateQueries({ queryKey: preparationsKeys.lists });
       context.client.invalidateQueries({ queryKey: productsKeys.lists });
+      context.client.invalidateQueries({ queryKey: ordersKeys.lists });
       context.client.setQueryData(preparationsKeys.detail(result.id), result);
     },
   });
