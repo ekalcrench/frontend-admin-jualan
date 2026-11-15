@@ -181,7 +181,7 @@ export default function ProductsPage() {
 
       <Stack spacing={4}>
         <PageTitle
-          title="Products"
+          title="Produk"
           subTitle="Mengelola daftar produk dan bahan yang digunakan"
         />
 

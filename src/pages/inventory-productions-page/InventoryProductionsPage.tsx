@@ -213,9 +213,8 @@ export default function InventoryProductionsPage() {
 
       <Stack spacing={4}>
         <PageTitle
-          title="Inventory Productions"
-          subTitle="Mengelola inventory tingkat lanjut, yaitu inventory yang merupakan
-              bahan jadi sebelum dijual"
+          title="Produksi Inventaris"
+          subTitle="Mengatur barang yang sudah melalui proses produksi dan siap dijual"
         />
 
         <CustomTable<PreparationResponse>

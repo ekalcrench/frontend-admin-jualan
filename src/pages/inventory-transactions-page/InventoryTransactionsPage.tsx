@@ -23,8 +23,8 @@ export default function InventoryTransactionsPage() {
     <Box>
       <Stack spacing={4}>
         <PageTitle
-          title="Inventory Transactions"
-          subTitle="Melihat riwayat transaksi stok inventory"
+          title="Riwayat Inventaris"
+          subTitle="Melihat catatan perubahan stok barang, mulai dari barang masuk, barang keluar, hingga proses produksi"
         />
 
         <CustomTable<InventoryTransactionResponse>

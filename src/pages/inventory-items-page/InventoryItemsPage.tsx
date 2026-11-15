@@ -93,8 +93,8 @@ export default function InventoryItemsPage() {
 
       <Stack spacing={4}>
         <PageTitle
-          title="Inventory Items"
-          subTitle="Melihat stok dan mengelola daftar barang"
+          title="Inventaris Barang"
+          subTitle="Melihat, menambah, dan mengatur daftar barang beserta stoknya"
         />
 
         <CustomTable<InventoryItemResponse>

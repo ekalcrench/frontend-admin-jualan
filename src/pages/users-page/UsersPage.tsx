@@ -148,8 +148,8 @@ export default function UsersPage() {
 
       <Stack spacing={4}>
         <PageTitle
-          title="Users"
-          subTitle={`Mengatur semua user yang terdaftar di ${organization?.name ?? "UMKM"}`}
+          title="Pengguna"
+          subTitle={`Mengelola semua pengguna yang terdaftar di ${organization?.name ?? "UMKM"}`}
         />
 
         <CustomTable<OrganizationUserResponse>

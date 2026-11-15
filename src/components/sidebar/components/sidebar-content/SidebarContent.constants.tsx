@@ -25,7 +25,7 @@ export const sidebarList: SidebarListItem[] = [
     groupName: "Transactions",
   },
   {
-    title: "Sales",
+    title: "Penjualan",
     url: paths.sales,
     params: `page=1&size=20&sortBy=-createdAt&startDate=${defaultParameterDate}&endDate=${defaultParameterDate}`,
     icon: <PaidIcon />,
@@ -36,7 +36,7 @@ export const sidebarList: SidebarListItem[] = [
     ],
   },
   {
-    title: "Purchases",
+    title: "Belanja",
     url: paths.purchases,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <ShoppingCartIcon />,
@@ -47,7 +47,7 @@ export const sidebarList: SidebarListItem[] = [
     ],
   },
   {
-    title: "Cash Flows",
+    title: "Arus Kas",
     url: paths.cashFlows,
     params: `page=1&size=20&sortBy=-transactionAt&startDate=${defaultParameterDate}&endDate=${defaultParameterDate}`,
     icon: <HistoryIcon />,
@@ -58,7 +58,7 @@ export const sidebarList: SidebarListItem[] = [
     groupName: "Organizations",
   },
   {
-    title: "Products",
+    title: "Produk",
     url: paths.products,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <CategoryIcon />,
@@ -69,12 +69,12 @@ export const sidebarList: SidebarListItem[] = [
     ],
   },
   {
-    title: "Inventory",
+    title: "Inventaris",
     url: paths.base,
     icon: <InventoryOutlinedIcon />,
     child: [
       {
-        title: "Items",
+        title: "Barang",
         url: paths.inventoryItems,
         params: "page=1&size=20&sortBy=name",
         organizationRoleAccess: [
@@ -84,7 +84,7 @@ export const sidebarList: SidebarListItem[] = [
         ],
       },
       {
-        title: "Productions",
+        title: "Produksi",
         url: paths.inventoryProductions,
         params: "page=1&size=20&sortBy=-createdAt",
         organizationRoleAccess: [
@@ -94,7 +94,7 @@ export const sidebarList: SidebarListItem[] = [
         ],
       },
       {
-        title: "Transactions",
+        title: "Riwayat",
         url: paths.inventoryTransactions,
         params: "page=1&size=20&sortBy=-createdAt",
         organizationRoleAccess: [
@@ -111,7 +111,7 @@ export const sidebarList: SidebarListItem[] = [
     ],
   },
   {
-    title: "Users",
+    title: "Pengguna",
     url: paths.users,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <GroupIcon />,
@@ -126,7 +126,7 @@ export const sidebarList: SidebarListItem[] = [
     userRoleAccess: [userRole.ADMIN, userRole.SUPER_ADMIN],
   },
   {
-    title: "All Users",
+    title: "Semua Pengguna",
     url: paths.allUsers,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <GroupIcon />,
