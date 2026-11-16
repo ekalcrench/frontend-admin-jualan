@@ -71,10 +71,41 @@ export function buildReceipt(
       type: "text",
       text: formatReceiptLabel("Waktu", formatLocalDatePrint(new Date())),
     },
-    {
-      type: "text",
-      text: formatReceiptLabel("Kasir", order.cashierName),
-    },
+    ...(order.type === orderType.DELIVERY && order.deliveryOrder
+      ? [
+          {
+            type: "text" as const,
+            text: formatReceiptLabel("Penerima", order.deliveryOrder.name),
+          },
+        ]
+      : []),
+    ...(order.type === orderType.TAKEAWAY && order.takeawayOrder
+      ? [
+          {
+            type: "text" as const,
+            text: formatReceiptLabel("Penerima", order.takeawayOrder.name),
+          },
+        ]
+      : []),
+    ...(order.type === orderType.DINE_IN && order.dineInOrder
+      ? [
+          {
+            type: "text" as const,
+            text: formatReceiptLabel(
+              "Penerima",
+              order.dineInOrder.name ?? "Guest",
+            ),
+          },
+        ]
+      : []),
+    ...(order.type === orderType.DINE_IN
+      ? [
+          {
+            type: "text" as const,
+            text: formatReceiptLabel("Kasir", order.cashierName),
+          },
+        ]
+      : []),
 
     { type: "divider" },
 
