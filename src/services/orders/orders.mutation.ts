@@ -47,6 +47,8 @@ export function useMarkPaidOrderMutation() {
     mutationFn: markPaidOrder,
     onSuccess: (result, payload, onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: ordersKeys.lists });
+      context.client.invalidateQueries({ queryKey: ordersKeys.overviews });
+      context.client.invalidateQueries({ queryKey: ordersKeys.overviewItems });
       context.client.invalidateQueries({ queryKey: productsKeys.lists });
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
       context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
