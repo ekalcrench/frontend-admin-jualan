@@ -13,10 +13,22 @@ import { useState } from "react";
 import { getDayDifference } from "@/utils/dateTime";
 
 const formatDate = (date: Date): string => {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  ).toISOString();
+};
+
+const getCalendarDate = (value: string): string | undefined => {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return undefined;
+
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
-
   return `${year}-${month}-${day}`;
 };
 
@@ -27,8 +39,12 @@ const getDefaultReportDateType = (
   if (!startDate || !endDate) return "ALL_TIME";
 
   const dayDifference = getDayDifference(startDate, endDate);
+  const today = getCalendarDate(new Date().toISOString());
+  const isToday =
+    getCalendarDate(startDate) === today &&
+    getCalendarDate(endDate) === today;
 
-  if (dayDifference === 0) return "TODAY";
+  if (dayDifference === 0 && isToday) return "TODAY";
   if (dayDifference === 7) return "A_WEEK";
   if (dayDifference === 31 || dayDifference === 30) return "A_MONTH";
   if (dayDifference === 365 || dayDifference === 366) return "A_YEAR";

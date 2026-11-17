@@ -2,7 +2,9 @@
 /node_modules
 /dist
 
+# local settings
 .github
+.vscode
 
 # dotenv environment variable files
 .env
