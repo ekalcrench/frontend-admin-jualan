@@ -11,6 +11,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CategoryIcon from "@mui/icons-material/Category";
 import HistoryIcon from "@mui/icons-material/History";
 import { defaultParameterDate } from "@/constants/table";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import PersonIcon from "@mui/icons-material/Person";
 
 export const sidebarList: SidebarListItem[] = [
   {
@@ -28,7 +30,7 @@ export const sidebarList: SidebarListItem[] = [
     title: "Penjualan",
     url: paths.sales,
     params: `page=1&size=20&sortBy=-createdAt&startDate=${defaultParameterDate}&endDate=${defaultParameterDate}`,
-    icon: <PaidIcon />,
+    icon: <ShoppingCartIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,
       organizationRole.OWNER,
@@ -39,7 +41,7 @@ export const sidebarList: SidebarListItem[] = [
     title: "Belanja",
     url: paths.purchases,
     params: "page=1&size=20&sortBy=-createdAt",
-    icon: <ShoppingCartIcon />,
+    icon: <ShoppingBasketIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,
       organizationRole.OWNER,
@@ -114,7 +116,7 @@ export const sidebarList: SidebarListItem[] = [
     title: "Pengguna",
     url: paths.users,
     params: "page=1&size=20&sortBy=-createdAt",
-    icon: <GroupIcon />,
+    icon: <PersonIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,
       organizationRole.OWNER,
