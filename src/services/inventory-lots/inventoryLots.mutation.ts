@@ -4,6 +4,7 @@ import { editInventoryLot } from "./inventoryLots.api";
 import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
 import { inventoryLotKeys } from "./inventoryLots.constants";
 import { inventoryTransactionKeys } from "../inventory-transactions/inventoryTransactions.constants";
+import { productsKeys } from "../products/products.constants";
 
 export function useEditInventoryLotMutation() {
   return useMutation<InventoryLotResponse, Error, EditInventoryLot>({
@@ -14,6 +15,7 @@ export function useEditInventoryLotMutation() {
       context.client.invalidateQueries({
         queryKey: inventoryTransactionKeys.lists,
       });
+      context.client.invalidateQueries({ queryKey: productsKeys.lists });
     },
   });
 }
