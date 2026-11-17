@@ -3,19 +3,25 @@ import {
   useEditOrganizationMutation,
 } from "@/services/organizations/organizations.mutation";
 import { UmkmFormProps, UmkmFormValues } from "./UmkmForm.types";
+import type { EditOrganization } from "@/services/organizations/organizations.types";
 import {
+  emptySocialMediaFormValues,
   emptyUmkmFormValues,
   umkmEditFormSchema,
   umkmFormSchema,
 } from "./UmkmForm.constants";
 import { apiErrorHandler } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Resolver, useForm } from "react-hook-form";
+import { Resolver, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useOrganizationByIdQuery } from "@/services/organizations/organizations.query";
 import { useEffect } from "react";
 import { fileToBase64 } from "@/utils/image";
 import useAuthStore from "@/store/auth-store";
+import {
+  socialMediaPlatformLabels,
+  SocialMediaPlatform,
+} from "@/constants/organization";
 
 export default function useUmkmForm(props: UmkmFormProps) {
   const createOrganization = useCreateOrganizationMutation();
@@ -35,17 +41,36 @@ export default function useUmkmForm(props: UmkmFormProps) {
     defaultValues: emptyUmkmFormValues,
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "socialMedias",
+  });
+
   useEffect(() => {
     if (!getOrganizationById.data) {
       reset(emptyUmkmFormValues);
       return;
     }
 
+    const socialMedias = getOrganizationById.data.socialMedias ?? [];
+
     reset({
       name: getOrganizationById.data.name,
+      username: getOrganizationById.data.username,
       email: getOrganizationById.data.email,
       address: getOrganizationById.data.address,
       phone: getOrganizationById.data.phone,
+      socialMedias: socialMedias.length
+        ? socialMedias.map((socialMedia) => ({
+            platform: {
+              label:
+                socialMediaPlatformLabels[socialMedia.platform] ??
+                socialMedia.platform,
+              value: socialMedia.platform,
+            },
+            username: socialMedia.username,
+          }))
+        : [{ ...emptySocialMediaFormValues }],
       file: undefined as unknown as File,
     });
   }, [getOrganizationById.data, reset]);
@@ -71,11 +96,17 @@ export default function useUmkmForm(props: UmkmFormProps) {
       props.id ? "Updating UMKM..." : "Creating UMKM...",
     );
     try {
+      const socialMedias = values.socialMedias.map((socialMedia, index) => ({
+        platform: socialMedia.platform?.value as SocialMediaPlatform,
+        username: socialMedia.username,
+        sortOrder: index,
+      }));
+
       if (props.id) {
-        const changedValues: Record<string, string> = {};
+        const changedValues: EditOrganization = {};
         (Object.keys(dirtyFields) as Array<keyof UmkmFormValues>).forEach(
           (field) => {
-            if (field !== "file") {
+            if (field !== "file" && field !== "socialMedias") {
               changedValues[field] = values[field];
             }
           },
@@ -83,6 +114,10 @@ export default function useUmkmForm(props: UmkmFormProps) {
 
         if (dirtyFields.file && values.file) {
           changedValues.logoBase64 = await fileToBase64(values.file);
+        }
+
+        if (dirtyFields.socialMedias) {
+          changedValues.socialMedias = socialMedias;
         }
 
         const res = await editOrganization.mutateAsync(changedValues);
@@ -96,10 +131,12 @@ export default function useUmkmForm(props: UmkmFormProps) {
       } else {
         const organization = await createOrganization.mutateAsync({
           name: values.name,
+          username: values.username,
           email: values.email,
           address: values.address,
           phone: values.phone,
           logoBase64: await fileToBase64(values.file),
+          socialMedias,
         });
         props.onSuccess?.(organization);
       }
@@ -115,6 +152,9 @@ export default function useUmkmForm(props: UmkmFormProps) {
 
   return {
     control,
+    fields,
+    append,
+    remove,
     isLoading,
     handleSubmit,
     onSubmit,
