@@ -5,6 +5,7 @@ import { OrganizationResponse } from "@/types/organization";
 import { formatLocalDatePrint } from "./dateTime";
 import { numberFormat } from "./number";
 import { orderType, orderTypePrintLabels } from "@/constants/order";
+import { socialMediaPlatformLabels } from "@/constants/organization";
 
 export function formatReceiptLabel(
   label: string,
@@ -186,15 +187,10 @@ export function buildReceipt(
 
     { type: "feed" },
 
-    {
-      type: "text",
-      text: "Instagram: sotopadanguninurul",
-      align: "center",
-    },
-    {
-      type: "text",
-      text: "TikTok: sotopadanguninurul",
-      align: "center",
-    },
+    ...(organization.socialMedias ?? []).map((socialMedia) => ({
+      type: "text" as const,
+      align: "center" as const,
+      text: `${socialMediaPlatformLabels[socialMedia.platform]}: ${socialMedia.username}`,
+    })),
   ];
 }

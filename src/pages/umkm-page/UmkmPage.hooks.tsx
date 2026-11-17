@@ -6,7 +6,8 @@ import { OrganizationResponse } from "@/types/organization";
 import { ColumnSort } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { formatLocalDate } from "@/utils/dateTime";
-import { Box, Avatar } from "@mui/material";
+import { Box, Avatar, Chip } from "@mui/material";
+import { socialMediaPlatformLabels } from "@/constants/organization";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -113,8 +114,46 @@ export default function useUmkmPage() {
         ),
       },
       { accessorKey: "name", header: "Nama", size: 170 },
+      {
+        accessorKey: "username",
+        header: "Username",
+        size: 150,
+        enableSorting: false,
+        Cell: ({ cell }) => cell.getValue<string | null>() ?? "-",
+      },
       { accessorKey: "email", header: "Email", size: 220 },
       { accessorKey: "phone", header: "Nomor HP", size: 150 },
+      {
+        id: "socialMedias",
+        header: "Media Sosial",
+        size: 220,
+        enableSorting: false,
+        Cell: ({ row }) => {
+          const socialMedias = row.original.socialMedias ?? [];
+
+          if (socialMedias.length === 0) return "-";
+
+          return (
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "4px",
+                padding: "4px 0",
+              }}
+            >
+              {socialMedias.map((socialMedia) => (
+                <Chip
+                  key={socialMedia.id}
+                  size="small"
+                  variant="outlined"
+                  label={`${socialMediaPlatformLabels[socialMedia.platform]}: ${socialMedia.username}`}
+                />
+              ))}
+            </Box>
+          );
+        },
+      },
       {
         accessorKey: "address",
         header: "Alamat",

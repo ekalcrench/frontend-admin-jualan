@@ -118,7 +118,9 @@ export default function UmkmPage() {
           }
           enableRowActions={userState?.role === userRole.USER ? false : true}
           renderRowActions={({ row }) => renderRowActions(row.original.id)}
-          searchPlaceholder={"Cari berdasarkan Nama, Email, Nomor HP, & Alamat"}
+          searchPlaceholder={
+            "Cari berdasarkan Nama, Username, Email, Nomor HP, Alamat, & Media Sosial"
+          }
         />
       </Stack>
     </Box>
