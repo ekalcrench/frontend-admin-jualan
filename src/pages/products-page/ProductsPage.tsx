@@ -65,7 +65,6 @@ export default function ProductsPage() {
       <IconButton
         aria-label={`Edit product ${row.original.name}`}
         onClick={() => handleClickEditForm(row.original.id)}
-        color="secondary"
       >
         <EditIcon />
       </IconButton>

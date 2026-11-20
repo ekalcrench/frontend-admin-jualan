@@ -22,7 +22,7 @@ export const inventoryTransactionTypeColors: Record<
   ChipProps["color"]
 > = {
   PURCHASE: "success",
-  SALE: "info",
+  SALE: "secondary",
   PREPARATION_IN: "success",
   PREPARATION_OUT: "warning",
   ADJUSTMENT_IN: "success",

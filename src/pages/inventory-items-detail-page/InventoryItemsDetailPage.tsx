@@ -55,7 +55,6 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
       <IconButton
         aria-label={`Edit lot ${row.original.id}`}
         onClick={() => handleClickEditForm(row.original)}
-        color="secondary"
       >
         <EditIcon />
       </IconButton>

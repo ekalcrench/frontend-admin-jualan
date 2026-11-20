@@ -64,7 +64,6 @@ export default function InventoryItemsPage() {
       <IconButton
         aria-label={`Edit ${row.original.name}`}
         onClick={() => handleClickEditForm(row.original)}
-        color="secondary"
       >
         <EditIcon />
       </IconButton>

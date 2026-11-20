@@ -11,7 +11,6 @@ export const DatePickerStyled = styled(DatePicker, {
     height: 54,
     borderRadius: "12px",
     backgroundColor: theme.palette.background.paper,
-    color: theme.palette.primary.main,
     "&.Mui-disabled": {
       backgroundColor: theme.palette.background.disabled,
     },

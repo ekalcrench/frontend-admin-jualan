@@ -81,7 +81,6 @@ export default function PurchasesPage() {
           <IconButton
             aria-label={`Edit purchase ${row.original.invoiceNumber ?? row.original.id}`}
             onClick={() => handleClickEditForm(row.original.id)}
-            color="secondary"
           >
             <EditIcon />
           </IconButton>

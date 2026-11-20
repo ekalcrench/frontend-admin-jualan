@@ -4,23 +4,19 @@ import { currencyFormatter } from "@/utils/currency";
 import { BalanceCard } from "./CashOverview.styles";
 import { BoxFlex } from "@/styled/CustomBox";
 import SavingsIcon from "@mui/icons-material/Savings";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { CashOverviewProps } from "./CashOverview.types";
 import {
   calculatePercentageDifference,
   formatPercentageDifference,
 } from "@/utils/generalUtils";
-import {
-  formatLocalDate,
-  formatLocalDateOnly,
-  getPreviousPeriodLabel,
-} from "@/utils/dateTime";
+import { formatLocalDateOnly, getPreviousPeriodLabel } from "@/utils/dateTime";
 import {
   CustomTrendingUpIcon,
   CustomTrendingDownIcon,
 } from "@/styled/CustomIcon";
 import { CardOverview } from "@/styled/CustomCard";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 
 export default function CashOverview(props: CashOverviewProps) {
   const { data, dataCashFlow, isLoading, isLoadingCashFlow } =
@@ -77,7 +73,7 @@ export default function CashOverview(props: CashOverviewProps) {
       <Grid size={{ xs: 12, md: 4, xl: 3 }}>
         <CardOverview>
           <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-            <SavingsIcon color="success" />
+            <SavingsIcon color="info" />
             <Typography>Cash masuk</Typography>
           </BoxFlex>
 
@@ -133,7 +129,7 @@ export default function CashOverview(props: CashOverviewProps) {
       <Grid size={{ xs: 12, md: 4, xl: 3 }}>
         <CardOverview>
           <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-            <ShoppingCartIcon color="error" />
+            <ShoppingBasketIcon color="info" />
             <Typography>Cash keluar</Typography>
           </BoxFlex>
 

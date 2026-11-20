@@ -15,6 +15,6 @@ export const purchaseStatusColorMapping: Record<
   PurchaseStatus,
   ChipProps["color"]
 > = {
-  DRAFT: "warning",
+  DRAFT: "default",
   FINALIZED: "success",
 };

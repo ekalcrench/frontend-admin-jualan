@@ -88,7 +88,6 @@ export default function SalesPage() {
           <IconButton
             aria-label={`Edit penjualan ${row.original.orderNumber}`}
             onClick={() => handleClickEditForm(row.original.id)}
-            color="secondary"
           >
             <EditIcon />
           </IconButton>

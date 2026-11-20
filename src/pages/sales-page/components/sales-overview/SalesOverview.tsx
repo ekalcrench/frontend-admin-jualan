@@ -53,7 +53,7 @@ export default function SalesOverview(props: SalesOverviewProps) {
         <Grid size={{ xs: 12, md: 4, xl: 3 }}>
           <CardOverview>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-              <CurrencyExchangeIcon color="primary" />
+              <CurrencyExchangeIcon color="info" />
               <Typography>Omset Penjualan</Typography>
             </BoxFlex>
             {isLoading ? (
@@ -107,7 +107,7 @@ export default function SalesOverview(props: SalesOverviewProps) {
         <Grid size={{ xs: 12, md: 4, xl: 3 }}>
           <CardOverview>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-              <MonetizationOnIcon color="success" />
+              <MonetizationOnIcon color="info" />
               <Typography>Keuntungan Kotor</Typography>
             </BoxFlex>
             {isLoading ? (
@@ -162,7 +162,7 @@ export default function SalesOverview(props: SalesOverviewProps) {
         <Grid size={{ xs: 12, md: 4, xl: 3 }}>
           <CardOverview>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-              <SellIcon color="action" />
+              <SellIcon color="info" />
               <Typography>Barang Terjual</Typography>
             </BoxFlex>
             {isLoading ? (
@@ -221,7 +221,7 @@ export default function SalesOverview(props: SalesOverviewProps) {
         <Grid size={{ xs: 12, md: 6, xl: 4 }}>
           <CardOverview>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-              <SellIcon color="primary" />
+              <SellIcon color="info" />
               <Typography>Paling Laku</Typography>
             </BoxFlex>
 
@@ -275,7 +275,7 @@ export default function SalesOverview(props: SalesOverviewProps) {
         <Grid size={{ xs: 12, md: 6, xl: 4 }}>
           <CardOverview>
             <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
-              <SellIcon color="error" />
+              <SellIcon color="info" />
               <Typography>Paling Tidak Laku</Typography>
             </BoxFlex>
             <Box>

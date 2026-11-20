@@ -57,7 +57,6 @@ export default function CashFlowsPage() {
         <IconButton
           aria-label={`Edit cash flow ${row.original.id}`}
           onClick={() => handleClickEditForm(row.original.id)}
-          color="secondary"
         >
           <EditIcon />
         </IconButton>

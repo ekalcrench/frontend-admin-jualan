@@ -76,7 +76,7 @@ export const userOrganizationStatusColorMapping: Record<
   OrganizationUserStatus,
   ChipProps["color"]
 > = {
-  APPROVED: "primary",
+  APPROVED: "success",
   PENDING_APPROVAL: "warning",
   REJECTED: "default",
   SUSPENDED: "error",

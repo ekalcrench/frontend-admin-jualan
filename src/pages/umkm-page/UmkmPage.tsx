@@ -54,7 +54,7 @@ export default function UmkmPage() {
       <BoxFlex>
         {(userState?.role === userRole.SUPER_ADMIN ||
           userState?.role === userRole.ADMIN) && (
-          <IconButton onClick={() => handleClickEditForm(id)} color="secondary">
+          <IconButton onClick={() => handleClickEditForm(id)}>
             <EditIcon />
           </IconButton>
         )}

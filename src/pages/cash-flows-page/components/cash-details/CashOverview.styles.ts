@@ -5,7 +5,7 @@ export const BalanceCard = styled(Card)<CardProps>(
   ({ theme: { palette } }) => ({
     background: `linear-gradient(
       135deg,
-      ${palette.secondary.main} 0%,
+      ${palette.primary.dark} 0%,
       ${palette.primary.light} 100%
     )`,
     boxShadow: boxShadowCard,
