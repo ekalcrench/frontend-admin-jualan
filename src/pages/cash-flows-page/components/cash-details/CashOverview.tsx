@@ -1,7 +1,6 @@
 import { Grid, Typography, Skeleton } from "@mui/material";
 import useCashOverview from "./CashOverview.hooks";
 import { currencyFormatter } from "@/utils/currency";
-import { BalanceCard } from "./CashOverview.styles";
 import { BoxFlex } from "@/styled/CustomBox";
 import SavingsIcon from "@mui/icons-material/Savings";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
@@ -15,7 +14,7 @@ import {
   CustomTrendingUpIcon,
   CustomTrendingDownIcon,
 } from "@/styled/CustomIcon";
-import { CardOverview } from "@/styled/CustomCard";
+import { CardBalance, CardOverview } from "@/styled/CustomCard";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 
 export default function CashOverview(props: CashOverviewProps) {
@@ -44,7 +43,7 @@ export default function CashOverview(props: CashOverviewProps) {
   return (
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, md: 4, xl: 3 }}>
-        <BalanceCard>
+        <CardBalance>
           <BoxFlex sx={{ marginBottom: "12px", gap: "8px" }}>
             <AccountBalanceIcon />
             <Typography>Sisa cash</Typography>
@@ -68,7 +67,7 @@ export default function CashOverview(props: CashOverviewProps) {
               {`Hingga ${formatLocalDateOnly(props.endDate)}`}
             </Typography>
           )}
-        </BalanceCard>
+        </CardBalance>
       </Grid>
       <Grid size={{ xs: 12, md: 4, xl: 3 }}>
         <CardOverview>
