@@ -11,4 +11,6 @@ export const inventoryItemKeys = {
   detail: (id?: string) => ["inventory_items", "detail", id] as const,
 
   options: ["inventory_items", "options"] as const,
+
+  assets: ["inventory_items", "assets"] as const,
 };

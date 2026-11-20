@@ -4,6 +4,7 @@ import { PaginatedData } from "@/types/table";
 import {
   CreateInventoryItem,
   EditInventoryItem,
+  InventoryItemAssets,
   InventoryItemFilterPayload,
   InventoryItemOptions,
   InventoryItemResponse,
@@ -35,6 +36,13 @@ export async function fetchInventoryItemById(
 ): Promise<InventoryItemResponse> {
   const response = await apiClient.get<InventoryItemResponse>(
     api.inventoryItems.byId(id),
+  );
+  return response.data;
+}
+
+export async function fetchInventoryItemAssets(): Promise<InventoryItemAssets> {
+  const response = await apiClient.get<InventoryItemAssets>(
+    api.inventoryItems.assets,
   );
   return response.data;
 }

@@ -31,3 +31,7 @@ export interface InventoryItemOptions {
   name: string;
   unit: InventoryUnit;
 }
+
+export interface InventoryItemAssets {
+  totalAssets: number;
+}

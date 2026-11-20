@@ -2,12 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { fiveMinutes } from "@/constants/time";
 import { PaginatedData } from "@/types/table";
 import {
+  fetchInventoryItemAssets,
   fetchInventoryItemById,
   fetchInventoryItemOptions,
   fetchInventoryItems,
 } from "./inventoryItems.api";
 import { inventoryItemKeys } from "./inventoryItems.constants";
 import {
+  InventoryItemAssets,
   InventoryItemFilterPayload,
   InventoryItemOptions,
   InventoryItemResponse,
@@ -44,6 +46,14 @@ export function useInventoryItemByIdQuery(id?: string) {
       return fetchInventoryItemById(id);
     },
     enabled: Boolean(id),
+    staleTime: fiveMinutes,
+  });
+}
+
+export function useInventoryItemAssetsQuery() {
+  return useQuery<InventoryItemAssets>({
+    queryKey: inventoryItemKeys.assets,
+    queryFn: () => fetchInventoryItemAssets(),
     staleTime: fiveMinutes,
   });
 }

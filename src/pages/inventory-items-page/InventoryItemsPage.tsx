@@ -14,6 +14,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate } from "react-router-dom";
 import { paths } from "@/constants/path";
 import PageTitle from "@/components/page-title";
+import InventoryItemOverview from "./components/inventory-item-overview";
 
 export default function InventoryItemsPage() {
   const {
@@ -95,6 +96,8 @@ export default function InventoryItemsPage() {
           title="Inventaris Barang"
           subTitle="Melihat, menambah, dan mengatur daftar barang beserta stoknya"
         />
+
+        <InventoryItemOverview />
 
         <CustomTable<InventoryItemResponse>
           columns={columns}
