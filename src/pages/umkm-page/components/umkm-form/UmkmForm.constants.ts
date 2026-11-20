@@ -11,27 +11,21 @@ const fileSchema = z
 
 const socialMediaSchema = z.object({
   platform: z.enum(socialMediaPlatforms, {
-    error: "Pilih platform media sosial",
+    error: "Pilih platform",
   }),
   username: z
-    .string("Masukkan username media sosial")
+    .string("Masukkan username")
     .trim()
-    .min(1, "Masukkan username media sosial")
-    .max(30, "Username media sosial maksimal 30 karakter"),
+    .min(1, "Masukkan username")
+    .max(30, "Maksimal 30 karakter"),
 });
 
 const umkmFormFields = {
   name: z.string("Masukkan nama UMKM").min(1, "Masukkan nama UMKM"),
-  username: z
-    .string("Masukkan username UMKM")
-    .trim()
-    .min(1, "Masukkan username UMKM")
-    .max(30, "Username maksimal 30 karakter"),
+  username: z.string().trim().max(30, "Maksimal 30 karakter").optional(),
   email: z.email("Masukkan email PIC/UMKM"),
   address: z.string("Masukkan alamat UMKM").min(1, "Masukkan alamat UMKM"),
-  phone: z
-    .string("Masukkan nomor yang bisa dihubungi")
-    .min(1, "Masukkan nomor yang bisa dihubungi"),
+  phone: z.string("Masukkan nomor WhatsApp").min(1, "Masukkan nomor WhatsApp"),
   socialMedias: z.array(socialMediaSchema).superRefine((socialMedias, ctx) => {
     const usedPlatforms = new Set<string>();
 

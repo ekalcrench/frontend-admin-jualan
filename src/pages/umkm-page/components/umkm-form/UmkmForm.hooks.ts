@@ -118,7 +118,10 @@ export default function useUmkmForm(props: UmkmFormProps) {
         const changedValues: EditOrganization = {};
 
         if (dirtyFields.name) changedValues.name = values.name;
-        if (dirtyFields.username) changedValues.username = values.username;
+        if (dirtyFields.username)
+          changedValues.username = values.username?.length
+            ? values.username
+            : null;
         if (dirtyFields.email) changedValues.email = values.email;
         if (dirtyFields.phone) changedValues.phone = values.phone;
         if (dirtyFields.address) changedValues.address = values.address;
@@ -140,7 +143,7 @@ export default function useUmkmForm(props: UmkmFormProps) {
       } else {
         const createdOrganization = await createOrganization.mutateAsync({
           name: values.name,
-          username: values.username,
+          username: values.username?.length ? values.username : null,
           email: values.email,
           address: values.address,
           phone: values.phone,
@@ -165,8 +168,7 @@ export default function useUmkmForm(props: UmkmFormProps) {
     handleSubmit,
     onSubmit,
     socialMediaFields,
-    isSocialMediaFull:
-      socialMediaFields.length >= socialMediaPlatforms.length,
+    isSocialMediaFull: socialMediaFields.length >= socialMediaPlatforms.length,
     handleClickAddSocialMedia,
     handleClickRemoveSocialMedia,
     logoBase64: getOrganizationById.data?.logoBase64,

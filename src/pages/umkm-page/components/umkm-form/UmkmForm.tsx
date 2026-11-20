@@ -114,7 +114,14 @@ export default function UmkmForm(props: UmkmFormProps) {
             color="text.secondary"
             sx={{ marginBottom: "16px" }}
           >
-            Tambahkan akun media sosial UMKM (opsional).
+            Tambahkan akun media sosial UMKM{" "}
+            <Typography
+              component={"span"}
+              variant="body2"
+              sx={{ fontWeight: 600 }}
+            >
+              (opsional)
+            </Typography>
           </Typography>
 
           <Stack spacing={2}>

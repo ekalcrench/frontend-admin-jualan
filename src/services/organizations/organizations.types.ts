@@ -8,7 +8,7 @@ export interface CreateOrganizationSocialMedia {
 
 export interface CreateOrganization {
   name: string;
-  username: string;
+  username: string | null;
   address: string;
   email: string;
   phone: string;

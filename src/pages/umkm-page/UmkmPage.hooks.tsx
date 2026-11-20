@@ -146,7 +146,6 @@ export default function useUmkmPage() {
                 <Chip
                   key={socialMedia.id}
                   size="small"
-                  variant="outlined"
                   label={`${socialMediaPlatformLabels[socialMedia.platform]}: ${socialMedia.username}`}
                 />
               ))}
