@@ -15,6 +15,8 @@ import InventoryItemsDetailPage from "@/pages/inventory-items-detail-page";
 import PurchasesPage from "@/pages/purchases-page";
 import InventoryTransactionsPage from "@/pages/inventory-transactions-page";
 import ProductsPage from "@/pages/products-page";
+import ProductModifiersPage from "@/pages/product-modifiers-page";
+import ProductModifierDetailPage from "@/pages/product-modifier-detail-page";
 import SalesPage from "@/pages/sales-page";
 import InventoryProductionsPage from "@/pages/inventory-productions-page";
 import CashFlowsPage from "@/pages/cash-flows-page";
@@ -75,6 +77,14 @@ export default function RouteLayout() {
 
             <Route path={paths.users} element={<UsersPage />} />
             <Route path={paths.products} element={<ProductsPage />} />
+            <Route
+              path={paths.productModifiers}
+              element={<ProductModifiersPage />}
+            />
+            <Route
+              path={paths.productModifierDetailRoute}
+              element={<ProductModifierDetailPage />}
+            />
             <Route
               path={paths.inventoryItems}
               element={<InventoryItemsPage />}

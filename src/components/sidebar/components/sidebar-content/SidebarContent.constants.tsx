@@ -9,6 +9,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CategoryIcon from "@mui/icons-material/Category";
+import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import HistoryIcon from "@mui/icons-material/History";
 import { defaultParameterDate } from "@/constants/table";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
@@ -64,6 +65,17 @@ export const sidebarList: SidebarListItem[] = [
     url: paths.products,
     params: "page=1&size=20&sortBy=-createdAt",
     icon: <CategoryIcon />,
+    organizationRoleAccess: [
+      organizationRole.ADMIN,
+      organizationRole.OWNER,
+      organizationRole.MEMBER,
+    ],
+  },
+  {
+    title: "Variasi & Add-on",
+    url: paths.productModifiers,
+    params: "page=1&size=20&sortBy=sortOrder",
+    icon: <TuneRoundedIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,
       organizationRole.OWNER,

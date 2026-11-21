@@ -11,6 +11,9 @@ export const paths = {
   cashFlows: "/cash-flows",
 
   products: "/products",
+  productModifiers: "/product-modifiers",
+  productModifierDetail: (id: string) => `/product-modifiers/${id}`,
+  productModifierDetailRoute: "/product-modifiers/:modifierGroupId",
   inventoryItems: "/inventory-items",
   inventoryItemsDetail: (id: string) => `/inventory-items/${id}`,
   inventoryItemsDetailRoute: "/inventory-items/:inventoryItemId",

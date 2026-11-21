@@ -52,6 +52,27 @@ export const api = {
     options: "/products/options",
     lowestStocks: "/products/lowest-stocks",
   },
+  productModifierGroups: {
+    base: "/product-modifier-groups",
+    byId: (id: string) => `/product-modifier-groups/${id}`,
+    status: (id: string) => `/product-modifier-groups/${id}/status`,
+    options: (id: string) => `/product-modifier-groups/${id}/options`,
+    reorderOptions: (id: string) =>
+      `/product-modifier-groups/${id}/options/reorder`,
+  },
+  productModifierOptions: {
+    base: "/product-modifier-options",
+    byId: (id: string) => `/product-modifier-options/${id}`,
+    status: (id: string) => `/product-modifier-options/${id}/status`,
+  },
+  productModifierAssignments: {
+    base: (productId: string) =>
+      `/products/${productId}/modifier-groups`,
+    byId: (productId: string, modifierGroupId: string) =>
+      `/products/${productId}/modifier-groups/${modifierGroupId}`,
+    reorder: (productId: string) =>
+      `/products/${productId}/modifier-groups/reorder`,
+  },
   orders: {
     base: "/orders",
     byId: (id: string) => `/orders/${id}`,

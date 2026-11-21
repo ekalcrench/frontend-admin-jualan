@@ -19,6 +19,7 @@ import { TypographyInputLabel } from "@/styled/CustomTypography";
 import useProductForm from "./ProductForm.hooks";
 import type { ProductFormProps } from "./ProductForm.types";
 import { emptyProductIngredient } from "./ProductForm.constants";
+import ProductModifierSection from "./components/product-modifier-section";
 
 export default function ProductForm(props: ProductFormProps) {
   const {
@@ -27,8 +28,15 @@ export default function ProductForm(props: ProductFormProps) {
     inventoryItemOptions,
     isLoading,
     isLoadingGetOptions,
+    modifierGroupOptions,
+    selectedModifierGroupIds,
+    canManage,
+    isModifierGroupsLoading,
+    isModifierGroupsError,
     append,
+    refetchModifierGroups,
     handleRemoveProductIngredient,
+    handleModifierGroupChange,
     handleSubmit,
     onSubmit,
   } = useProductForm(props);
@@ -135,6 +143,18 @@ export default function ProductForm(props: ProductFormProps) {
             Tambah Bahan
           </Button>
         </BoxFlexEnd>
+
+        <Divider sx={{ marginTop: "24px", marginBottom: "24px" }} />
+
+        <ProductModifierSection
+          options={modifierGroupOptions}
+          selectedIds={selectedModifierGroupIds}
+          onChange={handleModifierGroupChange}
+          isLoading={isModifierGroupsLoading}
+          isError={isModifierGroupsError}
+          onRetry={refetchModifierGroups}
+          disabled={!canManage || isLoading}
+        />
 
         <Button
           sx={{ mt: "32px" }}

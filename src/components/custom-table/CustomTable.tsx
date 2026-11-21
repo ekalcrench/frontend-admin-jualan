@@ -25,6 +25,8 @@ export default function CustomTable<TData extends MRT_RowData>({
   isError = false,
   errorMessage = "Terjadi kesalahan, mohon coba refresh kembali atau hubungi admin.",
   emptyMessage = "Data tidak ditemukan.",
+  renderEmptyState,
+  renderErrorState,
   onRowSelectionChange,
   filterComponents,
   enableRowActions,
@@ -183,7 +185,9 @@ export default function CustomTable<TData extends MRT_RowData>({
               backgroundColor: "white",
             }}
           >
-            {isError ? errorMessage : emptyMessage}
+            {isError
+              ? (renderErrorState ?? errorMessage)
+              : (renderEmptyState ?? emptyMessage)}
           </BoxCenter>
         )}
         muiTablePaperProps={{

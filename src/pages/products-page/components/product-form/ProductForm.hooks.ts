@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   FieldNamesMarkedBoolean,
   Resolver,
@@ -9,12 +9,18 @@ import {
 } from "react-hook-form";
 import { toast } from "sonner";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
+import useProductModifierAccess from "@/hooks/useProductModifierAccess";
 import { useInventoryItemOptionsQuery } from "@/services/inventory-items/inventoryItems.query";
 import {
   useCreateProductMutation,
   useEditProductMutation,
 } from "@/services/products/products.mutation";
 import { useProductByIdQuery } from "@/services/products/products.query";
+import {
+  useProductModifierGroupsByProductQuery,
+  useProductModifierGroupsQuery,
+} from "@/services/product-modifiers/productModifiers.query";
+import { useReplaceProductModifierGroupsMutation } from "@/services/product-modifiers/productModifiers.mutation";
 import type {
   CreateProduct,
   CreateProductIngredients,
@@ -22,6 +28,7 @@ import type {
   EditProductIngredients,
 } from "@/services/products/products.types";
 import { apiErrorHandler } from "@/utils/api";
+import { areSameIds } from "@/utils/productModifier";
 import {
   emptyProductFormValues,
   productFormSchema,
@@ -31,6 +38,7 @@ import type {
   ProductFormValues,
   ProductIngredientFormValues,
 } from "./ProductForm.types";
+import type { ProductModifierGroupOption } from "./components/product-modifier-section/ProductModifierSection.types";
 
 function toCreateProduct(values: ProductFormValues): CreateProduct {
   return {
@@ -81,7 +89,31 @@ function toEditProductIngredients(
 export default function useProductForm(props: ProductFormProps) {
   const createProduct = useCreateProductMutation();
   const editProduct = useEditProductMutation();
+  const replaceModifierGroups = useReplaceProductModifierGroupsMutation();
   const productQuery = useProductByIdQuery(props.id);
+  const { canManage } = useProductModifierAccess();
+
+  const modifierGroupsQuery = useProductModifierGroupsQuery(
+    {
+      page: 1,
+      size: 1000,
+      sortBy: "sortOrder",
+      isActive: true,
+    },
+    Boolean(props.open),
+  );
+  const productModifierGroupsQuery = useProductModifierGroupsByProductQuery(
+    props.id,
+    Boolean(props.open && props.id),
+  );
+
+  const [selectedModifierGroupIds, setSelectedModifierGroupIds] = useState<
+    string[]
+  >([]);
+  const [initialModifierGroupIds, setInitialModifierGroupIds] = useState<
+    string[]
+  >([]);
+  const modifierAssignmentLoadedRef = useRef<string | null>(null);
 
   const {
     control,
@@ -131,15 +163,97 @@ export default function useProductForm(props: ProductFormProps) {
     });
   }, [props.id, props.open, productQuery.data, reset]);
 
+  useEffect(() => {
+    if (!props.open || !props.id) {
+      modifierAssignmentLoadedRef.current = null;
+      setSelectedModifierGroupIds([]);
+      setInitialModifierGroupIds([]);
+      return;
+    }
+    if (
+      !productModifierGroupsQuery.isSuccess ||
+      productModifierGroupsQuery.isFetching ||
+      productModifierGroupsQuery.isStale
+    ) {
+      return;
+    }
+    if (!productModifierGroupsQuery.data) return;
+    if (modifierAssignmentLoadedRef.current === props.id) return;
+
+    const assignedIds =
+      productModifierGroupsQuery.data.modifierGroups.map(
+        (group) => group.id,
+      );
+
+    setSelectedModifierGroupIds(assignedIds);
+    setInitialModifierGroupIds(assignedIds);
+    modifierAssignmentLoadedRef.current = props.id;
+  }, [props.id, props.open, productModifierGroupsQuery.data]);
+
+  const modifierGroupOptions = useMemo<ProductModifierGroupOption[]>(() => {
+    const options = new Map<string, ProductModifierGroupOption>();
+
+    (modifierGroupsQuery.data?.items ?? []).forEach((group) => {
+      options.set(group.id, {
+        id: group.id,
+        name: group.name,
+        isRequired: group.isRequired,
+        isMultiple: group.isMultiple,
+        minSelection: group.minSelection,
+        maxSelection: group.maxSelection,
+        isActive: group.isActive,
+        optionsCount: group.optionsCount,
+      });
+    });
+
+    (productModifierGroupsQuery.data?.modifierGroups ?? []).forEach(
+      (group) => {
+        options.set(group.id, {
+          id: group.id,
+          name: group.name,
+          isRequired: group.isRequired,
+          isMultiple: group.isMultiple,
+          minSelection: group.minSelection,
+          maxSelection: group.maxSelection,
+          isActive: group.isActive,
+          optionsCount: group.options.length,
+        });
+      },
+    );
+
+    return Array.from(options.values());
+  }, [modifierGroupsQuery.data, productModifierGroupsQuery.data]);
+
   const isLoadingGetData = Boolean(
     props.id &&
     (!productQuery.data || productQuery.isPending || productQuery.isFetching),
+  );
+  const isLoadingModifierAssignment = Boolean(
+    props.id &&
+    props.open &&
+    (productModifierGroupsQuery.isPending ||
+      productModifierGroupsQuery.isFetching),
   );
   const isLoading =
     isSubmitting ||
     createProduct.isPending ||
     editProduct.isPending ||
-    isLoadingGetData;
+    replaceModifierGroups.isPending ||
+    isLoadingGetData ||
+    isLoadingModifierAssignment;
+
+  const isModifierGroupsLoading =
+    modifierGroupsQuery.isPending ||
+    Boolean(props.id && productModifierGroupsQuery.isPending);
+  const isModifierGroupsError =
+    modifierGroupsQuery.isError ||
+    Boolean(props.id && productModifierGroupsQuery.isError);
+
+  const refetchModifierGroups = () => {
+    modifierGroupsQuery.refetch();
+    if (props.id) productModifierGroupsQuery.refetch();
+  };
+
   const handleRemoveProductIngredient = (index: number) => {
     const item = productIngredientsValues[index];
 
@@ -150,8 +264,20 @@ export default function useProductForm(props: ProductFormProps) {
     remove(index);
   };
 
+  const handleModifierGroupChange = (ids: string[]) => {
+    setSelectedModifierGroupIds(ids);
+  };
+
   const onSubmit = async (values: ProductFormValues) => {
-    if (props.id && Object.keys(dirtyFields).length === 0) {
+    const hasProductChanges = Object.keys(dirtyFields).length > 0;
+    const isAssignmentReady =
+      !props.id || productModifierGroupsQuery.isSuccess;
+    const hasAssignmentChanges =
+      canManage &&
+      isAssignmentReady &&
+      !areSameIds(initialModifierGroupIds, selectedModifierGroupIds);
+
+    if (props.id && !hasProductChanges && !hasAssignmentChanges) {
       toast.info("Tidak ada perubahan untuk disimpan");
       return;
     }
@@ -159,32 +285,66 @@ export default function useProductForm(props: ProductFormProps) {
     const toastId = toast.loading(
       props.id ? "Memperbarui produk..." : "Membuat produk...",
     );
-    try {
-      if (props.id) {
-        const editPayload: EditProduct = {
-          id: props.id,
-          ...(dirtyFields.name && {
-            name: values.name,
-          }),
-          ...(dirtyFields.sellingPrice && {
-            sellingPrice: values.sellingPrice ?? 0,
-          }),
-          ...(dirtyFields.productIngredients && {
-            productIngredients: toEditProductIngredients(
-              values.productIngredients,
-              dirtyFields.productIngredients,
-            ),
-          }),
-        };
 
-        await editProduct.mutateAsync({
-          ...editPayload,
-          ...(deletedProductIngredientIds.length && {
-            deletedProductIngredientIds,
-          }),
-        });
+    try {
+      let productId = props.id;
+
+      if (props.id) {
+        if (hasProductChanges) {
+          const editPayload: EditProduct = {
+            id: props.id,
+            ...(dirtyFields.name && {
+              name: values.name,
+            }),
+            ...(dirtyFields.sellingPrice && {
+              sellingPrice: values.sellingPrice ?? 0,
+            }),
+            ...(dirtyFields.productIngredients && {
+              productIngredients: toEditProductIngredients(
+                values.productIngredients,
+                dirtyFields.productIngredients,
+              ),
+            }),
+          };
+
+          await editProduct.mutateAsync({
+            ...editPayload,
+            ...(deletedProductIngredientIds.length && {
+              deletedProductIngredientIds,
+            }),
+          });
+        }
       } else {
-        await createProduct.mutateAsync(toCreateProduct(values));
+        const createdProduct = await createProduct.mutateAsync(
+          toCreateProduct(values),
+        );
+        productId = createdProduct.id;
+      }
+
+      const shouldUpdateAssignments =
+        canManage &&
+        Boolean(productId) &&
+        (props.id
+          ? isAssignmentReady && hasAssignmentChanges
+          : selectedModifierGroupIds.length > 0);
+
+      if (shouldUpdateAssignments && productId) {
+        try {
+          await replaceModifierGroups.mutateAsync({
+            productId,
+            modifierGroupIds: selectedModifierGroupIds,
+          });
+        } catch (assignmentError) {
+          if (!props.id) {
+            toast.error(
+              "Produk berhasil dibuat, tetapi variasi gagal ditugaskan. Silakan edit produk untuk mengatur variasi.",
+            );
+            props.setIsFormOpen(false);
+            return;
+          }
+
+          throw assignmentError;
+        }
       }
 
       toast.success(
@@ -203,6 +363,24 @@ export default function useProductForm(props: ProductFormProps) {
       apiErrorHandler(productQuery.error);
     }
   }, [productQuery.isError, productQuery.error]);
+
+  useEffect(() => {
+    if (modifierGroupsQuery.isError && modifierGroupsQuery.error) {
+      apiErrorHandler(modifierGroupsQuery.error);
+    }
+  }, [modifierGroupsQuery.isError, modifierGroupsQuery.error]);
+
+  useEffect(() => {
+    if (
+      productModifierGroupsQuery.isError &&
+      productModifierGroupsQuery.error
+    ) {
+      apiErrorHandler(productModifierGroupsQuery.error);
+    }
+  }, [
+    productModifierGroupsQuery.isError,
+    productModifierGroupsQuery.error,
+  ]);
 
   const {
     data: inventoryItemOptions,
@@ -223,8 +401,15 @@ export default function useProductForm(props: ProductFormProps) {
     inventoryItemOptions,
     isLoading,
     isLoadingGetOptions,
+    modifierGroupOptions,
+    selectedModifierGroupIds,
+    canManage,
+    isModifierGroupsLoading,
+    isModifierGroupsError,
     append,
+    refetchModifierGroups,
     handleRemoveProductIngredient,
+    handleModifierGroupChange,
     handleSubmit,
     onSubmit,
   };
