@@ -109,9 +109,7 @@ export default function ProductModifiersPage() {
         <IconButton
           aria-label={`Lihat detail ${row.original.name}`}
           color="primary"
-          onClick={() =>
-            navigate(paths.productModifierDetail(row.original.id))
-          }
+          onClick={() => navigate(paths.productModifierDetail(row.original.id))}
         >
           <VisibilityIcon />
         </IconButton>
@@ -129,9 +127,7 @@ export default function ProductModifiersPage() {
           </Tooltip>
 
           <Tooltip
-            title={
-              row.original.isActive ? "Nonaktifkan grup" : "Aktifkan grup"
-            }
+            title={row.original.isActive ? "Nonaktifkan grup" : "Aktifkan grup"}
           >
             <IconButton
               aria-label={
@@ -306,9 +302,7 @@ export default function ProductModifiersPage() {
             isDeleting={
               deleteGroup.isPending && deleteGroup.variables === group.id
             }
-            onView={(value) =>
-              navigate(paths.productModifierDetail(value.id))
-            }
+            onView={(value) => navigate(paths.productModifierDetail(value.id))}
             onEdit={handleClickEditForm}
             onToggleActive={handleClickToggleActive}
             onDelete={handleClickDelete}
@@ -339,18 +333,12 @@ export default function ProductModifiersPage() {
       />
 
       <Stack spacing={4}>
-        <BoxFlexSpaceBetween
-          sx={{
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: { xs: "stretch", sm: "center" },
-            gap: "12px",
-          }}
-        >
+        <BoxFlexSpaceBetween sx={{ gap: "12px" }}>
           <PageTitle
             title="Variasi & Add-on"
             subTitle="Kelola pilihan tambahan dan variasi yang dapat digunakan pada berbagai produk."
           />
-          {canManage && renderAddButton()}
+          {!isMobile && canManage && renderAddButton()}
         </BoxFlexSpaceBetween>
 
         {isFetching && !isInitialLoading && (
@@ -359,6 +347,8 @@ export default function ProductModifiersPage() {
 
         {isMobile ? (
           <Stack spacing={2}>
+            {isMobile && canManage && renderAddButton()}
+
             <BoxFlex sx={{ gap: "8px", alignItems: "stretch" }}>
               <ModifierSearchBar
                 value={search}
