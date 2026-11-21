@@ -17,5 +17,6 @@ export interface ProductIngredientFormValues {
 export interface ProductFormValues {
   name: string;
   sellingPrice: number | null;
+  isActive: boolean;
   productIngredients: ProductIngredientFormValues[];
 }

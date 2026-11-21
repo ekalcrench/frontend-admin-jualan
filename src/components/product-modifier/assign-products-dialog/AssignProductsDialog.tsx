@@ -150,6 +150,8 @@ export default function AssignProductsDialog(props: AssignProductsDialogProps) {
                       sx={{ color: "text.primary" }}
                       primary={product.name}
                       secondary={`${currencyFormatter.format(product.sellingPrice)}${
+                        product.isActive ? "" : " · Nonaktif"
+                      }${
                         wasAssigned ? " · Sudah menggunakan grup ini" : ""
                       }`}
                     />

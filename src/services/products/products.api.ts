@@ -21,8 +21,15 @@ export async function fetchProducts(
   return response.data;
 }
 
-export async function fetchProductOptions(): Promise<ProductOptions[]> {
-  const response = await apiClient.get<ProductOptions[]>(api.products.options);
+export async function fetchProductOptions(
+  activeOnly = false,
+): Promise<ProductOptions[]> {
+  const response = await apiClient.get<ProductOptions[]>(
+    api.products.options,
+    {
+      params: { activeOnly },
+    },
+  );
   return response.data;
 }
 

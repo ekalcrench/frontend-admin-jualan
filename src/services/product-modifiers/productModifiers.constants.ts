@@ -11,6 +11,6 @@ export const productModifierKeys = {
   detail: (id?: string) => ["product-modifier-groups", "detail", id] as const,
 
   assignments: ["product-modifier-groups", "assignments"] as const,
-  assignment: (productId?: string) =>
-    ["product-modifier-groups", "assignments", productId] as const,
+  assignment: (productId?: string, activeOnly = false) =>
+    ["product-modifier-groups", "assignments", productId, activeOnly] as const,
 };

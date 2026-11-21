@@ -6,6 +6,7 @@ export interface CreateProductIngredients {
 export interface CreateProduct {
   name: string;
   sellingPrice: number;
+  isActive: boolean;
   productIngredients: CreateProductIngredients[];
 }
 

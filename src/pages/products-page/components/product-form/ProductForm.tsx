@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import CustomAutocomplete from "@/components/custom-autocomplete";
+import CustomCheckbox from "@/components/custom-checkbox";
 import CustomInput from "@/components/custom-input";
 import CustomInputNumber from "@/components/custom-input-number";
 import FormDrawer from "@/components/form-drawer";
@@ -68,6 +69,21 @@ export default function ProductForm(props: ProductFormProps) {
           renderErrorMessage
           disabled={isLoading}
         />
+
+        <CustomCheckbox
+          name="isActive"
+          control={control}
+          label="Produk aktif"
+          disabled={isLoading}
+        />
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ marginLeft: "32px", marginBottom: "20px" }}
+        >
+          Produk nonaktif tidak akan muncul saat membuat pesanan baru. Riwayat
+          transaksi yang sudah ada tetap tersedia.
+        </Typography>
 
         <Stack
           direction="row"

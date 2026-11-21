@@ -35,6 +35,7 @@ export interface CreateDineInOrder {
 export interface CreateOrderItems {
   productId: string;
   quantity: number;
+  modifierOptionIds?: string[];
 }
 
 export interface CreateOrder {
@@ -73,11 +74,26 @@ export interface EditOrder extends Partial<
   deletedOrderItemIds?: string[];
 }
 
+export interface OrderItemModifierResponse {
+  id: string;
+  modifierGroupId: string | null;
+  modifierOptionId: string | null;
+  groupName: string;
+  optionName: string;
+  unitPrice: number;
+  sortOrder: number;
+}
+
 interface OrderItems {
   id: string;
   quantity: number;
   unitPrice: number;
+  unitCost: number;
+  modifierTotal: number;
+  unitTotal: number;
+  subtotal: number;
   product: { id: string; name: string };
+  modifiers: OrderItemModifierResponse[];
 }
 
 export interface DeliveryOrderResponse {

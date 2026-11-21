@@ -10,5 +10,7 @@ export const productsKeys = {
   detail: (id?: string) => ["products", "detail", id] as const,
 
   options: ["products", "options"] as const,
+  optionList: (activeOnly = false) =>
+    ["products", "options", activeOnly] as const,
   lowestStocks: ["products", "lowestStocks"] as const,
 };

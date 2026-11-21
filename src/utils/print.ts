@@ -115,11 +115,16 @@ export function buildReceipt(
         type: "text" as const,
         text: item.product.name,
       },
+      ...(item.modifiers ?? []).map((modifier) => ({
+        type: "text" as const,
+        text: `   + ${modifier.groupName}: ${modifier.optionName} ${numberFormat.format(modifier.unitPrice)}`,
+      })),
       {
         type: "row" as const,
         left: `   ${item.quantity}x ${numberFormat.format(item.unitPrice)}`,
         right: numberFormat.format(
-          Number(item.quantity) * Number(item.unitPrice),
+          item.subtotal ??
+            Number(item.quantity) * Number(item.unitPrice),
         ),
       },
     ]),

@@ -21,6 +21,7 @@ export const productFormSchema = z.object({
   sellingPrice: z
     .number("Masukkan harga jual")
     .positive("Harga jual harus lebih dari 0"),
+  isActive: z.boolean(),
   productIngredients: z
     .array(productIngredientSchema)
     .min(1, "Tambahkan minimal satu bahan"),
@@ -34,5 +35,6 @@ export const emptyProductIngredient: ProductIngredientFormValues = {
 export const emptyProductFormValues: ProductFormValues = {
   name: "",
   sellingPrice: null,
+  isActive: true,
   productIngredients: [{ ...emptyProductIngredient }],
 };

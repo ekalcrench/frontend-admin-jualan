@@ -203,14 +203,30 @@ export default function SalesPage() {
             >
               <Grid size={6}>
                 <Typography>{item.product.name}</Typography>
+                {(item.modifiers ?? []).map((modifier, modifierIndex) => (
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    key={`${modifier.modifierOptionId ?? modifier.optionName}-${modifierIndex}`}
+                  >
+                    {`+ ${modifier.groupName}: ${modifier.optionName} (${currencyFormatter.format(modifier.unitPrice)})`}
+                  </Typography>
+                ))}
               </Grid>
               <Grid size={2}>
                 <Typography>{item.quantity}</Typography>
               </Grid>
               <Grid size={2}>
-                <BoxFlexEnd>
+                <BoxFlexEnd
+                  sx={{ flexDirection: "column", alignItems: "flex-end" }}
+                >
                   <Typography>
-                    {currencyFormatter.format(Number(item.unitPrice))}
+                    {currencyFormatter.format(
+                      item.unitTotal ?? item.unitPrice,
+                    )}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {`Dasar ${currencyFormatter.format(item.unitPrice)}`}
                   </Typography>
                 </BoxFlexEnd>
               </Grid>
@@ -218,7 +234,8 @@ export default function SalesPage() {
                 <BoxFlexEnd>
                   <Typography>
                     {currencyFormatter.format(
-                      Number(item.quantity) * Number(item.unitPrice),
+                      item.subtotal ??
+                        Number(item.quantity) * Number(item.unitPrice),
                     )}
                   </Typography>
                 </BoxFlexEnd>

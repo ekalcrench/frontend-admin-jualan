@@ -1,6 +1,14 @@
 import { z } from "zod";
 import type { OrderFormValues, OrderItemFormValues } from "./OrderForm.types";
 
+const orderItemModifierSchema = z.object({
+  modifierGroupId: z.string().nullable(),
+  modifierOptionId: z.string().nullable(),
+  groupName: z.string(),
+  optionName: z.string(),
+  unitPrice: z.number(),
+});
+
 const orderItemSchema = z.object({
   id: z.string().optional(),
   productId: z.object(
@@ -11,6 +19,8 @@ const orderItemSchema = z.object({
     { error: "Pilih produk" },
   ),
   quantity: z.number("Harus diisi").positive("Harus > 0"),
+  modifierOptionIds: z.array(z.string()).default([]),
+  modifiers: z.array(orderItemModifierSchema).default([]),
 });
 
 export const orderFormSchema = (stockMapping: Record<string, number>) =>
@@ -153,6 +163,8 @@ export const orderFormSchema = (stockMapping: Record<string, number>) =>
 export const emptyOrderItem: OrderItemFormValues = {
   productId: null,
   quantity: null,
+  modifierOptionIds: [],
+  modifiers: [],
 };
 
 export const emptyOrderFormValues: OrderFormValues = {

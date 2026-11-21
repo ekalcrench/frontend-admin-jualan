@@ -44,6 +44,7 @@ function toCreateProduct(values: ProductFormValues): CreateProduct {
   return {
     name: values.name,
     sellingPrice: values.sellingPrice ?? 0,
+    isActive: values.isActive,
     productIngredients: values.productIngredients.map((ingredient) => ({
       inventoryItemId: ingredient.inventoryItemId?.value ?? "",
       quantity: ingredient.quantity ?? 0,
@@ -152,6 +153,7 @@ export default function useProductForm(props: ProductFormProps) {
     reset({
       name: product.name,
       sellingPrice: product.sellingPrice,
+      isActive: product.isActive,
       productIngredients: product.productIngredients.map((ingredient) => ({
         id: ingredient.id,
         inventoryItemId: {
@@ -298,6 +300,9 @@ export default function useProductForm(props: ProductFormProps) {
             }),
             ...(dirtyFields.sellingPrice && {
               sellingPrice: values.sellingPrice ?? 0,
+            }),
+            ...(dirtyFields.isActive && {
+              isActive: values.isActive,
             }),
             ...(dirtyFields.productIngredients && {
               productIngredients: toEditProductIngredients(

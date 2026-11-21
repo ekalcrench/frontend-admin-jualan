@@ -53,15 +53,16 @@ export function useProductModifierGroupByIdQuery(
 export function useProductModifierGroupsByProductQuery(
   productId?: string,
   enabled = true,
+  activeOnly = false,
 ) {
   return useQuery<ProductModifierGroupsByProductResponse>({
-    queryKey: productModifierKeys.assignment(productId),
+    queryKey: productModifierKeys.assignment(productId, activeOnly),
     queryFn: () => {
       if (!productId) {
         throw new Error("Product id is required");
       }
 
-      return fetchProductModifierGroupsByProduct(productId);
+      return fetchProductModifierGroupsByProduct(productId, activeOnly);
     },
     enabled: Boolean(productId) && enabled,
     staleTime: fiveMinutes,

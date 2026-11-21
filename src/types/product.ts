@@ -18,6 +18,7 @@ export interface ProductResponse extends BaseApiResponse {
   organizationId: string;
   name: string;
   sellingPrice: number;
+  isActive: boolean;
   stock: number;
   productIngredients: ProductIngredients[];
 }
@@ -26,6 +27,7 @@ export interface ProductOptions {
   id: string;
   name: string;
   sellingPrice: number;
+  isActive: boolean;
   stock: number;
 }
 

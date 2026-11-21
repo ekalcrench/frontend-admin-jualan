@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   type FieldNamesMarkedBoolean,
   type Resolver,
@@ -8,19 +9,27 @@ import {
   useWatch,
 } from "react-hook-form";
 import { toast } from "sonner";
+import { fiveMinutes } from "@/constants/time";
 import { useProductOptionsQuery } from "@/services/products/products.query";
 import {
   useCreateOrderMutation,
   useEditOrderMutation,
 } from "@/services/orders/orders.mutation";
 import { useOrderByIdQuery } from "@/services/orders/orders.query";
+import { fetchProductModifierGroupsByProduct } from "@/services/product-modifiers/productModifiers.api";
+import { productModifierKeys } from "@/services/product-modifiers/productModifiers.constants";
+import type { LabelValue } from "@/types/generalTypes";
+import type { ProductModifierGroupOnProduct } from "@/types/productModifier";
 import { apiErrorHandler } from "@/utils/api";
+import { areSameIds } from "@/utils/productModifier";
 import { emptyOrderFormValues, orderFormSchema } from "./OrderForm.constants";
 import type {
   OrderFormProps,
   OrderFormValues,
   OrderItemFormValues,
+  OrderItemModifierFormValue,
 } from "./OrderForm.types";
+import type { ModifierSelectionResult } from "./components/modifier-selection-dialog/ModifierSelectionDialog.types";
 import {
   CreateDeliveryOrder,
   CreateDineInOrder,
@@ -35,6 +44,19 @@ import {
 } from "@/types/order";
 
 type DirtyOrderFields = FieldNamesMarkedBoolean<OrderFormValues>;
+
+interface ModifierDialogState {
+  index: number;
+  product: LabelValue<string>;
+  groups: ProductModifierGroupOnProduct[];
+  initialOptionIds: string[];
+}
+
+function toModifierFormValues(
+  modifiers: OrderItemModifierFormValue[],
+): OrderItemModifierFormValue[] {
+  return modifiers.map((modifier) => ({ ...modifier }));
+}
 
 function toDeliveryOrder(
   order: OrderFormValues["deliveryOrder"],
@@ -106,6 +128,7 @@ function toCreateOrderItem(item: OrderItemFormValues): CreateOrderItems {
   return {
     productId: item.productId?.value ?? "",
     quantity: item.quantity ?? 0,
+    modifierOptionIds: item.modifierOptionIds,
   };
 }
 
@@ -126,6 +149,9 @@ function toEditOrderItems(
           productId: item.productId?.value ?? "",
         }),
         ...(dirtyItem.quantity && { quantity: item.quantity ?? 0 }),
+        ...(dirtyItem.modifierOptionIds && {
+          modifierOptionIds: item.modifierOptionIds,
+        }),
       },
     ];
   });
@@ -135,17 +161,28 @@ export default function useOrderForm(props: OrderFormProps) {
   const createOrder = useCreateOrderMutation();
   const editOrder = useEditOrderMutation();
   const orderQuery = useOrderByIdQuery(props.id);
+  const queryClient = useQueryClient();
   const {
     data: productOptions,
     isLoading: isLoadingGetOptions,
     isError: isErrorGetOptions,
     error: errorGetOptions,
-  } = useProductOptionsQuery(props.open ?? false);
+  } = useProductOptionsQuery(props.open ?? false, true);
 
   const [sellingPriceMapping, setSellingPriceMapping] = useState<
     Record<string, number>
   >({});
   const [stockMapping, setStockMapping] = useState<Record<string, number>>({});
+  const [modifierDialog, setModifierDialog] =
+    useState<ModifierDialogState | null>(null);
+  const [checkingProductIndex, setCheckingProductIndex] = useState<
+    number | null
+  >(null);
+  const isFormOpenRef = useRef(props.open);
+
+  useEffect(() => {
+    isFormOpenRef.current = props.open;
+  }, [props.open]);
 
   useEffect(() => {
     if (!productOptions?.length) {
@@ -174,6 +211,9 @@ export default function useOrderForm(props: OrderFormProps) {
     control,
     handleSubmit,
     reset,
+    getValues,
+    setValue,
+    trigger,
     formState: { isSubmitting, dirtyFields },
   } = useForm<OrderFormValues>({
     resolver: zodResolver(customOrderFormSchema) as Resolver<OrderFormValues>,
@@ -187,6 +227,13 @@ export default function useOrderForm(props: OrderFormProps) {
   const orderItemsValues = useWatch({ control, name: "orderItems" });
   const orderType = useWatch({ control, name: "type" });
   const [deletedOrderItemIds, setDeletedOrderItemIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!props.open) {
+      setModifierDialog(null);
+      setCheckingProductIndex(null);
+    }
+  }, [props.open]);
 
   useEffect(() => {
     if (!props.open) {
@@ -225,14 +272,30 @@ export default function useOrderForm(props: OrderFormProps) {
         name: order.dineInOrder?.name ?? "",
         guestCount: order.dineInOrder?.guestCount ?? null,
       },
-      orderItems: order.orderItems.map((item) => ({
-        id: item.id,
-        productId: {
-          value: item.product.id,
-          label: item.product.name,
-        },
-        quantity: item.quantity,
-      })),
+      orderItems: order.orderItems.map((item) => {
+        const modifiers = item.modifiers ?? [];
+
+        return {
+          id: item.id,
+          productId: {
+            value: item.product.id,
+            label: item.product.name,
+          },
+          quantity: item.quantity,
+          modifierOptionIds: modifiers
+            .map((modifier) => modifier.modifierOptionId)
+            .filter((optionId): optionId is string => Boolean(optionId)),
+          modifiers: toModifierFormValues(
+            modifiers.map((modifier) => ({
+              modifierGroupId: modifier.modifierGroupId,
+              modifierOptionId: modifier.modifierOptionId,
+              groupName: modifier.groupName,
+              optionName: modifier.optionName,
+              unitPrice: modifier.unitPrice,
+            })),
+          ),
+        };
+      }),
     });
   }, [props.id, props.open, orderQuery.data, reset]);
 
@@ -244,7 +307,14 @@ export default function useOrderForm(props: OrderFormProps) {
     isSubmitting ||
     createOrder.isPending ||
     editOrder.isPending ||
-    isLoadingGetData;
+    isLoadingGetData ||
+    checkingProductIndex !== null;
+
+  const dialogProduct = modifierDialog
+    ? productOptions?.find(
+        (product) => product.id === modifierDialog.product.value,
+      )
+    : undefined;
 
   const handleRemoveOrderItem = (index: number) => {
     const item = orderItemsValues[index];
@@ -252,6 +322,137 @@ export default function useOrderForm(props: OrderFormProps) {
       setDeletedOrderItemIds((previous) => [...previous, item.id!]);
     }
     remove(index);
+  };
+
+  const handleProductSelection = async (
+    index: number,
+    product: LabelValue<string> | null,
+  ) => {
+    const currentProduct = getValues(`orderItems.${index}.productId`);
+
+    if (!product) {
+      setValue(`orderItems.${index}.productId`, null, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`orderItems.${index}.modifierOptionIds`, [], {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`orderItems.${index}.modifiers`, [], { shouldDirty: true });
+      return;
+    }
+
+    if (currentProduct?.value === product.value) return;
+
+    setCheckingProductIndex(index);
+    try {
+      const response = await queryClient.fetchQuery({
+        queryKey: productModifierKeys.assignment(product.value, true),
+        queryFn: () =>
+          fetchProductModifierGroupsByProduct(product.value, true),
+        staleTime: fiveMinutes,
+      });
+
+      if (!isFormOpenRef.current) return;
+
+      if (response.modifierGroups.length > 0) {
+        setModifierDialog({
+          index,
+          product,
+          groups: response.modifierGroups,
+          initialOptionIds: [],
+        });
+        return;
+      }
+
+      setValue(`orderItems.${index}.productId`, product, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`orderItems.${index}.modifierOptionIds`, [], {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue(`orderItems.${index}.modifiers`, [], { shouldDirty: true });
+      void trigger(`orderItems.${index}.productId`);
+    } catch (error) {
+      apiErrorHandler(error);
+    } finally {
+      setCheckingProductIndex(null);
+    }
+  };
+
+  const handleOpenModifierDialog = async (index: number) => {
+    const product = getValues(`orderItems.${index}.productId`);
+    if (!product) {
+      toast.info("Pilih produk terlebih dahulu");
+      return;
+    }
+
+    setCheckingProductIndex(index);
+    try {
+      const response = await queryClient.fetchQuery({
+        queryKey: productModifierKeys.assignment(product.value, true),
+        queryFn: () =>
+          fetchProductModifierGroupsByProduct(product.value, true),
+        staleTime: fiveMinutes,
+      });
+
+      if (!isFormOpenRef.current) return;
+
+      if (!response.modifierGroups.length) {
+        toast.info("Produk ini tidak memiliki variasi");
+        return;
+      }
+
+      setModifierDialog({
+        index,
+        product,
+        groups: response.modifierGroups,
+        initialOptionIds:
+          getValues(`orderItems.${index}.modifierOptionIds`) ?? [],
+      });
+    } catch (error) {
+      apiErrorHandler(error);
+    } finally {
+      setCheckingProductIndex(null);
+    }
+  };
+
+  const handleConfirmModifiers = (result: ModifierSelectionResult) => {
+    if (!modifierDialog) return;
+
+    const { index, product } = modifierDialog;
+    const currentProduct = getValues(`orderItems.${index}.productId`);
+    const currentOptionIds =
+      getValues(`orderItems.${index}.modifierOptionIds`) ?? [];
+
+    if (
+      currentProduct?.value === product.value &&
+      areSameIds(currentOptionIds, result.optionIds)
+    ) {
+      setModifierDialog(null);
+      return;
+    }
+
+    setValue(`orderItems.${index}.productId`, product, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    setValue(`orderItems.${index}.modifierOptionIds`, result.optionIds, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    setValue(`orderItems.${index}.modifiers`, result.modifiers, {
+      shouldDirty: true,
+    });
+    setModifierDialog(null);
+    void trigger(`orderItems.${index}.productId`);
+  };
+
+  const handleCloseModifierDialog = () => {
+    setModifierDialog(null);
   };
 
   const onSubmit = async (values: OrderFormValues) => {
@@ -366,8 +567,19 @@ export default function useOrderForm(props: OrderFormProps) {
     isLoadingGetOptions,
     sellingPriceMapping,
     stockMapping,
+    modifierDialog,
+    modifierDialogProductName:
+      dialogProduct?.name ?? modifierDialog?.product.label ?? "",
+    modifierDialogBasePrice: dialogProduct?.sellingPrice ?? 0,
+    modifierDialogGroups: modifierDialog?.groups ?? [],
+    modifierDialogInitialOptionIds: modifierDialog?.initialOptionIds ?? [],
+    checkingProductIndex,
     append,
     handleRemoveOrderItem,
+    handleProductSelection,
+    handleOpenModifierDialog,
+    handleConfirmModifiers,
+    handleCloseModifierDialog,
     handleSubmit,
     onSubmit,
   };

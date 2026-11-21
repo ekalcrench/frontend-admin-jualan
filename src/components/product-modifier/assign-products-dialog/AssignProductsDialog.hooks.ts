@@ -48,6 +48,7 @@ export default function useAssignProductsDialog(
           id: product.id,
           name: product.name,
           sellingPrice: product.sellingPrice,
+          isActive: false,
           stock: 0,
         });
       }

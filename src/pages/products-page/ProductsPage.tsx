@@ -1,6 +1,8 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import {
   Box,
   Button,
@@ -38,17 +40,23 @@ export default function ProductsPage() {
     search,
     sortBy,
     deleteProduct,
+    editProduct,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
+    handleClickToggleActive,
     handleResetFilter,
     setIsFormOpen,
   } = useProductsPage();
 
   const organizaiton = useAuthStore((state) => state.organization);
+  const canManage =
+    organizaiton?.role === userOrganizationRole.OWNER ||
+    organizaiton?.role === userOrganizationRole.ADMIN;
+  const canDelete = organizaiton?.role === userOrganizationRole.OWNER;
 
   const renderAddButton = () => (
     <Button
@@ -68,7 +76,24 @@ export default function ProductsPage() {
       >
         <EditIcon />
       </IconButton>
-      {organizaiton?.role === userOrganizationRole.OWNER && (
+      {canManage && (
+        <IconButton
+          aria-label={
+            row.original.isActive
+              ? `Nonaktifkan produk ${row.original.name}`
+              : `Aktifkan produk ${row.original.name}`
+          }
+          onClick={() => handleClickToggleActive(row.original)}
+          color={row.original.isActive ? "warning" : "success"}
+          loading={
+            editProduct.isPending &&
+            editProduct.variables?.id === row.original.id
+          }
+        >
+          {row.original.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
+        </IconButton>
+      )}
+      {canDelete && (
         <IconButton
           aria-label={`Delete product ${row.original.name}`}
           onClick={() => handleClickDelete(row.original.id)}
@@ -94,6 +119,9 @@ export default function ProductsPage() {
     return (
       <StackDetailPanel spacing={2}>
         <Typography>{row.original.name}</Typography>
+        <TypographyTab>
+          {`Status\t\t: ${row.original.isActive ? "Aktif" : "Nonaktif"}`}
+        </TypographyTab>
 
         <Grid container columnSpacing={2}>
           <Grid size={6}>
@@ -213,9 +241,7 @@ export default function ProductsPage() {
           handleSearch={handleChangeSearch}
           addButton={renderAddButton()}
           enableRowActions
-          columnRowActionsSize={
-            organizaiton?.role === userOrganizationRole.OWNER ? 110 : 80
-          }
+          columnRowActionsSize={canDelete ? 150 : canManage ? 110 : 80}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
           searchPlaceholder="Cari berdasarkan nama produk"

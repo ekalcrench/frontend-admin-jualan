@@ -1,5 +1,8 @@
 import { defaultParameter } from "@/constants/table";
-import { useDeleteProductMutation } from "@/services/products/products.mutation";
+import {
+  useDeleteProductMutation,
+  useEditProductMutation,
+} from "@/services/products/products.mutation";
 import { useProductQuery } from "@/services/products/products.query";
 import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
 import type { ProductResponse } from "@/types/product";
@@ -7,6 +10,7 @@ import type { ColumnSort, PaginatedData } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate } from "@/utils/dateTime";
+import { Chip } from "@mui/material";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -91,6 +95,19 @@ export default function useProductsPage() {
       { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       { accessorKey: "name", header: "Nama Produk", size: 240 },
       {
+        accessorKey: "isActive",
+        header: "Status",
+        size: 110,
+        Cell: ({ row }) => (
+          <Chip
+            label={row.original.isActive ? "Aktif" : "Nonaktif"}
+            size="small"
+            color={row.original.isActive ? "success" : "default"}
+            variant={row.original.isActive ? "filled" : "outlined"}
+          />
+        ),
+      },
+      {
         accessorKey: "capitalCost",
         header: "Harga Modal",
         size: 160,
@@ -145,6 +162,7 @@ export default function useProductsPage() {
   }, [isError, error]);
 
   const deleteProduct = useDeleteProductMutation();
+  const editProduct = useEditProductMutation();
   const confirm = useConfirmationStore((state) => state.confirm);
 
   const handleClickDelete = async (id: string) => {
@@ -168,6 +186,33 @@ export default function useProductsPage() {
     }
   };
 
+  const handleClickToggleActive = async (product: ProductResponse) => {
+    if (product.isActive) {
+      const confirmed = await confirm({
+        title: "Nonaktifkan Produk",
+        message: `Produk "${product.name}" tidak akan muncul saat membuat pesanan baru. Riwayat transaksi tetap tersedia. Lanjutkan?`,
+        confirmText: "Nonaktifkan",
+        cancelText: "Batal",
+      });
+
+      if (!confirmed) return;
+    }
+
+    try {
+      await editProduct.mutateAsync({
+        id: product.id,
+        isActive: !product.isActive,
+      });
+      toast.success(
+        product.isActive
+          ? "Produk berhasil dinonaktifkan"
+          : "Produk berhasil diaktifkan",
+      );
+    } catch (toggleError) {
+      apiErrorHandler(toggleError);
+    }
+  };
+
   return {
     columns,
     data,
@@ -178,12 +223,14 @@ export default function useProductsPage() {
     search: search ?? "",
     sortBy,
     deleteProduct,
+    editProduct,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
+    handleClickToggleActive,
     handleResetFilter,
     setIsFormOpen,
   };

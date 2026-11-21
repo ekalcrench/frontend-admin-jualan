@@ -26,10 +26,10 @@ export function useProductQuery(payload: ProductFilterPayload) {
   });
 }
 
-export function useProductOptionsQuery(enabled: boolean) {
+export function useProductOptionsQuery(enabled: boolean, activeOnly = false) {
   return useQuery<ProductOptions[]>({
-    queryKey: productsKeys.options,
-    queryFn: () => fetchProductOptions(),
+    queryKey: productsKeys.optionList(activeOnly),
+    queryFn: () => fetchProductOptions(activeOnly),
     staleTime: fiveMinutes,
     enabled,
   });

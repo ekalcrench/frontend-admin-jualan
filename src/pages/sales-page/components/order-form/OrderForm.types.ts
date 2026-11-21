@@ -8,10 +8,20 @@ export interface OrderFormProps extends SwipeableDrawerProps {
   id?: string;
 }
 
+export interface OrderItemModifierFormValue {
+  modifierGroupId: string | null;
+  modifierOptionId: string | null;
+  groupName: string;
+  optionName: string;
+  unitPrice: number;
+}
+
 export interface OrderItemFormValues {
   id?: string;
   productId: LabelValue<string> | null;
   quantity: number | null;
+  modifierOptionIds: string[];
+  modifiers: OrderItemModifierFormValue[];
 }
 
 export interface OrderFormValues {
