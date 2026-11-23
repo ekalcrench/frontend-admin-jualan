@@ -16,6 +16,7 @@ export function useEditInventoryLotMutation() {
         queryKey: inventoryTransactionKeys.lists,
       });
       context.client.invalidateQueries({ queryKey: productsKeys.lists });
+      context.client.invalidateQueries({ queryKey: productsKeys.options });
     },
   });
 }
