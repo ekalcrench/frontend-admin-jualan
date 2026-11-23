@@ -49,7 +49,7 @@ export default function useCashFlowsPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const { data, isLoading, isError, error } = useCashTransactionsQuery({
+  const { data, isLoading, isError, error, refetch } = useCashTransactionsQuery({
     page,
     size,
     sortBy,
@@ -213,6 +213,7 @@ export default function useCashFlowsPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search: search ?? "",
     sortBy,
     startDate,

@@ -14,6 +14,7 @@ export interface CustomTopToolbarProps<
 
   // Reset
   handleResetFilter: () => void;
+  isMobile?: boolean;
 
   // Columns
   columns: MRT_ColumnDef<TData>[];

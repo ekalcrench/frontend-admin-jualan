@@ -10,7 +10,16 @@ import { emptyFunc } from "@/utils/generalUtils";
 import { defaultPage, defaultPageSize, descDirection } from "@/constants/table";
 import { BoxCenter } from "@/styled/CustomBox";
 import CustomTopToolbar from "./components/custom-top-toolbar";
-import { Collapse, Stack } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Collapse,
+  LinearProgress,
+  Skeleton,
+  Stack,
+  useMediaQuery,
+} from "@mui/material";
 import { boxShadowMain } from "@/constants/styled";
 
 export default function CustomTable<TData extends MRT_RowData>({
@@ -26,11 +35,13 @@ export default function CustomTable<TData extends MRT_RowData>({
   errorMessage = "Terjadi kesalahan, mohon coba refresh kembali atau hubungi admin.",
   emptyMessage = "Data tidak ditemukan.",
   renderEmptyState,
+  renderSearchEmptyContent,
   renderErrorState,
   onRowSelectionChange,
   filterComponents,
   enableRowActions,
   columnRowActionsSize,
+  renderMobileCard,
 
   // Custom Top Toolbar
   search,
@@ -48,6 +59,10 @@ export default function CustomTable<TData extends MRT_RowData>({
   ...tableOptions
 }: CustomTableProps<TData>) {
   const totalDisplayedData = data.length;
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const emptyContent = search?.trim()
+    ? (renderSearchEmptyContent ?? renderEmptyState ?? emptyMessage)
+    : (renderEmptyState ?? emptyMessage);
 
   // Sorting
   const sorting: MRT_SortingState = sortBy
@@ -102,11 +117,61 @@ export default function CustomTable<TData extends MRT_RowData>({
         columns={columns}
         columnVisibility={columnVisibility}
         setColumnVisibility={setColumnVisibility}
+        isMobile={isMobile && Boolean(renderMobileCard)}
       />
 
       {hasFilters && <Collapse in={showFilters}>{filterComponents}</Collapse>}
 
-      <MaterialReactTable
+      {isMobile && renderMobileCard ? (
+        <Stack spacing={2}>
+          {isLoading && data.length === 0 ? (
+            <>
+              <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+                <CardContent>
+                  <Skeleton variant="text" width="60%" height={28} />
+                  <Skeleton variant="text" width="85%" />
+                  <Skeleton variant="rounded" width="100%" height={52} />
+                </CardContent>
+              </Card>
+              <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+                <CardContent>
+                  <Skeleton variant="text" width="60%" height={28} />
+                  <Skeleton variant="text" width="85%" />
+                  <Skeleton variant="rounded" width="100%" height={52} />
+                </CardContent>
+              </Card>
+              <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+                <CardContent>
+                  <Skeleton variant="text" width="60%" height={28} />
+                  <Skeleton variant="text" width="85%" />
+                  <Skeleton variant="rounded" width="100%" height={52} />
+                </CardContent>
+              </Card>
+            </>
+          ) : data.length > 0 ? (
+            <>
+              {isLoading && <LinearProgress sx={{ borderRadius: "8px" }} />}
+              {data.map((row) => (
+                <Box key={row.id}>{renderMobileCard(row)}</Box>
+              ))}
+            </>
+          ) : (
+            <Box
+              sx={{
+                minHeight: "100px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {isError
+                ? (renderErrorState ?? errorMessage)
+                : emptyContent}
+            </Box>
+          )}
+        </Stack>
+      ) : (
+        <MaterialReactTable
         getRowId={(row) => row.id}
         {...tableOptions}
         localization={{
@@ -185,7 +250,7 @@ export default function CustomTable<TData extends MRT_RowData>({
           >
             {isError
               ? (renderErrorState ?? errorMessage)
-              : (renderEmptyState ?? emptyMessage)}
+              : emptyContent}
           </BoxCenter>
         )}
         muiTablePaperProps={{
@@ -210,7 +275,8 @@ export default function CustomTable<TData extends MRT_RowData>({
           },
         }}
         muiSkeletonProps={{ height: 24 }}
-      />
+        />
+      )}
 
       <CustomPagination
         handleChangePage={handleChangePage}

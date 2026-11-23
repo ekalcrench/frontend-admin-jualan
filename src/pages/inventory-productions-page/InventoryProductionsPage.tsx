@@ -4,6 +4,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Button,
+  Card,
+  CardContent,
+  Chip,
   Divider,
   Grid,
   IconButton,
@@ -11,12 +14,15 @@ import {
   Typography,
 } from "@mui/material";
 import type { MRT_Row } from "material-react-table";
-import CustomTable from "@/components/custom-table";
+import CustomTable, {
+  createCustomTableEmptyStates,
+} from "@/components/custom-table";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
 import { BoxFlex, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { TypographyTab } from "@/styled/CustomTypography";
 import { PreparationResponse } from "@/types/preparations";
 import { formatLocalDate } from "@/utils/dateTime";
+import { currencyFormatter } from "@/utils/currency";
 import PreparationForm from "./components/preparation-form";
 import useInventoryProductionsPage from "./InventoryProductionsPage.hooks";
 import { preparationStatus } from "@/constants/production";
@@ -34,6 +40,7 @@ export default function InventoryProductionsPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search,
     sortBy,
     handleChangePage,
@@ -48,6 +55,12 @@ export default function InventoryProductionsPage() {
   } = useInventoryProductionsPage();
 
   const organization = useAuthStore((state) => state.organization);
+  const tableEmptyStates = createCustomTableEmptyStates({
+    itemName: "produksi inventaris",
+    search,
+    onResetFilter: handleResetFilter,
+    onRetry: refetch,
+  });
 
   const renderAddButton = () => (
     <Button
@@ -59,56 +72,59 @@ export default function InventoryProductionsPage() {
     </Button>
   );
 
-  const renderRowActions = (row: MRT_Row<PreparationResponse>) => (
-    <BoxFlex>
-      {row.original.status === preparationStatus.DRAFT && (
+  const renderRowActions = (row: MRT_Row<PreparationResponse>) =>
+    renderPreparationActions(row.original);
+
+  const renderPreparationActions = (preparation: PreparationResponse) => (
+    <BoxFlexEnd>
+      {preparation.status === preparationStatus.DRAFT && (
         <>
           <Button
             color="success"
             size="small"
             sx={{ marginRight: "4px" }}
-            onClick={() => handleClickComplete(row.original.id)}
+            onClick={() => handleClickComplete(preparation.id)}
             loading={
               completePreparation.isPending &&
-              completePreparation.variables === row.original.id
+              completePreparation.variables === preparation.id
             }
           >
             Complete
           </Button>
           <IconButton
-            aria-label={`Edit produksi ${row.original.name ?? row.original.id}`}
-            onClick={() => handleClickEditForm(row.original.id)}
+            aria-label={`Edit produksi ${preparation.name ?? preparation.id}`}
+            onClick={() => handleClickEditForm(preparation.id)}
           >
             <EditIcon />
           </IconButton>
           <IconButton
-            aria-label={`Hapus produksi ${row.original.name ?? row.original.id}`}
-            onClick={() => handleClickDelete(row.original)}
+            aria-label={`Hapus produksi ${preparation.name ?? preparation.id}`}
+            onClick={() => handleClickDelete(preparation)}
             color="error"
             loading={
               deletePreparation.isPending &&
-              deletePreparation.variables === row.original.id
+              deletePreparation.variables === preparation.id
             }
           >
             <DeleteIcon />
           </IconButton>
         </>
       )}
-      {row.original.status === preparationStatus.COMPLETED &&
+      {preparation.status === preparationStatus.COMPLETED &&
         organization?.role === userOrganizationRole.OWNER && (
           <IconButton
-            aria-label={`Hapus produksi ${row.original.name ?? row.original.id}`}
-            onClick={() => handleClickDelete(row.original)}
+            aria-label={`Hapus produksi ${preparation.name ?? preparation.id}`}
+            onClick={() => handleClickDelete(preparation)}
             color="error"
             loading={
               deletePreparation.isPending &&
-              deletePreparation.variables === row.original.id
+              deletePreparation.variables === preparation.id
             }
           >
             <DeleteIcon />
           </IconButton>
         )}
-    </BoxFlex>
+    </BoxFlexEnd>
   );
 
   const renderDetailPanel = (row: MRT_Row<PreparationResponse>) => (
@@ -200,6 +216,66 @@ export default function InventoryProductionsPage() {
     </Stack>
   );
 
+  const renderMobileCard = (preparation: PreparationResponse) => (
+    <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+      <CardContent sx={{ padding: "16px !important" }}>
+        <BoxFlexSpaceBetween sx={{ alignItems: "flex-start", gap: 1 }}>
+          <Typography sx={{ fontWeight: 600 }}>
+            {preparation.name || `Produksi #${preparation.id}`}
+          </Typography>
+          <Chip
+            label={preparation.status === "COMPLETED" ? "Selesai" : "Draft"}
+            size="small"
+            color={preparation.status === "COMPLETED" ? "success" : "warning"}
+          />
+        </BoxFlexSpaceBetween>
+        <Stack spacing={0.75} sx={{ mt: 1.5 }}>
+          <Typography variant="body2">
+            Barang hasil: {preparation.outputInventoryItem.name}
+          </Typography>
+          <Typography variant="body2">
+            Jumlah hasil:{" "}
+            {`${Number(preparation.outputQuantity).toLocaleString("id-ID")} ${inventoryUnitLabels[preparation.outputInventoryItem.unit]}`}
+          </Typography>
+          <Typography variant="body2">
+            Tanggal: {formatLocalDate(preparation.preparedAt)}
+          </Typography>
+          <Typography variant="body2">
+            Total biaya:{" "}
+            {currencyFormatter.format(Number(preparation.outputTotalCost))}
+          </Typography>
+          {preparation.notes && (
+            <Typography variant="body2">
+              Catatan: {preparation.notes}
+            </Typography>
+          )}
+        </Stack>
+        {preparation.preparationItems.length > 0 && (
+          <>
+            <Divider sx={{ my: 1.5 }} />
+            <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+              Bahan Produksi
+            </Typography>
+            <Stack spacing={0.5}>
+              {preparation.preparationItems.map((item) => (
+                <BoxFlexSpaceBetween key={item.id} sx={{ gap: 1 }}>
+                  <Typography variant="body2">
+                    {item.inventoryItem.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {`${item.quantity.toLocaleString("id-ID")} ${inventoryUnitLabels[item.inventoryItem.unit]}`}
+                  </Typography>
+                </BoxFlexSpaceBetween>
+              ))}
+            </Stack>
+          </>
+        )}
+        <Divider sx={{ my: 1.5 }} />
+        {renderPreparationActions(preparation)}
+      </CardContent>
+    </Card>
+  );
+
   return (
     <Box>
       <PreparationForm
@@ -219,6 +295,8 @@ export default function InventoryProductionsPage() {
 
         <CustomTable<PreparationResponse>
           columns={columns}
+          {...tableEmptyStates}
+          renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
           isLoading={isLoading}
           isError={isError}

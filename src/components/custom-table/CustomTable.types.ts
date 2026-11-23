@@ -34,8 +34,10 @@ export interface CustomTableProps<TData extends MRT_RowData>
   errorMessage?: string;
   emptyMessage?: string;
   renderEmptyState?: React.ReactNode;
+  renderSearchEmptyContent?: React.ReactNode;
   renderErrorState?: React.ReactNode;
   filterComponents?: React.ReactNode;
   enableRowActions?: boolean;
   columnRowActionsSize?: number;
+  renderMobileCard?: (row: TData) => React.ReactNode;
 }

@@ -1,14 +1,7 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
-import {
-  Box,
-  Button,
-  Chip,
-  Skeleton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Chip, Skeleton, Stack, Typography } from "@mui/material";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import AssignProductsDialog from "@/components/product-modifier/assign-products-dialog";
 import ModifierEmptyState from "@/components/product-modifier/modifier-empty-state";
@@ -24,6 +17,7 @@ import {
 import AssignedProductsSection from "./components/assigned-products-section";
 import ModifierOptionsSection from "./components/modifier-options-section";
 import useProductModifierDetailPage from "./ProductModifierDetailPage.hooks";
+import PageTitle from "@/components/page-title";
 
 function DetailSkeleton() {
   return (
@@ -47,7 +41,12 @@ function DetailSkeleton() {
         }}
       >
         <Skeleton variant="text" width={180} height={32} />
-        <Skeleton variant="rounded" width="100%" height={160} sx={{ marginTop: "16px" }} />
+        <Skeleton
+          variant="rounded"
+          width="100%"
+          height={160}
+          sx={{ marginTop: "16px" }}
+        />
       </Box>
 
       <Box
@@ -59,7 +58,12 @@ function DetailSkeleton() {
         }}
       >
         <Skeleton variant="text" width={280} height={32} />
-        <Skeleton variant="rounded" width="100%" height={120} sx={{ marginTop: "16px" }} />
+        <Skeleton
+          variant="rounded"
+          width="100%"
+          height={120}
+          sx={{ marginTop: "16px" }}
+        />
       </Box>
     </Stack>
   );
@@ -75,11 +79,7 @@ export default function ProductModifierDetailPage() {
   return <ModifierGroupDetail modifierGroupId={modifierGroupId} />;
 }
 
-function ModifierGroupDetail({
-  modifierGroupId,
-}: {
-  modifierGroupId: string;
-}) {
+function ModifierGroupDetail({ modifierGroupId }: { modifierGroupId: string }) {
   const {
     groupQuery,
     group,
@@ -185,84 +185,61 @@ function ModifierGroupDetail({
       />
 
       <Stack spacing={4}>
-        <BoxFlexSpaceBetween
-          sx={{
-            alignItems: { xs: "flex-start", sm: "center" },
-            flexDirection: { xs: "column", sm: "row" },
-            gap: "16px",
-          }}
-        >
-          <Box sx={{ minWidth: 0 }}>
-            <Button
-              variant="text"
+        <Stack spacing={1}>
+          <PageTitle
+            title={
+              <BoxFlex
+                sx={{ gap: "10px", flexWrap: "wrap", alignItems: "center" }}
+              >
+                <Typography variant="h5">{group.name}</Typography>
+                <Chip
+                  label={group.isActive ? "Aktif" : "Nonaktif"}
+                  size="small"
+                  color={group.isActive ? "success" : "default"}
+                  variant={group.isActive ? "filled" : "outlined"}
+                />
+              </BoxFlex>
+            }
+            subTitle={group.description || "Belum ada deskripsi untuk grup ini"}
+            enableBackButton
+            addButton={
+              canManage && (
+                <Button
+                  variant="contained"
+                  startIcon={<EditIcon />}
+                  onClick={() => setIsGroupFormOpen(true)}
+                  sx={{ width: { xs: "100%", sm: "auto" }, flexShrink: 0 }}
+                >
+                  Edit Grup
+                </Button>
+              )
+            }
+          />
+
+          <BoxFlex sx={{ flexWrap: "wrap", gap: "8px" }}>
+            <Chip
+              label={`${options.length} opsi`}
               size="small"
-              startIcon={<ArrowBackIcon />}
-              onClick={() => navigate(paths.productModifiers)}
-              sx={{ marginBottom: "8px", marginLeft: "-8px" }}
-            >
-              Kembali
-            </Button>
-
-            <BoxFlex
-              sx={{ gap: "10px", flexWrap: "wrap", alignItems: "center" }}
-            >
-              <Typography variant="h5">{group.name}</Typography>
-              <Chip
-                label={group.isActive ? "Aktif" : "Nonaktif"}
-                size="small"
-                color={group.isActive ? "success" : "default"}
-                variant={group.isActive ? "filled" : "outlined"}
-              />
-            </BoxFlex>
-
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ marginTop: "4px", maxWidth: 720 }}
-            >
-              {group.description || "Belum ada deskripsi untuk grup ini."}
-            </Typography>
-
-            <Stack
-              direction="row"
-              spacing={0.75}
-              sx={{ flexWrap: "wrap", gap: "6px", marginTop: "12px" }}
-            >
-              <Chip
-                label={`${options.length} opsi`}
-                size="small"
-                variant="outlined"
-              />
-              <Chip
-                label={`${group.products.length} produk`}
-                size="small"
-                variant="outlined"
-              />
-              <Chip
-                label={formatSelectionMode(group.isRequired)}
-                size="small"
-                variant="outlined"
-                color={group.isRequired ? "primary" : "default"}
-              />
-              <Chip
-                label={formatSelectionRule(group)}
-                size="small"
-                variant="outlined"
-              />
-            </Stack>
-          </Box>
-
-          {canManage && (
-            <Button
-              variant="contained"
-              startIcon={<EditIcon />}
-              onClick={() => setIsGroupFormOpen(true)}
-              sx={{ width: { xs: "100%", sm: "auto" }, flexShrink: 0 }}
-            >
-              Edit Grup
-            </Button>
-          )}
-        </BoxFlexSpaceBetween>
+              variant="outlined"
+            />
+            <Chip
+              label={`${group.products.length} produk`}
+              size="small"
+              variant="outlined"
+            />
+            <Chip
+              label={formatSelectionMode(group.isRequired)}
+              size="small"
+              variant="outlined"
+              color={group.isRequired ? "primary" : "default"}
+            />
+            <Chip
+              label={formatSelectionRule(group)}
+              size="small"
+              variant="outlined"
+            />
+          </BoxFlex>
+        </Stack>
 
         <ModifierOptionsSection
           options={options}

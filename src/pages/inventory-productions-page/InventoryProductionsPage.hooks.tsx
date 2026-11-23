@@ -47,6 +47,7 @@ export default function useInventoryProductionsPage() {
     isLoading,
     isError,
     error,
+    refetch,
   } = usePreparationQuery({ page, size, sortBy, search });
   const data = response;
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -221,6 +222,7 @@ export default function useInventoryProductionsPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search: search ?? "",
     sortBy,
     handleChangePage,

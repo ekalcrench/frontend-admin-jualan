@@ -4,6 +4,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Button,
+  Card,
+  CardContent,
+  Chip,
   Divider,
   Grid,
   IconButton,
@@ -12,7 +15,9 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import type { MRT_Row } from "material-react-table";
-import CustomTable from "@/components/custom-table";
+import CustomTable, {
+  createCustomTableEmptyStates,
+} from "@/components/custom-table";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { formatLocalDate } from "@/utils/dateTime";
@@ -21,7 +26,12 @@ import { OrderResponse } from "@/types/order";
 import OrderForm from "./components/order-form";
 import useSalesPage from "./SalesPage.hooks";
 import { StackDetailPanel } from "./SalesPage.styles";
-import { orderStatus, orderTypeLabels } from "@/constants/order";
+import {
+  orderStatus,
+  orderStatusColorMapping,
+  orderStatusMapping,
+  orderTypeLabels,
+} from "@/constants/order";
 import ReportDate from "@/components/report-date";
 import SalesOverview from "./components/sales-overview";
 import PageTitle from "@/components/page-title";
@@ -42,6 +52,7 @@ export default function SalesPage() {
     isLoading,
     isPrinting,
     markPaidOrder,
+    refetch,
     search,
     sortBy,
     startDate,
@@ -61,6 +72,12 @@ export default function SalesPage() {
   } = useSalesPage();
 
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const tableEmptyStates = createCustomTableEmptyStates({
+    itemName: "penjualan",
+    search,
+    onResetFilter: handleResetFilter,
+    onRetry: refetch,
+  });
 
   const renderAddButton = () => (
     <Button
@@ -72,34 +89,36 @@ export default function SalesPage() {
     </Button>
   );
 
-  const renderRowActions = (row: MRT_Row<OrderResponse>) => (
-    <BoxFlex>
-      {row.original.status === orderStatus.UNPAID ? (
+  const renderRowActions = (row: MRT_Row<OrderResponse>) =>
+    renderOrderActions(row.original);
+
+  const renderOrderActions = (order: OrderResponse) => (
+    <BoxFlexEnd sx={{ flexWrap: "wrap" }}>
+      {order.status === orderStatus.UNPAID ? (
         <>
           <Button
             color="success"
             size="small"
             sx={{ marginRight: "4px" }}
-            onClick={() => handleClickMarkPaid(row.original.id)}
+            onClick={() => handleClickMarkPaid(order.id)}
             loading={
-              markPaidOrder.isPending &&
-              markPaidOrder.variables === row.original.id
+              markPaidOrder.isPending && markPaidOrder.variables === order.id
             }
           >
             Dibayar
           </Button>
           <IconButton
-            aria-label={`Edit penjualan ${row.original.orderNumber}`}
-            onClick={() => handleClickEditForm(row.original.id)}
+            aria-label={`Edit penjualan ${order.orderNumber}`}
+            onClick={() => handleClickEditForm(order.id)}
           >
             <EditIcon />
           </IconButton>
           <IconButton
-            aria-label={`Hapus penjualan ${row.original.orderNumber}`}
-            onClick={() => handleClickDelete(row.original.id)}
+            aria-label={`Hapus penjualan ${order.orderNumber}`}
+            onClick={() => handleClickDelete(order.id)}
             color="error"
             loading={
-              deleteOrder.isPending && deleteOrder.variables === row.original.id
+              deleteOrder.isPending && deleteOrder.variables === order.id
             }
           >
             <DeleteIcon />
@@ -119,14 +138,14 @@ export default function SalesPage() {
         <Button
           disabled={connectionStatus !== "ready"}
           startIcon={<PrintIcon />}
-          onClick={() => handlePrint(row.original)}
+          onClick={() => handlePrint(order)}
           loading={isPrinting || isChecking}
           size="small"
         >
           Print
         </Button>
       )}
-    </BoxFlex>
+    </BoxFlexEnd>
   );
 
   const renderDetailPanel = (row: MRT_Row<OrderResponse>) => (
@@ -256,6 +275,72 @@ export default function SalesPage() {
     </StackDetailPanel>
   );
 
+  const renderMobileCard = (order: OrderResponse) => (
+    <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+      <CardContent sx={{ padding: "16px !important" }}>
+        <BoxFlexSpaceBetween sx={{ alignItems: "flex-start", gap: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography sx={{ fontWeight: 600 }}>
+              Penjualan #{order.orderNumber}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {orderTypeLabels[order.type]}
+            </Typography>
+          </Box>
+          <Chip
+            label={orderStatusMapping[order.status]}
+            color={orderStatusColorMapping[order.status]}
+            size="small"
+          />
+        </BoxFlexSpaceBetween>
+        <Stack spacing={0.75} sx={{ mt: 1.5 }}>
+          <Typography variant="body2">
+            Tanggal: {formatLocalDate(order.createdAt)}
+          </Typography>
+          <BoxFlexSpaceBetween>
+            <Typography variant="body2">Jumlah barang</Typography>
+            <Typography variant="body2">{order.totalQuantity}</Typography>
+          </BoxFlexSpaceBetween>
+          <BoxFlexSpaceBetween>
+            <Typography variant="body2">Total penjualan</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              {currencyFormatter.format(Number(order.totalAmount))}
+            </Typography>
+          </BoxFlexSpaceBetween>
+        </Stack>
+        {order.orderItems.length > 0 && (
+          <>
+            <Divider sx={{ my: 1.5 }} />
+            <Stack spacing={1}>
+              {order.orderItems.map((item) => (
+                <Box key={item.id}>
+                  <BoxFlexSpaceBetween sx={{ gap: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      {item.product.name}
+                    </Typography>
+                    <Typography variant="body2">× {item.quantity}</Typography>
+                  </BoxFlexSpaceBetween>
+                  {(item.modifiers ?? []).map((modifier, modifierIndex) => (
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      key={`${modifier.modifierOptionId ?? modifier.optionName}-${modifierIndex}`}
+                      sx={{ display: "block" }}
+                    >
+                      {`+ ${modifier.groupName}: ${modifier.optionName} (${currencyFormatter.format(modifier.unitPrice)})`}
+                    </Typography>
+                  ))}
+                </Box>
+              ))}
+            </Stack>
+          </>
+        )}
+        <Divider sx={{ my: 1.5 }} />
+        {renderOrderActions(order)}
+      </CardContent>
+    </Card>
+  );
+
   return (
     <Box>
       <OrderForm
@@ -286,6 +371,8 @@ export default function SalesPage() {
 
         <CustomTable
           columns={columns}
+          {...tableEmptyStates}
+          renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
           isLoading={isLoading}
           isError={isError}
@@ -306,7 +393,7 @@ export default function SalesPage() {
           search={search}
           handleSearch={handleChangeSearch}
           enableRowActions
-          columnRowActionsSize={190}
+          columnRowActionsSize={192}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
           searchPlaceholder="Cari berdasarkan nomor penjualan atau produk"

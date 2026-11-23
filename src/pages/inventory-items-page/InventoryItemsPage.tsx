@@ -1,7 +1,18 @@
-import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import CustomTable from "@/components/custom-table";
+import CustomTable, {
+  createCustomTableEmptyStates,
+} from "@/components/custom-table";
 import { BoxFlex } from "@/styled/CustomBox";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import useInventoryItemsPage from "./InventoryItemsPage.hooks";
@@ -15,6 +26,8 @@ import { useNavigate } from "react-router-dom";
 import { paths } from "@/constants/path";
 import PageTitle from "@/components/page-title";
 import InventoryItemOverview from "./components/inventory-item-overview";
+import { inventoryUnitLabels } from "@/constants/inventoryItem";
+import { currencyFormatter } from "@/utils/currency";
 
 export default function InventoryItemsPage() {
   const {
@@ -24,6 +37,7 @@ export default function InventoryItemsPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search,
     sortBy,
     handleChangePage,
@@ -38,6 +52,12 @@ export default function InventoryItemsPage() {
 
   const organizaiton = useAuthStore((state) => state.organization);
   const navigate = useNavigate();
+  const tableEmptyStates = createCustomTableEmptyStates({
+    itemName: "barang inventaris",
+    search,
+    onResetFilter: handleResetFilter,
+    onRetry: refetch,
+  });
 
   const renderAddButton = () => (
     <Button
@@ -49,13 +69,13 @@ export default function InventoryItemsPage() {
     </Button>
   );
 
-  const renderRowActions = (row: { original: InventoryItemResponse }) => (
+  const renderRowActions = (item: InventoryItemResponse) => (
     <BoxFlex>
       <IconButton
-        aria-label={`Detail ${row.original.name}`}
+        aria-label={`Detail ${item.name}`}
         onClick={() =>
           navigate(
-            `${paths.inventoryItemsDetail(row.original.id)}?page=1&size=20&sortBy=-receivedAt`,
+            `${paths.inventoryItemsDetail(item.id)}?page=1&size=20&sortBy=-receivedAt`,
           )
         }
         color="primary"
@@ -63,22 +83,57 @@ export default function InventoryItemsPage() {
         <VisibilityIcon />
       </IconButton>
       <IconButton
-        aria-label={`Edit ${row.original.name}`}
-        onClick={() => handleClickEditForm(row.original)}
+        aria-label={`Edit ${item.name}`}
+        onClick={() => handleClickEditForm(item)}
       >
         <EditIcon />
       </IconButton>
       {(organizaiton?.role === userOrganizationRole.OWNER ||
         organizaiton?.role === userOrganizationRole.ADMIN) && (
         <IconButton
-          aria-label={`Delete ${row.original.name}`}
-          onClick={() => handleClickDelete(row.original.id)}
+          aria-label={`Delete ${item.name}`}
+          onClick={() => handleClickDelete(item.id)}
           color="error"
         >
           <DeleteIcon />
         </IconButton>
       )}
     </BoxFlex>
+  );
+
+  const renderMobileCard = (item: InventoryItemResponse) => (
+    <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+      <CardContent sx={{ padding: "16px !important" }}>
+        <Typography sx={{ fontWeight: 600 }}>{item.name}</Typography>
+        <Typography variant="body2" color="text.secondary">
+          {inventoryUnitLabels[item.unit]}
+        </Typography>
+        <Stack spacing={0.75} sx={{ mt: 1.5 }}>
+          <BoxFlex sx={{ justifyContent: "space-between", gap: 1 }}>
+            <Typography variant="body2">Total stok</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+              {`${item.totalStock.toLocaleString("id-ID")} ${inventoryUnitLabels[item.unit]}`}
+            </Typography>
+          </BoxFlex>
+          <BoxFlex sx={{ justifyContent: "space-between", gap: 1 }}>
+            <Typography variant="body2">Nilai aset</Typography>
+            <Typography variant="body2">
+              {currencyFormatter.format(item.totalStock * item.averageCost)}
+            </Typography>
+          </BoxFlex>
+          <BoxFlex sx={{ justifyContent: "space-between", gap: 1 }}>
+            <Typography variant="body2">Biaya rata-rata</Typography>
+            <Typography variant="body2">
+              {`${currencyFormatter.format(item.averageCost)} / ${inventoryUnitLabels[item.unit]}`}
+            </Typography>
+          </BoxFlex>
+        </Stack>
+        <Divider sx={{ my: 1.5 }} />
+        <BoxFlex sx={{ justifyContent: "flex-end" }}>
+          {renderRowActions(item)}
+        </BoxFlex>
+      </CardContent>
+    </Card>
   );
 
   return (
@@ -102,6 +157,8 @@ export default function InventoryItemsPage() {
 
         <CustomTable<InventoryItemResponse>
           columns={columns}
+          {...tableEmptyStates}
+          renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
           isLoading={isLoading}
           isError={isError}
@@ -129,7 +186,7 @@ export default function InventoryItemsPage() {
             organizaiton?.role === userOrganizationRole.MEMBER ? 110 : 140
           }
           enableRowActions
-          renderRowActions={({ row }) => renderRowActions(row)}
+          renderRowActions={({ row }) => renderRowActions(row.original)}
           searchPlaceholder="Cari berdasarkan nama barang"
         />
       </Stack>

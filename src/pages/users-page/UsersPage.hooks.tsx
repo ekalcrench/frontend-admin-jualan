@@ -54,7 +54,8 @@ export default function useUsersPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const { data, isLoading, isError, error } = useOrganizationUsersQuery({
+  const { data, isLoading, isError, error, refetch } =
+    useOrganizationUsersQuery({
     page,
     size,
     sortBy,
@@ -301,11 +302,13 @@ export default function useUsersPage() {
     activateOrganizationUser,
     approveOrganizationUser,
     columns,
+    control,
     data,
     editingRoleId,
     editOrganizationUser,
     isLoading,
     isError,
+    refetch,
     isFormOpen,
     search: search ?? "",
     sortBy,

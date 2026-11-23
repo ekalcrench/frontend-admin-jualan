@@ -4,13 +4,18 @@ import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Button,
+  Card,
+  CardContent,
+  Chip,
   Divider,
   Grid,
   IconButton,
   Stack,
   Typography,
 } from "@mui/material";
-import CustomTable from "@/components/custom-table";
+import CustomTable, {
+  createCustomTableEmptyStates,
+} from "@/components/custom-table";
 import { BoxFlex, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import PurchaseForm from "./components/purchase-form";
@@ -22,7 +27,11 @@ import { formatLocalDate } from "@/utils/dateTime";
 import { PurchaseResponse } from "@/types/purchase";
 import { StackDetailPanel } from "./PurchasesPage.styles";
 import { currencyFormatter } from "@/utils/currency";
-import { purchaseStatus } from "@/constants/purchase";
+import {
+  purchaseStatus,
+  purchaseStatusColorMapping,
+  purchaseStatusMapping,
+} from "@/constants/purchase";
 import useAuthStore from "@/store/auth-store";
 import { userOrganizationRole } from "@/constants/user";
 import PageTitle from "@/components/page-title";
@@ -37,6 +46,7 @@ export default function PurchasesPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search,
     sortBy,
     handleChangePage,
@@ -51,6 +61,12 @@ export default function PurchasesPage() {
   } = usePurchasesPage();
 
   const organization = useAuthStore((state) => state.organization);
+  const tableEmptyStates = createCustomTableEmptyStates({
+    itemName: "pembelian",
+    search,
+    onResetFilter: handleResetFilter,
+    onRetry: refetch,
+  });
 
   const renderAddButton = () => (
     <Button
@@ -62,56 +78,59 @@ export default function PurchasesPage() {
     </Button>
   );
 
-  const renderRowActions = (row: MRT_Row<PurchaseResponse>) => (
-    <BoxFlex>
-      {row.original.status === purchaseStatus.DRAFT && (
+  const renderRowActions = (row: MRT_Row<PurchaseResponse>) =>
+    renderPurchaseActions(row.original);
+
+  const renderPurchaseActions = (purchase: PurchaseResponse) => (
+    <BoxFlexEnd>
+      {purchase.status === purchaseStatus.DRAFT && (
         <>
           <Button
             color="success"
             size="small"
             sx={{ marginRight: "4px" }}
-            onClick={() => handleClickFinalize(row.original.id)}
+            onClick={() => handleClickFinalize(purchase.id)}
             loading={
               finalizePurchase.isPending &&
-              finalizePurchase.variables === row.original.id
+              finalizePurchase.variables === purchase.id
             }
           >
             Finalize
           </Button>
           <IconButton
-            aria-label={`Edit purchase ${row.original.invoiceNumber ?? row.original.id}`}
-            onClick={() => handleClickEditForm(row.original.id)}
+            aria-label={`Edit purchase ${purchase.invoiceNumber ?? purchase.id}`}
+            onClick={() => handleClickEditForm(purchase.id)}
           >
             <EditIcon />
           </IconButton>
           <IconButton
-            aria-label={`Delete purchase ${row.original.invoiceNumber ?? row.original.id}`}
-            onClick={() => handleClickDelete(row.original.id)}
+            aria-label={`Delete purchase ${purchase.invoiceNumber ?? purchase.id}`}
+            onClick={() => handleClickDelete(purchase.id)}
             color="error"
             loading={
               deletePurchase.isPending &&
-              deletePurchase.variables === row.original.id
+              deletePurchase.variables === purchase.id
             }
           >
             <DeleteIcon />
           </IconButton>
         </>
       )}
-      {row.original.status === purchaseStatus.FINALIZED &&
+      {purchase.status === purchaseStatus.FINALIZED &&
         organization?.role === userOrganizationRole.OWNER && (
           <IconButton
-            aria-label={`Delete purchase ${row.original.invoiceNumber ?? row.original.id}`}
-            onClick={() => handleClickDelete(row.original.id)}
+            aria-label={`Delete purchase ${purchase.invoiceNumber ?? purchase.id}`}
+            onClick={() => handleClickDelete(purchase.id)}
             color="error"
             loading={
               deletePurchase.isPending &&
-              deletePurchase.variables === row.original.id
+              deletePurchase.variables === purchase.id
             }
           >
             <DeleteIcon />
           </IconButton>
         )}
-    </BoxFlex>
+    </BoxFlexEnd>
   );
 
   const renderDetailPanel = (row: MRT_Row<PurchaseResponse>) => (
@@ -189,6 +208,73 @@ export default function PurchasesPage() {
     </StackDetailPanel>
   );
 
+  const renderMobileCard = (purchase: PurchaseResponse) => {
+    const totalCost = purchase.purchaseItems.reduce(
+      (total, item) => total + Number(item.totalCost),
+      0,
+    );
+
+    return (
+      <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+        <CardContent sx={{ padding: "16px !important" }}>
+          <BoxFlexSpaceBetween sx={{ alignItems: "flex-start", gap: 1 }}>
+            <Box sx={{ minWidth: 0 }}>
+              <Typography sx={{ fontWeight: 600 }}>
+                {purchase.invoiceNumber || `Pembelian #${purchase.id}`}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {purchase.supplierName}
+              </Typography>
+            </Box>
+            <Chip
+              label={purchaseStatusMapping[purchase.status]}
+              size="small"
+              color={purchaseStatusColorMapping[purchase.status]}
+            />
+          </BoxFlexSpaceBetween>
+          <Stack spacing={0.75} sx={{ mt: 1.5 }}>
+            <Typography variant="body2">
+              Tanggal: {formatLocalDate(purchase.purchasedAt)}
+            </Typography>
+            <Typography variant="body2">
+              Jumlah barang: {purchase.purchaseItems.length}
+            </Typography>
+          </Stack>
+          {purchase.purchaseItems.length > 0 && (
+            <>
+              <Divider sx={{ my: 1.5 }} />
+              <Stack spacing={1}>
+                {purchase.purchaseItems.map((item) => (
+                  <BoxFlexSpaceBetween key={item.id} sx={{ gap: 1 }}>
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        {item.inventoryItem.name}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {`${item.quantity} × ${item.packageSize} ${inventoryUnitLabels[item.inventoryItem.unit]}`}
+                      </Typography>
+                    </Box>
+                    <Typography variant="body2" sx={{ flexShrink: 0 }}>
+                      {currencyFormatter.format(Number(item.totalCost))}
+                    </Typography>
+                  </BoxFlexSpaceBetween>
+                ))}
+              </Stack>
+            </>
+          )}
+          <Divider sx={{ my: 1.5 }} />
+          <BoxFlexSpaceBetween>
+            <Typography sx={{ fontWeight: 600 }}>Total</Typography>
+            <Typography sx={{ fontWeight: 600 }}>
+              {currencyFormatter.format(totalCost)}
+            </Typography>
+          </BoxFlexSpaceBetween>
+          <Box sx={{ mt: 1 }}>{renderPurchaseActions(purchase)}</Box>
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <Box>
       <PurchaseForm
@@ -208,6 +294,8 @@ export default function PurchasesPage() {
 
         <CustomTable
           columns={columns}
+          {...tableEmptyStates}
+          renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
           isLoading={isLoading}
           isError={isError}

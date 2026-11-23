@@ -3,4 +3,5 @@ export interface CustomSearchInputProps {
   onSearch(value: string): void;
   debounceMs?: number;
   searchPlaceholder?: string;
+  isMobile?: boolean;
 }

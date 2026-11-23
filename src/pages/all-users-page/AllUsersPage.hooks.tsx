@@ -49,7 +49,7 @@ export default function useAllUsersPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const { data, isLoading, isError, error } = useUsersQuery({
+  const { data, isLoading, isError, error, refetch } = useUsersQuery({
     page,
     size,
     sortBy,
@@ -223,11 +223,13 @@ export default function useAllUsersPage() {
   return {
     activateUser,
     columns,
+    control,
     data,
     editingRoleId,
     editUser,
     isLoading,
     isError,
+    refetch,
     search: search ?? "",
     sortBy,
     suspendUser,

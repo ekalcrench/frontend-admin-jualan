@@ -1,24 +1,29 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
-  Button,
+  Card,
+  CardContent,
+  Divider,
   IconButton,
   Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
 import type { MRT_Row } from "material-react-table";
-import { useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { paths } from "@/constants/path";
-import CustomTable from "@/components/custom-table";
-import { BoxFlex, BoxFlexSpaceBetween } from "@/styled/CustomBox";
+import CustomTable, {
+  createCustomTableEmptyStates,
+} from "@/components/custom-table";
+import { BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import type { InventoryLotResponse } from "@/types/inventoryLot";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import InventoryLotForm from "./components/inventory-lot-form";
 import useInventoryItemsDetailPage from "./InventoryItemsDetailPage.hooks";
 import PageTitle from "@/components/page-title";
+import { inventoryUnitLabels } from "@/constants/inventoryItem";
+import { currencyFormatter } from "@/utils/currency";
+import { formatLocalDate, formatLocalDateOnly } from "@/utils/dateTime";
 
 export default function InventoryItemsDetailPage() {
   const { inventoryItemId } = useParams<{ inventoryItemId: string }>();
@@ -31,7 +36,6 @@ export default function InventoryItemsDetailPage() {
 }
 
 function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
-  const navigate = useNavigate();
   const {
     columns,
     data,
@@ -40,6 +44,7 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
     isError,
     isFormOpen,
     isLoading,
+    refetch,
     search,
     sortBy,
     handleChangePage,
@@ -50,15 +55,79 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
     setIsFormOpen,
   } = useInventoryItemsDetailPage(inventoryItemId);
 
+  const tableEmptyStates = createCustomTableEmptyStates({
+    itemName: "lot stok",
+    search,
+    onResetFilter: handleResetFilter,
+    onRetry: refetch,
+  });
+
   const renderRowActions = (row: MRT_Row<InventoryLotResponse>) => (
-    <BoxFlex>
+    <BoxFlexEnd>
       <IconButton
         aria-label={`Edit lot ${row.original.id}`}
         onClick={() => handleClickEditForm(row.original)}
       >
         <EditIcon />
       </IconButton>
-    </BoxFlex>
+    </BoxFlexEnd>
+  );
+
+  const renderMobileCard = (lot: InventoryLotResponse) => (
+    <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+      <CardContent sx={{ padding: "16px !important" }}>
+        <Typography sx={{ fontWeight: 600 }}>
+          {lot.supplierName ?? lot.preparationName ?? "Lot persediaan"}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {lot.invoiceNumber
+            ? `Invoice ${lot.invoiceNumber}`
+            : `Lot #${lot.id}`}
+        </Typography>
+        <Stack spacing={0.75} sx={{ mt: 1.5 }}>
+          <BoxFlexSpaceBetween>
+            <Typography variant="body2">Jumlah awal</Typography>
+            <Typography variant="body2">
+              {`${lot.quantity.toLocaleString("id-ID")} ${inventoryUnitLabels[inventoryItemQuery.data?.unit ?? "PCS"]}`}
+            </Typography>
+          </BoxFlexSpaceBetween>
+          <BoxFlexSpaceBetween>
+            <Typography variant="body2">Sisa stok</Typography>
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              {`${lot.remainingQuantity.toLocaleString("id-ID")} ${inventoryUnitLabels[inventoryItemQuery.data?.unit ?? "PCS"]}`}
+            </Typography>
+          </BoxFlexSpaceBetween>
+          <BoxFlexSpaceBetween>
+            <Typography variant="body2">Biaya per stok</Typography>
+            <Typography variant="body2">
+              {currencyFormatter.format(lot.unitCost)}
+            </Typography>
+          </BoxFlexSpaceBetween>
+          <BoxFlexSpaceBetween>
+            <Typography variant="body2">Total biaya</Typography>
+            <Typography variant="body2">
+              {currencyFormatter.format(lot.totalCost)}
+            </Typography>
+          </BoxFlexSpaceBetween>
+          <Typography variant="body2">
+            Diterima: {formatLocalDate(lot.receivedAt)}
+          </Typography>
+          <Typography variant="body2">
+            Kedaluwarsa:{" "}
+            {lot.expiredAt ? formatLocalDateOnly(lot.expiredAt) : "-"}
+          </Typography>
+        </Stack>
+        <Divider sx={{ my: 1.5 }} />
+        <BoxFlexSpaceBetween sx={{ justifyContent: "flex-end" }}>
+          <IconButton
+            aria-label={`Edit lot ${lot.id}`}
+            onClick={() => handleClickEditForm(lot)}
+          >
+            <EditIcon />
+          </IconButton>
+        </BoxFlexSpaceBetween>
+      </CardContent>
+    </Card>
   );
 
   return (
@@ -73,48 +142,27 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
         />
       )}
       <Stack spacing={4}>
-        <BoxFlexSpaceBetween
-          sx={{
-            columnGap: "8px",
-            flexDirection: { xs: "column-reverse", sm: "row" },
-            alignItems: { xs: "flex-start", sm: "center" },
-          }}
-        >
-          <PageTitle
-            title="Detail Inventory Item"
-            subTitle={`Lot stok untuk barang ${
-              inventoryItemQuery.isLoading ? (
-                <Skeleton
-                  component="span"
-                  variant="text"
-                  width={160}
-                  sx={{ display: "inline-block", verticalAlign: "middle" }}
-                />
-              ) : (
-                (inventoryItemQuery.data?.name ?? "-")
-              )
-            }`}
-          />
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              justifyContent: "flex-end",
-              width: "100%",
-            }}
-          >
-            <Button
-              variant="outlined"
-              startIcon={<ArrowBackIcon />}
-              onClick={() => navigate(-1)}
-            >
-              Kembali
-            </Button>
-          </Box>
-        </BoxFlexSpaceBetween>
+        <PageTitle
+          title="Detail Inventory Item"
+          subTitle={`Lot stok untuk barang ${
+            inventoryItemQuery.isLoading ? (
+              <Skeleton
+                component="span"
+                variant="text"
+                width={160}
+                sx={{ display: "inline-block", verticalAlign: "middle" }}
+              />
+            ) : (
+              (inventoryItemQuery.data?.name ?? "-")
+            )
+          }`}
+          enableBackButton
+        />
 
         <CustomTable<InventoryLotResponse>
           columns={columns}
+          {...tableEmptyStates}
+          renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
           isLoading={isLoading}
           isError={isError}

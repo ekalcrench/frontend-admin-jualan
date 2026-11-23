@@ -18,6 +18,8 @@ export interface InventoryTransactionResponse extends BaseApiResponse {
   inventoryItemId: string;
   type: InventoryTransactionType;
   quantity: number;
+  unitCost: number;
+  totalCost: number;
   inventoryItem: { name: string; unit: InventoryUnit };
   referenceId?: string;
 }

@@ -40,7 +40,7 @@ export default function useInventoryItemsPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const { data, isLoading, isError, error } = useInventoryItemsQuery({
+  const { data, isLoading, isError, error, refetch } = useInventoryItemsQuery({
     page,
     size,
     sortBy,
@@ -171,6 +171,7 @@ export default function useInventoryItemsPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search: search ?? "",
     sortBy,
     handleChangePage,

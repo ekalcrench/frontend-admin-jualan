@@ -9,6 +9,7 @@ import {
 import { MRT_ColumnDef, MRT_RowData } from "material-react-table";
 import { useState } from "react";
 import { ButtonColumnsProps } from "./ButtonColumns.types";
+import ViewColumnTwoToneIcon from "@mui/icons-material/ViewColumnTwoTone";
 
 export default function ButtonColumns<TData extends MRT_RowData>({
   columns,
@@ -36,7 +37,13 @@ export default function ButtonColumns<TData extends MRT_RowData>({
 
   return (
     <Box>
-      <Button onClick={handleClickHideColumn}>Columns</Button>
+      <Button
+        onClick={handleClickHideColumn}
+        variant="outlined"
+        startIcon={<ViewColumnTwoToneIcon />}
+      >
+        Columns
+      </Button>
 
       <Menu
         anchorEl={anchorEl}

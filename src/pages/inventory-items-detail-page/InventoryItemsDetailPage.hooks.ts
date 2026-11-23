@@ -43,7 +43,7 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const { data, isLoading, isError, error } = useInventoryLotsQuery({
+  const { data, isLoading, isError, error, refetch } = useInventoryLotsQuery({
     inventoryItemId,
     page,
     size,
@@ -196,6 +196,7 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
     editingLot,
     inventoryItemQuery,
     isError,
+    refetch,
     isFormOpen,
     isLoading,
     search: search ?? "",

@@ -47,7 +47,7 @@ export default function useUmkmPage() {
     }
   }, [searchParams, setSearchParams]);
 
-  const { data, isLoading, isError, error } = useOrganizationsQuery({
+  const { data, isLoading, isError, error, refetch } = useOrganizationsQuery({
     page,
     size,
     sortBy,
@@ -227,6 +227,7 @@ export default function useUmkmPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search: search ?? "",
     sortBy,
     handleChangePage,

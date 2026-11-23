@@ -46,7 +46,8 @@ export default function useInventoryTransactionsPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const { data, isLoading, isError, error } = useInventoryTransactionsQuery({
+  const { data, isLoading, isError, error, refetch } =
+    useInventoryTransactionsQuery({
     page,
     size,
     sortBy,
@@ -154,6 +155,7 @@ export default function useInventoryTransactionsPage() {
     data,
     isLoading,
     isError,
+    refetch,
     search: search ?? "",
     sortBy,
     handleChangePage,

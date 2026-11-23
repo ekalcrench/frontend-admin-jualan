@@ -5,6 +5,8 @@ import CustomSearchInput from "../custom-search-input";
 import { emptyFunc } from "@/utils/generalUtils";
 import ButtonColumns from "../button-columns";
 import { MRT_RowData } from "material-react-table";
+import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
+import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
 
 export default function CustomTopToolbar<TData extends MRT_RowData>({
   handleClickFilters,
@@ -15,25 +17,44 @@ export default function CustomTopToolbar<TData extends MRT_RowData>({
   columnVisibility,
   setColumnVisibility,
   searchPlaceholder,
+  isMobile = false,
 }: CustomTopToolbarProps<TData>) {
   return (
-    <BoxFlexSpaceBetween sx={{ gap: "12px" }}>
-      <BoxFlex sx={{ gap: "12px" }}>
+    <BoxFlexSpaceBetween sx={{ width: "100%", gap: "8px" }}>
+      <BoxFlex sx={{ gap: "8px", flex: 1 }}>
         <CustomSearchInput
           value={search}
           onSearch={handleSearch}
           searchPlaceholder={searchPlaceholder}
+          isMobile={isMobile}
         />
-        {handleClickFilters && (
-          <Button onClick={handleClickFilters}>Filters</Button>
+        {!isMobile && (
+          <ButtonColumns
+            columns={columns}
+            columnVisibility={columnVisibility}
+            setColumnVisibility={setColumnVisibility}
+          />
         )}
-        <ButtonColumns
-          columns={columns}
-          columnVisibility={columnVisibility}
-          setColumnVisibility={setColumnVisibility}
-        />
-        <Button onClick={handleResetFilter}>Reset</Button>
+        {handleClickFilters && (
+          <Button
+            onClick={handleClickFilters}
+            sx={{ flexShrink: 0 }}
+            variant="outlined"
+            startIcon={<FilterAltRoundedIcon />}
+          >
+            Filter
+          </Button>
+        )}
       </BoxFlex>
+
+      <Button
+        onClick={handleResetFilter}
+        sx={{ flexShrink: 0 }}
+        variant="text"
+        startIcon={<RestartAltRoundedIcon />}
+      >
+        Reset
+      </Button>
     </BoxFlexSpaceBetween>
   );
 }

@@ -52,6 +52,7 @@ export default function usePurchasesPage() {
     isLoading,
     isError,
     error,
+    refetch,
   } = usePurchasesQuery({
     page,
     size,
@@ -222,6 +223,7 @@ export default function usePurchasesPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search: search ?? "",
     sortBy,
     handleChangePage,

@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
 
 export interface PageTitleProps {
-  title: string;
+  title: string | ReactNode;
   subTitle: string;
+  enableBackButton?: boolean;
   addButton?: ReactNode;
 }

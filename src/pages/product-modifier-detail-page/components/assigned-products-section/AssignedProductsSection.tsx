@@ -39,9 +39,7 @@ export default function AssignedProductsSection({
         }}
       >
         <Box>
-          <Typography variant="h6">
-            Produk yang menggunakan grup ini
-          </Typography>
+          <Typography variant="h6">Produk yang menggunakan grup ini</Typography>
           <Typography variant="body2" color="text.secondary">
             Produk-produk ini menampilkan grup variasi saat pelanggan memesan.
           </Typography>
@@ -49,7 +47,6 @@ export default function AssignedProductsSection({
 
         {canManage && (
           <Button
-            variant="outlined"
             startIcon={<PlaylistAddRoundedIcon />}
             onClick={onOpenAssign}
             sx={{ width: { xs: "100%", sm: "auto" }, flexShrink: 0 }}
@@ -108,9 +105,7 @@ export default function AssignedProductsSection({
               }}
             >
               <Box sx={{ minWidth: 0 }}>
-                <Typography sx={{ fontWeight: 600 }}>
-                  {product.name}
-                </Typography>
+                <Typography sx={{ fontWeight: 600 }}>{product.name}</Typography>
                 <Typography variant="body2" color="text.secondary">
                   {currencyFormatter.format(product.sellingPrice)}
                 </Typography>

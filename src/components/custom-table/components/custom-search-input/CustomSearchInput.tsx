@@ -8,6 +8,7 @@ export default function CustomSearchInput({
   onSearch,
   debounceMs = 3000,
   searchPlaceholder = "Search",
+  isMobile = false,
 }: CustomSearchInputProps) {
   const [inputValue, setInputValue] = useState<string>(value);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -61,7 +62,13 @@ export default function CustomSearchInput({
           ),
         },
       }}
-      sx={{ minWidth: "360px", "& input": { height: "48px" } }}
+      sx={{
+        width: "auto",
+        maxWidth: "520px",
+        flex: 1,
+        ...(isMobile && { flex: "1 1 0%" }),
+        "& input": { height: "48px" },
+      }}
     />
   );
 }

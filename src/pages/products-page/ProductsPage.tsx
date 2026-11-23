@@ -6,6 +6,9 @@ import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import {
   Box,
   Button,
+  Card,
+  CardContent,
+  Chip,
   Divider,
   Grid,
   IconButton,
@@ -14,7 +17,9 @@ import {
 } from "@mui/material";
 import type { MRT_Row } from "material-react-table";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
-import CustomTable from "@/components/custom-table";
+import CustomTable, {
+  createCustomTableEmptyStates,
+} from "@/components/custom-table";
 import { BoxFlex, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { TypographyTab } from "@/styled/CustomTypography";
 import type { ProductResponse } from "@/types/product";
@@ -37,6 +42,7 @@ export default function ProductsPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search,
     sortBy,
     deleteProduct,
@@ -57,6 +63,12 @@ export default function ProductsPage() {
     organizaiton?.role === userOrganizationRole.OWNER ||
     organizaiton?.role === userOrganizationRole.ADMIN;
   const canDelete = organizaiton?.role === userOrganizationRole.OWNER;
+  const tableEmptyStates = createCustomTableEmptyStates({
+    itemName: "produk",
+    search,
+    onResetFilter: handleResetFilter,
+    onRetry: refetch,
+  });
 
   const renderAddButton = () => (
     <Button
@@ -68,45 +80,46 @@ export default function ProductsPage() {
     </Button>
   );
 
-  const renderRowActions = (row: MRT_Row<ProductResponse>) => (
-    <BoxFlex>
+  const renderRowActions = (row: MRT_Row<ProductResponse>) =>
+    renderProductActions(row.original);
+
+  const renderProductActions = (product: ProductResponse) => (
+    <BoxFlexEnd>
       <IconButton
-        aria-label={`Edit product ${row.original.name}`}
-        onClick={() => handleClickEditForm(row.original.id)}
+        aria-label={`Edit product ${product.name}`}
+        onClick={() => handleClickEditForm(product.id)}
       >
         <EditIcon />
       </IconButton>
       {canManage && (
         <IconButton
           aria-label={
-            row.original.isActive
-              ? `Nonaktifkan produk ${row.original.name}`
-              : `Aktifkan produk ${row.original.name}`
+            product.isActive
+              ? `Nonaktifkan produk ${product.name}`
+              : `Aktifkan produk ${product.name}`
           }
-          onClick={() => handleClickToggleActive(row.original)}
-          color={row.original.isActive ? "warning" : "success"}
+          onClick={() => handleClickToggleActive(product)}
+          color={product.isActive ? "warning" : "success"}
           loading={
-            editProduct.isPending &&
-            editProduct.variables?.id === row.original.id
+            editProduct.isPending && editProduct.variables?.id === product.id
           }
         >
-          {row.original.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
+          {product.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
         </IconButton>
       )}
       {canDelete && (
         <IconButton
-          aria-label={`Delete product ${row.original.name}`}
-          onClick={() => handleClickDelete(row.original.id)}
+          aria-label={`Delete product ${product.name}`}
+          onClick={() => handleClickDelete(product.id)}
           color="error"
           loading={
-            deleteProduct.isPending &&
-            deleteProduct.variables === row.original.id
+            deleteProduct.isPending && deleteProduct.variables === product.id
           }
         >
           <DeleteIcon />
         </IconButton>
       )}
-    </BoxFlex>
+    </BoxFlexEnd>
   );
 
   const renderDetailPanel = (row: MRT_Row<ProductResponse>) => {
@@ -196,6 +209,73 @@ export default function ProductsPage() {
     );
   };
 
+  const renderMobileCard = (product: ProductResponse) => {
+    const totalCapital = product.productIngredients.reduce(
+      (total, item) => total + item.quantity * item.unitCost,
+      0,
+    );
+
+    return (
+      <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+        <CardContent sx={{ padding: "16px !important" }}>
+          <BoxFlexSpaceBetween sx={{ alignItems: "flex-start", gap: 1 }}>
+            <Typography sx={{ fontWeight: 600, minWidth: 0 }}>
+              {product.name}
+            </Typography>
+            <Chip
+              label={product.isActive ? "Aktif" : "Nonaktif"}
+              size="small"
+              color={product.isActive ? "success" : "default"}
+              variant={product.isActive ? "filled" : "outlined"}
+            />
+          </BoxFlexSpaceBetween>
+          <Stack spacing={0.75} sx={{ mt: 1.5 }}>
+            <BoxFlexSpaceBetween>
+              <Typography variant="body2">Harga jual</Typography>
+              <Typography variant="body2">
+                {currencyFormatter.format(product.sellingPrice)}
+              </Typography>
+            </BoxFlexSpaceBetween>
+            <BoxFlexSpaceBetween>
+              <Typography variant="body2">Harga modal</Typography>
+              <Typography variant="body2">
+                {totalCapital ? currencyFormatter.format(totalCapital) : "-"}
+              </Typography>
+            </BoxFlexSpaceBetween>
+            <BoxFlexSpaceBetween>
+              <Typography variant="body2">Stok</Typography>
+              <Typography variant="body2">
+                {product.stock.toLocaleString("id-ID")}
+              </Typography>
+            </BoxFlexSpaceBetween>
+            <Typography variant="body2" color="text.secondary">
+              {product.productIngredients.length} bahan
+            </Typography>
+          </Stack>
+          {product.productIngredients.length > 0 && (
+            <>
+              <Divider sx={{ my: 1.5 }} />
+              <Stack spacing={0.5}>
+                {product.productIngredients.map((ingredient) => (
+                  <BoxFlexSpaceBetween key={ingredient.id} sx={{ gap: 1 }}>
+                    <Typography variant="body2">
+                      {ingredient.inventoryItem.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {`${ingredient.quantity.toLocaleString("id-ID")} ${inventoryUnitLabels[ingredient.inventoryItem.unit]}`}
+                    </Typography>
+                  </BoxFlexSpaceBetween>
+                ))}
+              </Stack>
+            </>
+          )}
+          <Divider sx={{ my: 1.5 }} />
+          {renderProductActions(product)}
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <Box>
       <ProductForm
@@ -217,6 +297,8 @@ export default function ProductsPage() {
 
         <CustomTable<ProductResponse>
           columns={columns}
+          {...tableEmptyStates}
+          renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
           isLoading={isLoading}
           isError={isError}

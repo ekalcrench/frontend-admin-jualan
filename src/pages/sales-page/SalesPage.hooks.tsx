@@ -59,6 +59,7 @@ export default function useSalesPage() {
     isLoading,
     isError,
     error,
+    refetch,
   } = useOrderQuery({
     page,
     size,
@@ -261,6 +262,7 @@ export default function useSalesPage() {
     endDate,
     isChecking,
     isError,
+    refetch,
     isFormOpen,
     isLoading,
     isPrinting,

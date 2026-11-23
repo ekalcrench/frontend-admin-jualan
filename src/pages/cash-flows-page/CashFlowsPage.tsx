@@ -1,8 +1,20 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
-import CustomTable from "@/components/custom-table";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Divider,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import CustomTable, {
+  createCustomTableEmptyStates,
+} from "@/components/custom-table";
 import { defaultParameter } from "@/constants/table";
 import { isEditableCashTransactionType } from "@/constants/cashTransaction";
 import { CashTransactionResponse } from "@/types/cashTransaction";
@@ -13,6 +25,13 @@ import useCashFlowsPage from "./CashFlowsPage.hooks";
 import CashDetails from "./components/cash-details";
 import ReportDate from "@/components/report-date";
 import PageTitle from "@/components/page-title";
+import {
+  cashTransactionTypeColorMapping,
+  cashTransactionTypeLabels,
+} from "@/constants/cashTransaction";
+import { currencyFormatter } from "@/utils/currency";
+import { formatLocalDate } from "@/utils/dateTime";
+import { BoxFlexEnd } from "@/styled/CustomBox";
 
 export default function CashFlowsPage() {
   const {
@@ -24,6 +43,7 @@ export default function CashFlowsPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search,
     sortBy,
     startDate,
@@ -38,6 +58,12 @@ export default function CashFlowsPage() {
     setIsFormOpen,
     setStartDate,
   } = useCashFlowsPage();
+  const tableEmptyStates = createCustomTableEmptyStates({
+    itemName: "arus kas",
+    search,
+    onResetFilter: handleResetFilter,
+    onRetry: refetch,
+  });
 
   const renderAddButton = () => (
     <Button
@@ -49,29 +75,79 @@ export default function CashFlowsPage() {
     </Button>
   );
 
-  const renderRowActions = (row: MRT_Row<CashTransactionResponse>) => {
-    if (!isEditableCashTransactionType(row.original.type)) return null;
+  const renderRowActions = (row: MRT_Row<CashTransactionResponse>) =>
+    renderTransactionActions(row.original);
+
+  const renderTransactionActions = (transaction: CashTransactionResponse) => {
+    if (!isEditableCashTransactionType(transaction.type)) return null;
 
     return (
-      <Stack direction="row">
+      <BoxFlexEnd>
         <IconButton
-          aria-label={`Edit cash flow ${row.original.id}`}
-          onClick={() => handleClickEditForm(row.original.id)}
+          aria-label={`Edit cash flow ${transaction.id}`}
+          onClick={() => handleClickEditForm(transaction.id)}
         >
           <EditIcon />
         </IconButton>
         <IconButton
-          aria-label={`Delete cash flow ${row.original.id}`}
-          onClick={() => handleClickDelete(row.original)}
+          aria-label={`Delete cash flow ${transaction.id}`}
+          onClick={() => handleClickDelete(transaction)}
           color="error"
           loading={
             deleteCashTransaction.isPending &&
-            deleteCashTransaction.variables === row.original.id
+            deleteCashTransaction.variables === transaction.id
           }
         >
           <DeleteIcon />
         </IconButton>
-      </Stack>
+      </BoxFlexEnd>
+    );
+  };
+
+  const renderMobileCard = (transaction: CashTransactionResponse) => {
+    const actions = renderTransactionActions(transaction);
+
+    return (
+      <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+        <CardContent sx={{ padding: "16px !important" }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}
+          >
+            <Typography sx={{ fontWeight: 600 }}>
+              {transaction.description || "Transaksi arus kas"}
+            </Typography>
+            <Chip
+              label={cashTransactionTypeLabels[transaction.type]}
+              color={cashTransactionTypeColorMapping[transaction.type]}
+              size="small"
+            />
+          </Box>
+          <Stack spacing={0.75} sx={{ mt: 1.5 }}>
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}
+            >
+              <Typography variant="body2">Jumlah</Typography>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {currencyFormatter.format(transaction.amount)}
+              </Typography>
+            </Box>
+            <Typography variant="body2">
+              Tanggal: {formatLocalDate(transaction.transactionAt)}
+            </Typography>
+            {transaction.referenceId && (
+              <Typography variant="body2" color="text.secondary">
+                Referensi: {transaction.referenceId}
+              </Typography>
+            )}
+          </Stack>
+          {actions && (
+            <>
+              <Divider sx={{ my: 1.5 }} />
+              {actions}
+            </>
+          )}
+        </CardContent>
+      </Card>
     );
   };
 
@@ -105,6 +181,8 @@ export default function CashFlowsPage() {
 
         <CustomTable
           columns={columns}
+          {...tableEmptyStates}
+          renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
           isLoading={isLoading}
           isError={isError}

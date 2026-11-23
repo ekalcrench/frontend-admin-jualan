@@ -48,6 +48,7 @@ export default function useProductsPage() {
     isLoading,
     isError,
     error,
+    refetch,
   } = useProductQuery({ page, size, sortBy, search });
   const data = response as PaginatedData<ProductResponse> | undefined;
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -220,6 +221,7 @@ export default function useProductsPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search: search ?? "",
     sortBy,
     deleteProduct,

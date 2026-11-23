@@ -1,8 +1,19 @@
-import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import useUmkmPage from "./UmkmPage.hooks";
 import UmkmForm from "./components/umkm-form";
-import CustomTable from "@/components/custom-table";
+import CustomTable, {
+  createCustomTableEmptyStates,
+} from "@/components/custom-table";
 import { OrganizationResponse } from "@/types/organization";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex } from "@/styled/CustomBox";
@@ -21,6 +32,7 @@ export default function UmkmPage() {
     isFormOpen,
     isLoading,
     isError,
+    refetch,
     search,
     sortBy,
     handleChangePage,
@@ -34,6 +46,12 @@ export default function UmkmPage() {
   } = useUmkmPage();
 
   const userState = useAuthStore((state) => state.user);
+  const tableEmptyStates = createCustomTableEmptyStates({
+    itemName: "UMKM",
+    search,
+    onResetFilter: handleResetFilter,
+    onRetry: refetch,
+  });
 
   const addButton = () => {
     if (userState?.role === userRole.USER) return undefined;
@@ -75,6 +93,41 @@ export default function UmkmPage() {
     );
   };
 
+  const renderMobileCard = (organization: OrganizationResponse) => (
+    <Card variant="outlined" sx={{ borderRadius: "16px" }}>
+      <CardContent sx={{ padding: "16px !important" }}>
+        <Typography sx={{ fontWeight: 600 }}>{organization.name}</Typography>
+        {organization.username && (
+          <Typography variant="body2" color="text.secondary">
+            @{organization.username}
+          </Typography>
+        )}
+        <Stack spacing={0.75} sx={{ mt: 1.5 }}>
+          <Typography variant="body2">{organization.email}</Typography>
+          <Typography variant="body2">{organization.phone}</Typography>
+          <Typography variant="body2">{organization.address}</Typography>
+        </Stack>
+        {organization.socialMedias.length > 0 && (
+          <Stack spacing={0.5} sx={{ mt: 1 }}>
+            {organization.socialMedias.map((socialMedia) => (
+              <Typography
+                key={socialMedia.id}
+                variant="body2"
+                color="text.secondary"
+              >
+                {`${socialMedia.platform}: ${socialMedia.username}`}
+              </Typography>
+            ))}
+          </Stack>
+        )}
+        <Divider sx={{ my: 1.5 }} />
+        <BoxFlex sx={{ justifyContent: "flex-end" }}>
+          {renderRowActions(organization.id)}
+        </BoxFlex>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <Box>
       <UmkmForm
@@ -94,6 +147,8 @@ export default function UmkmPage() {
 
         <CustomTable<OrganizationResponse>
           columns={columns}
+          {...tableEmptyStates}
+          renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
           isLoading={isLoading}
           isError={isError}

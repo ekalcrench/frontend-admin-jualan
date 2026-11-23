@@ -57,7 +57,6 @@ export default function ModifierOptionsSection({
 
       {canManage && (
         <Button
-          variant="outlined"
           startIcon={<AddIcon />}
           onClick={onAdd}
           sx={{ width: { xs: "100%", sm: "auto" }, flexShrink: 0 }}
@@ -153,9 +152,7 @@ export default function ModifierOptionsSection({
           {options.map((option, index) => (
             <TableRow key={option.id} hover>
               <TableCell>
-                <Typography sx={{ fontWeight: 600 }}>
-                  {option.name}
-                </Typography>
+                <Typography sx={{ fontWeight: 600 }}>{option.name}</Typography>
                 <Typography variant="body2" color="text.secondary">
                   {option.description || "Tanpa deskripsi"}
                 </Typography>
@@ -252,9 +249,7 @@ export default function ModifierOptionsSection({
             padding: "16px",
           }}
         >
-          <BoxFlexSpaceBetween
-            sx={{ alignItems: "flex-start", gap: "8px" }}
-          >
+          <BoxFlexSpaceBetween sx={{ alignItems: "flex-start", gap: "8px" }}>
             <Box sx={{ minWidth: 0 }}>
               <Typography sx={{ fontWeight: 600 }}>{option.name}</Typography>
               <Typography variant="body2" color="text.secondary">
