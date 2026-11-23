@@ -28,9 +28,13 @@ export default function ReportDate(props: ReportDateProps) {
         overflowX: "auto",
         overflowY: "hidden",
         WebkitOverflowScrolling: "touch",
+        paddingBottom: "4px",
       }}
     >
-      <ButtonGroup sx={{ width: "max-content", flexWrap: "nowrap" }} size="small">
+      <ButtonGroup
+        sx={{ width: "max-content", flexWrap: "nowrap" }}
+        size="small"
+      >
         <Button
           onClick={handleClickToday}
           variant={reportDateType === "TODAY" ? "contained" : "outlined"}
@@ -73,31 +77,47 @@ export default function ReportDate(props: ReportDateProps) {
         <form onSubmit={handleSubmit(onSubmit)}>
           <BoxFlexSpaceBetween
             sx={{
-              width: { xs: "560px", sm: "100%" },
-              minWidth: { xs: "560px", sm: 0 },
+              width: "100%",
               gap: "8px",
               marginTop: "16px",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: { xs: "stretch", sm: "center" },
             }}
           >
             <CustomDatePicker
               control={control}
               name="startDate"
-              boxFieldWrapperProps={{ sx: { flex: 1 } }}
+              boxFieldWrapperProps={{
+                sx: { flex: 1, width: { xs: "100%", sm: "auto" }, minWidth: 0 },
+              }}
               renderErrorMessage
             />
-            <BoxCenter sx={{ height: "100%", paddingBottom: "20px" }}>
+            <BoxCenter
+              sx={{
+                height: "100%",
+                paddingBottom: { xs: 0, sm: "20px" },
+                display: { xs: "none", sm: "flex" },
+              }}
+            >
               <Typography sx={{ fontSize: "20px" }}>-</Typography>
             </BoxCenter>
             <CustomDatePicker
               control={control}
               name="endDate"
-              boxFieldWrapperProps={{ sx: { flex: 1 } }}
+              boxFieldWrapperProps={{
+                sx: { flex: 1, width: { xs: "100%", sm: "auto" }, minWidth: 0 },
+              }}
               renderErrorMessage
             />
             <Button
               type="submit"
               startIcon={<SearchIcon />}
-              sx={{ marginLeft: "8px", marginBottom: "20px" }}
+              sx={{
+                marginLeft: { xs: 0, sm: "8px" },
+                marginBottom: { xs: 0, sm: "20px" },
+                width: { xs: "100%", sm: "auto" },
+                flexShrink: 0,
+              }}
             >
               Cari
             </Button>
