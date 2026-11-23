@@ -39,7 +39,7 @@ export default function Sidebar() {
             position: "fixed",
             top: "8px",
             left: "8px",
-            zIndex: 1300,
+            zIndex: (theme) => theme.zIndex.drawer - 1,
             backgroundColor: "white",
           }}
           color="primary"
