@@ -9,6 +9,7 @@ import {
   IconButton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import type { MRT_Row } from "material-react-table";
 import CustomTable from "@/components/custom-table";
@@ -59,6 +60,8 @@ export default function SalesPage() {
     setStartDate,
   } = useSalesPage();
 
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
   const renderAddButton = () => (
     <Button
       variant="contained"
@@ -102,7 +105,8 @@ export default function SalesPage() {
             <DeleteIcon />
           </IconButton>
         </>
-      ) : connectionStatus !== "ready" && connectionStatus !== "checking" ? (
+      ) : !isMobile ? null : connectionStatus !== "ready" &&
+        connectionStatus !== "checking" ? (
         <Button
           color="warning"
           startIcon={<RefreshIcon />}
@@ -221,9 +225,7 @@ export default function SalesPage() {
                   sx={{ flexDirection: "column", alignItems: "flex-end" }}
                 >
                   <Typography>
-                    {currencyFormatter.format(
-                      item.unitTotal ?? item.unitPrice,
-                    )}
+                    {currencyFormatter.format(item.unitTotal ?? item.unitPrice)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {`Dasar ${currencyFormatter.format(item.unitPrice)}`}

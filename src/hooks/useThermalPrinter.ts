@@ -12,6 +12,7 @@ import type {
   PrintResponse,
   ReceiptBlock,
 } from "@/services/printer/printer.types";
+import { useMediaQuery } from "@mui/material";
 
 type ConnectionStatus =
   | "checking"
@@ -31,6 +32,8 @@ interface UseThermalPrinterReturn {
 }
 
 export function useThermalPrinter(): UseThermalPrinterReturn {
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("checking");
 
@@ -118,6 +121,8 @@ export function useThermalPrinter(): UseThermalPrinterReturn {
 
   // Check printer when component mounts.
   useEffect(() => {
+    if (!isMobile) return;
+
     refreshPrinter();
   }, [refreshPrinter]);
 
