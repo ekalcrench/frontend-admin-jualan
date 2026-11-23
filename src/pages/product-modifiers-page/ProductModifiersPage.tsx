@@ -333,13 +333,11 @@ export default function ProductModifiersPage() {
       />
 
       <Stack spacing={4}>
-        <BoxFlexSpaceBetween sx={{ gap: "12px" }}>
-          <PageTitle
-            title="Variasi & Add-on"
-            subTitle="Kelola pilihan tambahan dan variasi yang dapat digunakan pada berbagai produk."
-          />
-          {!isMobile && canManage && renderAddButton()}
-        </BoxFlexSpaceBetween>
+        <PageTitle
+          title="Variasi & Add-on"
+          subTitle="Kelola pilihan tambahan dan variasi yang dapat digunakan pada berbagai produk."
+          addButton={renderAddButton()}
+        />
 
         {isFetching && !isInitialLoading && (
           <LinearProgress sx={{ borderRadius: "8px" }} />
@@ -347,8 +345,6 @@ export default function ProductModifiersPage() {
 
         {isMobile ? (
           <Stack spacing={2}>
-            {isMobile && canManage && renderAddButton()}
-
             <BoxFlex sx={{ gap: "8px", alignItems: "stretch" }}>
               <ModifierSearchBar
                 value={search}

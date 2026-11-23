@@ -95,6 +95,7 @@ export default function InventoryItemsPage() {
         <PageTitle
           title="Inventaris Barang"
           subTitle="Melihat, menambah, dan mengatur daftar barang beserta stoknya"
+          addButton={renderAddButton()}
         />
 
         <InventoryItemOverview />
@@ -124,7 +125,6 @@ export default function InventoryItemsPage() {
           handleResetFilter={handleResetFilter}
           search={search}
           handleSearch={handleChangeSearch}
-          addButton={renderAddButton()}
           columnRowActionsSize={
             organizaiton?.role === userOrganizationRole.MEMBER ? 110 : 140
           }

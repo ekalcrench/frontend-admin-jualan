@@ -271,6 +271,7 @@ export default function SalesPage() {
           <PageTitle
             title="Penjualan"
             subTitle="Mengelola dan melihat keseluruhan transaksi penjualan produk"
+            addButton={renderAddButton()}
           />
 
           <ReportDate
@@ -304,7 +305,6 @@ export default function SalesPage() {
           handleResetFilter={handleResetFilter}
           search={search}
           handleSearch={handleChangeSearch}
-          addButton={renderAddButton()}
           enableRowActions
           columnRowActionsSize={190}
           renderRowActions={({ row }) => renderRowActions(row)}

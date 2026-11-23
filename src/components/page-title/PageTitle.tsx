@@ -1,21 +1,28 @@
 import { Box, Typography } from "@mui/material";
 import { PageTitleProps } from "./PageTitle.types";
+import { BoxFlexSpaceBetween } from "@/styled/CustomBox";
 
-export default function PageTitle({ title, subTitle }: PageTitleProps) {
+export default function PageTitle({
+  addButton,
+  title,
+  subTitle,
+}: PageTitleProps) {
   return (
-    <Box
+    <BoxFlexSpaceBetween
       sx={{
-        display: "flex",
         flexDirection: { xs: "column", md: "row" },
         alignItems: { xs: "stretch", md: "center" },
-        columnGap: "8px",
+        gap: "16px",
         padding: { xs: "12px 8px 0px", sm: "0px 8px" },
       }}
     >
-      <Typography variant="h5">{title}</Typography>
-      <Typography variant="body2" color="text.secondary">
-        {`(${subTitle})`}
-      </Typography>
-    </Box>
+      <Box>
+        <Typography variant="h5">{title}</Typography>
+        <Typography variant="body2" color="text.secondary">
+          {`(${subTitle})`}
+        </Typography>
+      </Box>
+      {addButton}
+    </BoxFlexSpaceBetween>
   );
 }

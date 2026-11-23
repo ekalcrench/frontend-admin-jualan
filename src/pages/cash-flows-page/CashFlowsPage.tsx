@@ -90,6 +90,7 @@ export default function CashFlowsPage() {
           <PageTitle
             title="Arus Kas"
             subTitle="Melihat dan mengelola arus kas, investasi, dan bagi hasil"
+            addButton={renderAddButton()}
           />
 
           <ReportDate
@@ -123,7 +124,6 @@ export default function CashFlowsPage() {
           handleResetFilter={handleResetFilter}
           search={search}
           handleSearch={handleChangeSearch}
-          addButton={renderAddButton()}
           enableRowActions
           columnRowActionsSize={100}
           renderRowActions={({ row }) => renderRowActions(row)}

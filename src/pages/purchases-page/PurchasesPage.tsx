@@ -203,6 +203,7 @@ export default function PurchasesPage() {
         <PageTitle
           title="Belanja"
           subTitle="Mengelola seluruh pembelian stok inventory"
+          addButton={renderAddButton()}
         />
 
         <CustomTable
@@ -226,7 +227,6 @@ export default function PurchasesPage() {
           handleResetFilter={handleResetFilter}
           search={search}
           handleSearch={handleChangeSearch}
-          addButton={renderAddButton()}
           enableRowActions
           columnRowActionsSize={190}
           renderRowActions={({ row }) => renderRowActions(row)}

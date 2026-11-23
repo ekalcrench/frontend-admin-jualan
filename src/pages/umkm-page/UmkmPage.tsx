@@ -89,6 +89,7 @@ export default function UmkmPage() {
         <PageTitle
           title="UMKM"
           subTitle="Mengatur UMKM yang sudah, maupun akan terdaftar dalam sistem"
+          addButton={addButton()}
         />
 
         <CustomTable<OrganizationResponse>
@@ -112,7 +113,6 @@ export default function UmkmPage() {
           handleResetFilter={handleResetFilter}
           search={search}
           handleSearch={handleChangeSearch}
-          addButton={addButton()}
           columnRowActionsSize={
             userState?.role === userRole.SUPER_ADMIN ? 110 : 80
           }

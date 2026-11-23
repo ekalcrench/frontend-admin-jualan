@@ -9,7 +9,6 @@ import { MRT_RowData } from "material-react-table";
 export default function CustomTopToolbar<TData extends MRT_RowData>({
   handleClickFilters,
   handleResetFilter,
-  addButton,
   search,
   handleSearch = emptyFunc,
   columns,
@@ -35,8 +34,6 @@ export default function CustomTopToolbar<TData extends MRT_RowData>({
         />
         <Button onClick={handleResetFilter}>Reset</Button>
       </BoxFlex>
-
-      {addButton}
     </BoxFlexSpaceBetween>
   );
 }

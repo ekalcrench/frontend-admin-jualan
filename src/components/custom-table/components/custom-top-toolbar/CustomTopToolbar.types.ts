@@ -19,7 +19,4 @@ export interface CustomTopToolbarProps<
   columns: MRT_ColumnDef<TData>[];
   columnVisibility: Record<string, boolean>;
   setColumnVisibility: Dispatch<SetStateAction<Record<string, boolean>>>;
-
-  // Add Button (Optional)
-  addButton?: React.ReactNode;
 }

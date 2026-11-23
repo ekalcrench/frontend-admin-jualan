@@ -150,6 +150,7 @@ export default function UsersPage() {
         <PageTitle
           title="Pengguna"
           subTitle={`Mengelola semua pengguna yang terdaftar di ${organization?.name ?? "UMKM"}`}
+          addButton={renderAddButton()}
         />
 
         <CustomTable<OrganizationUserResponse>
@@ -193,7 +194,6 @@ export default function UsersPage() {
               : renderRowActions(row.original)
           }
           searchPlaceholder="Cari berdasarkan Nama dan Email"
-          addButton={renderAddButton()}
         />
       </Stack>
     </Box>

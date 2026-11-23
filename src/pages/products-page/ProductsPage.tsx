@@ -210,6 +210,7 @@ export default function ProductsPage() {
         <PageTitle
           title="Produk"
           subTitle="Mengelola daftar produk dan bahan yang digunakan"
+          addButton={renderAddButton()}
         />
 
         <ProductOverview />
@@ -239,7 +240,6 @@ export default function ProductsPage() {
           handleResetFilter={handleResetFilter}
           search={search}
           handleSearch={handleChangeSearch}
-          addButton={renderAddButton()}
           enableRowActions
           columnRowActionsSize={canDelete ? 150 : canManage ? 110 : 80}
           renderRowActions={({ row }) => renderRowActions(row)}

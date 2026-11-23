@@ -33,7 +33,6 @@ export default function CustomTable<TData extends MRT_RowData>({
   columnRowActionsSize,
 
   // Custom Top Toolbar
-  addButton,
   search,
   searchPlaceholder,
   handleResetFilter,
@@ -97,7 +96,6 @@ export default function CustomTable<TData extends MRT_RowData>({
       <CustomTopToolbar<TData>
         handleClickFilters={hasFilters ? handleClickFilters : undefined}
         handleResetFilter={handleReset}
-        addButton={addButton}
         search={search}
         searchPlaceholder={searchPlaceholder}
         handleSearch={handleSearch}

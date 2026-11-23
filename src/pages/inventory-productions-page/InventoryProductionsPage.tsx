@@ -214,6 +214,7 @@ export default function InventoryProductionsPage() {
         <PageTitle
           title="Produksi Inventaris"
           subTitle="Mengatur barang yang sudah melalui proses produksi dan siap dijual"
+          addButton={renderAddButton()}
         />
 
         <CustomTable<PreparationResponse>
@@ -242,7 +243,6 @@ export default function InventoryProductionsPage() {
           handleResetFilter={handleResetFilter}
           search={search}
           handleSearch={handleChangeSearch}
-          addButton={renderAddButton()}
           enableRowActions
           columnRowActionsSize={200}
           renderRowActions={({ row }) => renderRowActions(row)}
