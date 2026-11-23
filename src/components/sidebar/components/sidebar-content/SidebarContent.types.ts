@@ -11,3 +11,7 @@ export interface SidebarListItem {
   child?: SidebarListItem[];
   groupName?: string;
 }
+
+export interface SidebarContentProps {
+  onMenuItemClick?: () => void;
+}

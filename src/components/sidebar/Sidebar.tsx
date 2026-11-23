@@ -67,7 +67,7 @@ export default function Sidebar() {
           },
         }}
       >
-        <SidebarContent />
+        <SidebarContent onMenuItemClick={handleDrawerClose} />
       </Drawer>
 
       {/* Permanent drawer for larger screens */}

@@ -6,7 +6,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { Avatar, Collapse } from "@mui/material";
-import { SidebarListItem } from "./SidebarContent.types";
+import { SidebarContentProps, SidebarListItem } from "./SidebarContent.types";
 import useSidebarContent from "./SidebarContent.hooks";
 import { CustomLink } from "@/styled/CustomLink";
 import LogoutButton from "../logout-button";
@@ -15,7 +15,9 @@ import { OrganizationName, TopSidebar } from "./SidebarContent.styles";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
-export default function SidebarContent() {
+export default function SidebarContent({
+  onMenuItemClick,
+}: SidebarContentProps) {
   const {
     accessibleSidebarItems,
     isChildrenOpen,
@@ -34,7 +36,7 @@ export default function SidebarContent() {
     }
 
     return (
-      <CustomLink to={href}>
+      <CustomLink to={href} onClick={onMenuItemClick}>
         <ListItem sx={{ padding: 0 }}>
           <ListItemButton
             className={
