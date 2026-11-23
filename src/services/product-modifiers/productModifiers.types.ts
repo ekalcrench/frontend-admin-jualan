@@ -21,6 +21,8 @@ export interface CreateProductModifierOption {
   name: string;
   description?: string | null;
   price: number;
+  inventoryItemId?: string | null;
+  inventoryQuantity?: number | null;
   isActive: boolean;
   sortOrder?: number;
 }

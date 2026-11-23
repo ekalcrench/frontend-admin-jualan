@@ -181,7 +181,7 @@ let theme = createTheme({
           paddingTop: "0px",
           paddingBottom: "0px",
           height: "54px",
-          color: error ? palette.error.main : palette.primary.main,
+          color: error ? palette.error.main : palette.text.primary,
           fontWeight: 500,
           "&::placeholder": {
             color: palette.text.placeholder,

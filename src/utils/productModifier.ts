@@ -1,5 +1,8 @@
+import { inventoryUnitLabels } from "@/constants/inventoryItem";
 import { userOrganizationRole } from "@/constants/user";
+import type { InventoryUnit } from "@/types/inventoryItem";
 import { OrganizationUserRole } from "@/types/organizationUser";
+import { numberFormat } from "./number";
 
 interface SelectionRule {
   isRequired: boolean;
@@ -52,4 +55,19 @@ export function canManageProductModifiers(
     role === userOrganizationRole.OWNER ||
     role === userOrganizationRole.ADMIN
   );
+}
+
+export function formatInventoryDeduction(
+  inventoryItem: { name: string; unit: InventoryUnit } | null | undefined,
+  inventoryQuantity: number | null | undefined,
+): string | null {
+  if (
+    !inventoryItem ||
+    inventoryQuantity === null ||
+    inventoryQuantity === undefined
+  ) {
+    return null;
+  }
+
+  return `${inventoryItem.name} (${numberFormat.format(inventoryQuantity)} ${inventoryUnitLabels[inventoryItem.unit]})`;
 }

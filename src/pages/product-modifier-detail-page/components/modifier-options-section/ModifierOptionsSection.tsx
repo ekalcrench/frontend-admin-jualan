@@ -23,6 +23,7 @@ import {
 import ModifierEmptyState from "@/components/product-modifier/modifier-empty-state";
 import { BoxFlex, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { currencyFormatter } from "@/utils/currency";
+import { formatInventoryDeduction } from "@/utils/productModifier";
 import type { ModifierOptionsSectionProps } from "./ModifierOptionsSection.types";
 
 export default function ModifierOptionsSection({
@@ -101,6 +102,31 @@ export default function ModifierOptionsSection({
   const isStatusPending = (optionId: string) => statusPendingId === optionId;
   const isDeletePending = (optionId: string) => deletePendingId === optionId;
 
+  const renderInventoryInfo = (
+    option: ModifierOptionsSectionProps["options"][number],
+  ) => {
+    const inventoryLabel = formatInventoryDeduction(
+      option.inventoryItem,
+      option.inventoryQuantity,
+    );
+
+    return (
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{
+          display: "block",
+          marginTop: "4px",
+          ...(!inventoryLabel && { fontStyle: "italic", opacity: 0.8 }),
+        }}
+      >
+        {inventoryLabel
+          ? `Persediaan: ${inventoryLabel}`
+          : "Tanpa pengurangan persediaan"}
+      </Typography>
+    );
+  };
+
   const renderTable = () => (
     <TableContainer
       sx={{
@@ -133,6 +159,7 @@ export default function ModifierOptionsSection({
                 <Typography variant="body2" color="text.secondary">
                   {option.description || "Tanpa deskripsi"}
                 </Typography>
+                {renderInventoryInfo(option)}
               </TableCell>
               <TableCell>
                 <Typography sx={{ fontWeight: 500 }}>
@@ -233,6 +260,7 @@ export default function ModifierOptionsSection({
               <Typography variant="body2" color="text.secondary">
                 {option.description || "Tanpa deskripsi"}
               </Typography>
+              {renderInventoryInfo(option)}
             </Box>
             <Switch
               size="small"

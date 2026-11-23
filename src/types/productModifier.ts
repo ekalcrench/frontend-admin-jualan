@@ -1,9 +1,16 @@
 import { BaseApiResponse } from "./api";
+import { InventoryUnit } from "./inventoryItem";
 import { DefaultFilter } from "./table";
 
 export interface ProductModifierGroupFilterPayload extends DefaultFilter {
   search?: string;
   isActive?: boolean;
+}
+
+export interface ProductModifierOptionInventoryItem {
+  id: string;
+  name: string;
+  unit: InventoryUnit;
 }
 
 export interface ProductModifierOptionResponse extends BaseApiResponse {
@@ -12,6 +19,9 @@ export interface ProductModifierOptionResponse extends BaseApiResponse {
   name: string;
   description: string | null;
   price: number;
+  inventoryItemId: string | null;
+  inventoryQuantity: number | null;
+  inventoryItem: ProductModifierOptionInventoryItem | null;
   isActive: boolean;
   sortOrder: number;
 }

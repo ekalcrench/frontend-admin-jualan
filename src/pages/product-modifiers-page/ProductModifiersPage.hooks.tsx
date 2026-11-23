@@ -18,6 +18,7 @@ import {
   formatSelectionRule,
 } from "@/utils/productModifier";
 import { modifierGroupsDefaultParameter } from "./ProductModifiersPage.constants";
+import { BoxFlex } from "@/styled/CustomBox";
 
 export default function useProductModifiersPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -51,14 +52,8 @@ export default function useProductModifiersPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const {
-    data,
-    isLoading,
-    isFetching,
-    isError,
-    error,
-    refetch,
-  } = useProductModifierGroupsQuery({ page, size, sortBy, search });
+  const { data, isLoading, isFetching, isError, error, refetch } =
+    useProductModifierGroupsQuery({ page, size, sortBy, search });
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingGroup, setEditingGroup] =
@@ -221,7 +216,7 @@ export default function useProductModifiersPage() {
         size: 230,
         enableSorting: false,
         Cell: ({ row }) => (
-          <Stack direction="row" spacing={0.5} sx={{ flexWrap: "wrap" }}>
+          <BoxFlex sx={{ flexWrap: "wrap", gap: "4px" }}>
             <Chip
               label={formatSelectionMode(row.original.isRequired)}
               size="small"
@@ -233,7 +228,7 @@ export default function useProductModifiersPage() {
               size="small"
               variant="outlined"
             />
-          </Stack>
+          </BoxFlex>
         ),
       },
       {

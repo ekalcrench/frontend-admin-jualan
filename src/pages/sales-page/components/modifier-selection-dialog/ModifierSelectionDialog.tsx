@@ -82,10 +82,7 @@ export default function ModifierSelectionDialog(
   const validationErrors = useMemo(
     () =>
       props.groups.reduce<Record<string, string>>((errors, group) => {
-        const error = getSelectionError(
-          group,
-          selectedByGroup[group.id] ?? [],
-        );
+        const error = getSelectionError(group, selectedByGroup[group.id] ?? []);
         if (error) errors[group.id] = error;
         return errors;
       }, {}),
@@ -93,6 +90,9 @@ export default function ModifierSelectionDialog(
   );
 
   const isValid = Object.keys(validationErrors).length === 0;
+  const hasMissingRequiredSelection = props.groups.some(
+    (group) => group.isRequired && validationErrors[group.id],
+  );
   const modifierTotal = selectedOptions.reduce(
     (total, { option }) => total + option.price,
     0,
@@ -147,10 +147,15 @@ export default function ModifierSelectionDialog(
     });
   };
 
+  const handleClose = () => {
+    if (hasMissingRequiredSelection) return;
+    props.onClose();
+  };
+
   return (
     <Dialog
       open={props.open}
-      onClose={props.onClose}
+      onClose={handleClose}
       fullWidth
       maxWidth="sm"
       slotProps={{ paper: { sx: { borderRadius: "16px" } } }}
@@ -167,7 +172,7 @@ export default function ModifierSelectionDialog(
             <Typography sx={{ fontWeight: 600 }}>
               {props.productName}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               Harga dasar {currencyFormatter.format(props.basePrice)}
             </Typography>
           </Box>
@@ -182,35 +187,32 @@ export default function ModifierSelectionDialog(
 
             return (
               <Box key={group.id}>
-                <BoxFlexSpaceBetween
-                  sx={{ alignItems: "flex-start", gap: "12px" }}
-                >
-                  <Box>
-                    <BoxFlex sx={{ gap: "8px", flexWrap: "wrap" }}>
-                      <Typography sx={{ fontWeight: 600 }}>
-                        {group.name}
-                      </Typography>
-                      <Chip
-                        label={formatSelectionMode(group.isRequired)}
-                        size="small"
-                        variant="outlined"
-                        color={group.isRequired ? "primary" : "default"}
-                      />
-                    </BoxFlex>
-                    <Typography variant="body2" color="text.secondary">
-                      {formatSelectionRule(group)}
+                <Box>
+                  <BoxFlex
+                    sx={{ gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}
+                  >
+                    <Typography sx={{ fontWeight: 600 }}>
+                      {group.name}
                     </Typography>
-                    {group.description && (
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ marginTop: "2px" }}
-                      >
-                        {group.description}
-                      </Typography>
-                    )}
-                  </Box>
-                </BoxFlexSpaceBetween>
+                    <Chip
+                      label={formatSelectionMode(group.isRequired)}
+                      size="small"
+                      variant="outlined"
+                      color={group.isRequired ? "secondary" : "default"}
+                    />
+                  </BoxFlex>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {formatSelectionRule(group)}
+                  </Typography>
+                  {group.description && (
+                    <Typography
+                      variant="body2"
+                      sx={{ marginTop: "2px", color: "text.secondary" }}
+                    >
+                      {group.description}
+                    </Typography>
+                  )}
+                </Box>
 
                 <Box sx={{ marginTop: "4px" }}>
                   {group.isMultiple ? (
@@ -224,8 +226,7 @@ export default function ModifierSelectionDialog(
                           <FormControlLabel
                             key={option.id}
                             sx={{
-                              alignItems: "flex-start",
-                              marginY: "2px",
+                              alignItems: "center",
                               "& .MuiFormControlLabel-label": { flex: 1 },
                             }}
                             control={
@@ -246,8 +247,10 @@ export default function ModifierSelectionDialog(
                                 </Typography>
                                 <Typography
                                   variant="body2"
-                                  color="text.secondary"
-                                  sx={{ whiteSpace: "nowrap" }}
+                                  sx={{
+                                    whiteSpace: "nowrap",
+                                    color: "text.secondary",
+                                  }}
                                 >
                                   {option.price === 0
                                     ? "Gratis"
@@ -282,8 +285,7 @@ export default function ModifierSelectionDialog(
                           key={option.id}
                           value={option.id}
                           sx={{
-                            alignItems: "flex-start",
-                            marginY: "2px",
+                            alignItems: "center",
                             "& .MuiFormControlLabel-label": { flex: 1 },
                           }}
                           control={<Radio />}
@@ -296,8 +298,10 @@ export default function ModifierSelectionDialog(
                               </Typography>
                               <Typography
                                 variant="body2"
-                                color="text.secondary"
-                                sx={{ whiteSpace: "nowrap" }}
+                                sx={{
+                                  whiteSpace: "nowrap",
+                                  color: "text.secondary",
+                                }}
                               >
                                 {option.price === 0
                                   ? "Gratis"
@@ -311,7 +315,10 @@ export default function ModifierSelectionDialog(
                   )}
 
                   {group.options.length === 0 && (
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}
+                    >
                       Belum ada opsi aktif untuk grup ini.
                     </Typography>
                   )}
@@ -320,7 +327,7 @@ export default function ModifierSelectionDialog(
                     <Typography
                       variant="body2"
                       color="error"
-                      sx={{ marginTop: "4px" }}
+                      sx={{ marginTop: "8px" }}
                     >
                       {error}
                     </Typography>
@@ -344,7 +351,7 @@ export default function ModifierSelectionDialog(
           }}
         >
           <BoxFlexSpaceBetween>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               Harga dasar
             </Typography>
             <Typography variant="body2">
@@ -352,7 +359,7 @@ export default function ModifierSelectionDialog(
             </Typography>
           </BoxFlexSpaceBetween>
           <BoxFlexSpaceBetween>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               Total variasi
             </Typography>
             <Typography variant="body2">
@@ -372,7 +379,11 @@ export default function ModifierSelectionDialog(
       </DialogContent>
 
       <DialogActions sx={{ padding: "16px 24px" }}>
-        <Button variant="text" onClick={props.onClose}>
+        <Button
+          variant="text"
+          onClick={handleClose}
+          disabled={hasMissingRequiredSelection}
+        >
           Batal
         </Button>
         <Button

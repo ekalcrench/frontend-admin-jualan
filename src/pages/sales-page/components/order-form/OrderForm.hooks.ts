@@ -29,7 +29,7 @@ import type {
   OrderItemFormValues,
   OrderItemModifierFormValue,
 } from "./OrderForm.types";
-import type { ModifierSelectionResult } from "./components/modifier-selection-dialog/ModifierSelectionDialog.types";
+import type { ModifierSelectionResult } from "../modifier-selection-dialog/ModifierSelectionDialog.types";
 import {
   CreateDeliveryOrder,
   CreateDineInOrder,
@@ -349,14 +349,17 @@ export default function useOrderForm(props: OrderFormProps) {
     try {
       const response = await queryClient.fetchQuery({
         queryKey: productModifierKeys.assignment(product.value, true),
-        queryFn: () =>
-          fetchProductModifierGroupsByProduct(product.value, true),
+        queryFn: () => fetchProductModifierGroupsByProduct(product.value, true),
         staleTime: fiveMinutes,
       });
 
       if (!isFormOpenRef.current) return;
 
-      if (response.modifierGroups.length > 0) {
+      const hasRequiredModifierGroup = response.modifierGroups.some(
+        (group) => group.isRequired,
+      );
+
+      if (hasRequiredModifierGroup) {
         setModifierDialog({
           index,
           product,
@@ -394,8 +397,7 @@ export default function useOrderForm(props: OrderFormProps) {
     try {
       const response = await queryClient.fetchQuery({
         queryKey: productModifierKeys.assignment(product.value, true),
-        queryFn: () =>
-          fetchProductModifierGroupsByProduct(product.value, true),
+        queryFn: () => fetchProductModifierGroupsByProduct(product.value, true),
         staleTime: fiveMinutes,
       });
 

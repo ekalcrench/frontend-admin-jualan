@@ -1,16 +1,21 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef } from "react";
-import { Resolver, useForm } from "react-hook-form";
+import { useEffect, useMemo, useRef } from "react";
+import { Resolver, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
+import { inventoryUnitLabels } from "@/constants/inventoryItem";
+import { useInventoryItemOptionsQuery } from "@/services/inventory-items/inventoryItems.query";
 import {
   useCreateProductModifierOptionMutation,
   useEditProductModifierOptionMutation,
 } from "@/services/product-modifiers/productModifiers.mutation";
 import { CreateProductModifierOption } from "@/services/product-modifiers/productModifiers.types";
+import type { InventoryUnit } from "@/types/inventoryItem";
+import type { LabelValue } from "@/types/generalTypes";
 import { apiErrorHandler } from "@/utils/api";
 import {
   emptyModifierOptionFormValues,
   modifierOptionFormSchema,
+  NO_INVENTORY_OPTION,
   toModifierOptionFormValues,
 } from "./ModifierOptionForm.constants";
 import type {
@@ -21,11 +26,13 @@ import type {
 export default function useModifierOptionForm(props: OptionFormProps) {
   const createOption = useCreateProductModifierOptionMutation();
   const editOption = useEditProductModifierOptionMutation();
+  const inventoryItemsQuery = useInventoryItemOptionsQuery(Boolean(props.open));
 
   const {
     control,
     handleSubmit,
     reset,
+    setValue,
     formState: { isSubmitting },
   } = useForm<OptionFormValues>({
     resolver: zodResolver(
@@ -56,13 +63,85 @@ export default function useModifierOptionForm(props: OptionFormProps) {
     loadedOptionIdRef.current = optionId;
   }, [props.open, props.option, reset]);
 
+  useEffect(() => {
+    if (inventoryItemsQuery.isError && inventoryItemsQuery.error) {
+      apiErrorHandler(inventoryItemsQuery.error);
+    }
+  }, [inventoryItemsQuery.isError, inventoryItemsQuery.error]);
+
+  const inventoryItemOptions = useMemo<LabelValue<string>[]>(() => {
+    const options: LabelValue<string>[] = [NO_INVENTORY_OPTION];
+    const seenIds = new Set<string>([NO_INVENTORY_OPTION.value]);
+
+    (inventoryItemsQuery.data ?? []).forEach((item) => {
+      if (seenIds.has(item.id)) return;
+
+      seenIds.add(item.id);
+      options.push({
+        label: `${item.name} (${inventoryUnitLabels[item.unit]})`,
+        value: item.id,
+      });
+    });
+
+    // Keep a previously configured item selectable even when it has since been
+    // deactivated and is no longer returned by the options endpoint.
+    const currentItem = props.option?.inventoryItem;
+    if (currentItem && !seenIds.has(currentItem.id)) {
+      options.push({
+        label: `${currentItem.name} (${inventoryUnitLabels[currentItem.unit]})`,
+        value: currentItem.id,
+      });
+    }
+
+    return options;
+  }, [inventoryItemsQuery.data, props.option]);
+
+  const selectedInventoryItem = useWatch({
+    control,
+    name: "inventoryItemId",
+  });
+
+  const selectedInventoryItemId = selectedInventoryItem?.value || null;
+  const hasSelectedInventoryItem = Boolean(selectedInventoryItemId);
+
+  const selectedInventoryItemUnit = useMemo<InventoryUnit | null>(() => {
+    if (!selectedInventoryItemId) return null;
+
+    const inventoryItem = inventoryItemsQuery.data?.find(
+      (item) => item.id === selectedInventoryItemId,
+    );
+    if (inventoryItem) return inventoryItem.unit;
+
+    if (props.option?.inventoryItem?.id === selectedInventoryItemId) {
+      return props.option.inventoryItem.unit;
+    }
+
+    return null;
+  }, [inventoryItemsQuery.data, props.option, selectedInventoryItemId]);
+
+  const handleInventoryItemChange = (value: LabelValue<string> | null) => {
+    if (value?.value) return;
+
+    setValue("inventoryQuantity", null, {
+      shouldDirty: true,
+      shouldValidate: false,
+    });
+  };
+
   const isLoading = isSubmitting || createOption.isPending || editOption.isPending;
+  const isInventoryItemsEmpty =
+    inventoryItemsQuery.isSuccess && (inventoryItemsQuery.data?.length ?? 0) === 0;
 
   const onSubmit = async (values: OptionFormValues) => {
+    const inventoryItemId = values.inventoryItemId?.value || null;
     const payload: CreateProductModifierOption = {
       name: values.name,
       description: values.description?.trim() ? values.description.trim() : null,
       price: values.price ?? 0,
+      inventoryItemId,
+      inventoryQuantity: inventoryItemId
+        ? (values.inventoryQuantity ?? null)
+        : null,
       isActive: values.isActive,
     };
 
@@ -100,6 +179,12 @@ export default function useModifierOptionForm(props: OptionFormProps) {
   return {
     control,
     isLoading,
+    isLoadingInventoryItems: inventoryItemsQuery.isLoading,
+    isInventoryItemsEmpty,
+    inventoryItemOptions,
+    hasSelectedInventoryItem,
+    selectedInventoryItemUnit,
+    handleInventoryItemChange,
     handleSubmit,
     onSubmit,
   };
