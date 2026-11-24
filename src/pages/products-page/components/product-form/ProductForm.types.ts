@@ -1,5 +1,6 @@
 import { LabelValue } from "@/types/generalTypes";
-import type { InventoryItemOptions } from "@/types/inventoryItem";
+import type { InventoryItemOptions, InventoryPolicy } from "@/types/inventoryItem";
+import type { ProductStockManagement } from "@/types/product";
 import type { SwipeableDrawerProps } from "@mui/material";
 import type { Dispatch } from "react";
 
@@ -18,5 +19,8 @@ export interface ProductFormValues {
   name: string;
   sellingPrice: number | null;
   isActive: boolean;
+  stockManagement: ProductStockManagement;
+  inventoryPolicy: InventoryPolicy;
+  stock: number | null;
   productIngredients: ProductIngredientFormValues[];
 }

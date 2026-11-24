@@ -1,3 +1,5 @@
+import type { InventoryPolicy } from "@/types/inventoryItem";
+
 export interface CreateProductModifierGroup {
   name: string;
   description?: string | null;
@@ -23,6 +25,8 @@ export interface CreateProductModifierOption {
   price: number;
   inventoryItemId?: string | null;
   inventoryQuantity?: number | null;
+  trackInventory: boolean;
+  inventoryPolicy: InventoryPolicy;
   isActive: boolean;
   sortOrder?: number;
 }

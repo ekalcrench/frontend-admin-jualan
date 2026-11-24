@@ -45,6 +45,11 @@ function toCreateProduct(values: ProductFormValues): CreateProduct {
     name: values.name,
     sellingPrice: values.sellingPrice ?? 0,
     isActive: values.isActive,
+    stockManagement: values.stockManagement,
+    inventoryPolicy: values.inventoryPolicy,
+    ...(values.stockManagement === "MANUAL" && {
+      stock: values.stock ?? 0,
+    }),
     productIngredients: values.productIngredients.map((ingredient) => ({
       inventoryItemId: ingredient.inventoryItemId?.value ?? "",
       quantity: ingredient.quantity ?? 0,
@@ -120,6 +125,7 @@ export default function useProductForm(props: ProductFormProps) {
     control,
     handleSubmit,
     reset,
+    setValue,
     formState: { isSubmitting, dirtyFields },
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema) as Resolver<ProductFormValues>,
@@ -133,6 +139,10 @@ export default function useProductForm(props: ProductFormProps) {
   const productIngredientsValues = useWatch({
     control,
     name: "productIngredients",
+  });
+  const stockManagement = useWatch({
+    control,
+    name: "stockManagement",
   });
 
   const [deletedProductIngredientIds, setDeletedProductIngredientIds] =
@@ -154,6 +164,10 @@ export default function useProductForm(props: ProductFormProps) {
       name: product.name,
       sellingPrice: product.sellingPrice,
       isActive: product.isActive,
+      stockManagement: product.stockManagement,
+      inventoryPolicy: product.inventoryPolicy,
+      stock:
+        product.stockManagement === "MANUAL" ? product.stock : null,
       productIngredients: product.productIngredients.map((ingredient) => ({
         id: ingredient.id,
         inventoryItemId: {
@@ -270,6 +284,15 @@ export default function useProductForm(props: ProductFormProps) {
     setSelectedModifierGroupIds(ids);
   };
 
+  const handleStockManagementChange = (value: string) => {
+    if (value !== "MANUAL") {
+      setValue("stock", null, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  };
+
   const onSubmit = async (values: ProductFormValues) => {
     const hasProductChanges = Object.keys(dirtyFields).length > 0;
     const isAssignmentReady =
@@ -304,6 +327,16 @@ export default function useProductForm(props: ProductFormProps) {
             ...(dirtyFields.isActive && {
               isActive: values.isActive,
             }),
+            ...(dirtyFields.stockManagement && {
+              stockManagement: values.stockManagement,
+            }),
+            ...(dirtyFields.inventoryPolicy && {
+              inventoryPolicy: values.inventoryPolicy,
+            }),
+            ...(dirtyFields.stock &&
+              values.stockManagement === "MANUAL" && {
+                stock: values.stock ?? 0,
+              }),
             ...(dirtyFields.productIngredients && {
               productIngredients: toEditProductIngredients(
                 values.productIngredients,
@@ -403,6 +436,8 @@ export default function useProductForm(props: ProductFormProps) {
   return {
     control,
     fields,
+    stockManagement,
+    handleStockManagementChange,
     inventoryItemOptions,
     isLoading,
     isLoadingGetOptions,

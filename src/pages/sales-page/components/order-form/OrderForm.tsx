@@ -319,7 +319,12 @@ export default function OrderForm(props: OrderFormProps) {
                   <BoxFlexSpaceBetween>
                     <Typography variant="body2">Stok</Typography>
                     <Typography variant="body2">
-                      {productId ? stockMapping[productId] : "-"}
+                      {productId
+                        ? stockMapping[productId] === null
+                          ? "Tidak terbatas"
+                          : stockMapping[productId]?.toLocaleString("id-ID") ??
+                            "-"
+                        : "-"}
                     </Typography>
                   </BoxFlexSpaceBetween>
 

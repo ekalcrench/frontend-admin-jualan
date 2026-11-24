@@ -172,7 +172,9 @@ export default function useOrderForm(props: OrderFormProps) {
   const [sellingPriceMapping, setSellingPriceMapping] = useState<
     Record<string, number>
   >({});
-  const [stockMapping, setStockMapping] = useState<Record<string, number>>({});
+  const [stockMapping, setStockMapping] = useState<
+    Record<string, number | null>
+  >({});
   const [modifierDialog, setModifierDialog] =
     useState<ModifierDialogState | null>(null);
   const [checkingProductIndex, setCheckingProductIndex] = useState<
@@ -191,7 +193,7 @@ export default function useOrderForm(props: OrderFormProps) {
       return;
     }
     const _sellingPriceMapping: Record<string, number> = {};
-    const _stockMapping: Record<string, number> = {};
+    const _stockMapping: Record<string, number | null> = {};
 
     for (const option of productOptions) {
       _sellingPriceMapping[option.id] = option.sellingPrice;

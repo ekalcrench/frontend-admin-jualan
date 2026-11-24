@@ -1,4 +1,5 @@
 import type { LabelValue } from "@/types/generalTypes";
+import type { InventoryPolicy } from "@/types/inventoryItem";
 import type { ProductModifierOptionResponse } from "@/types/productModifier";
 import type { SwipeableDrawerProps } from "@mui/material";
 import type { Dispatch } from "react";
@@ -16,5 +17,7 @@ export interface OptionFormValues {
   price: number | null;
   inventoryItemId: LabelValue<string> | null;
   inventoryQuantity: number | null;
+  trackInventory: boolean;
+  inventoryPolicy: InventoryPolicy;
   isActive: boolean;
 }

@@ -49,7 +49,9 @@ export default function useAssignProductsDialog(
           name: product.name,
           sellingPrice: product.sellingPrice,
           isActive: false,
-          stock: 0,
+          stockManagement: "UNTRACKED",
+          inventoryPolicy: "STRICT",
+          stock: null,
         });
       }
     });

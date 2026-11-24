@@ -28,6 +28,7 @@ import ProductForm from "./components/product-form";
 import useProductsPage from "./ProductsPage.hooks";
 import { StackDetailPanel } from "./ProductsPage.styles";
 import { currencyFormatter } from "@/utils/currency";
+import { calculateProductCapitalCost } from "@/utils/product";
 import { numberFormat } from "@/utils/number";
 import useAuthStore from "@/store/auth-store";
 import { userOrganizationRole } from "@/constants/user";
@@ -123,9 +124,8 @@ export default function ProductsPage() {
   );
 
   const renderDetailPanel = (row: MRT_Row<ProductResponse>) => {
-    const totalCapital = row.original.productIngredients.reduce(
-      (total, item) => total + item.quantity * item.unitCost,
-      0,
+    const totalCapital = calculateProductCapitalCost(
+      row.original.productIngredients,
     );
     const sellingPrice = row.original.sellingPrice;
 
@@ -144,19 +144,17 @@ export default function ProductsPage() {
           </Grid>
           <Grid size={6}>
             <TypographyTab>
-              {`Harga Modal\t: ${currencyFormatter.format(totalCapital)}`}
+              {`Harga Modal\t: ${totalCapital === null ? "-" : currencyFormatter.format(totalCapital)}`}
             </TypographyTab>
           </Grid>
           <Grid size={6}>
             <TypographyTab>
-              {`Laba Kotor\t: ${currencyFormatter.format(
-                sellingPrice - totalCapital,
-              )}`}
+              {`Laba Kotor\t: ${totalCapital === null ? "-" : currencyFormatter.format(sellingPrice - totalCapital)}`}
             </TypographyTab>
           </Grid>
           <Grid size={6}>
             <TypographyTab>
-              {`Margin Kotor\t: ${numberFormat.format(((sellingPrice - totalCapital) / sellingPrice) * 100)}%`}
+              {`Margin Kotor\t: ${totalCapital === null ? "-" : `${numberFormat.format(((sellingPrice - totalCapital) / sellingPrice) * 100)}%`}`}
             </TypographyTab>
           </Grid>
         </Grid>
@@ -190,9 +188,11 @@ export default function ProductsPage() {
                 <Grid size={3}>
                   <BoxFlexEnd>
                     <Typography>
-                      {currencyFormatter.format(
-                        ingredient.quantity * (ingredient.unitCost ?? 0),
-                      )}
+                      {ingredient.unitCost === null
+                        ? "-"
+                        : currencyFormatter.format(
+                            ingredient.quantity * ingredient.unitCost,
+                          )}
                     </Typography>
                   </BoxFlexEnd>
                 </Grid>
@@ -202,7 +202,9 @@ export default function ProductsPage() {
           <Divider sx={{ marginTop: "8px", marginBottom: "4px" }} />
           <BoxFlexSpaceBetween>
             <Typography sx={{ fontWeight: 700 }}>Total</Typography>
-            <Typography>{currencyFormatter.format(totalCapital)}</Typography>
+            <Typography>
+              {totalCapital === null ? "-" : currencyFormatter.format(totalCapital)}
+            </Typography>
           </BoxFlexSpaceBetween>
         </Box>
       </StackDetailPanel>
@@ -210,9 +212,8 @@ export default function ProductsPage() {
   };
 
   const renderMobileCard = (product: ProductResponse) => {
-    const totalCapital = product.productIngredients.reduce(
-      (total, item) => total + item.quantity * item.unitCost,
-      0,
+    const totalCapital = calculateProductCapitalCost(
+      product.productIngredients,
     );
 
     return (
@@ -245,7 +246,9 @@ export default function ProductsPage() {
             <BoxFlexSpaceBetween>
               <Typography variant="body2">Stok</Typography>
               <Typography variant="body2">
-                {product.stock.toLocaleString("id-ID")}
+                {product.stock === null
+                  ? "Tidak terbatas"
+                  : product.stock.toLocaleString("id-ID")}
               </Typography>
             </BoxFlexSpaceBetween>
             <Typography variant="body2" color="text.secondary">

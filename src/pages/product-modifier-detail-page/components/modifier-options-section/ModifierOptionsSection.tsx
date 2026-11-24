@@ -120,8 +120,10 @@ export default function ModifierOptionsSection({
         }}
       >
         {inventoryLabel
-          ? `Persediaan: ${inventoryLabel}`
-          : "Tanpa pengurangan persediaan"}
+          ? option.trackInventory
+            ? `Pengurangan stok: ${inventoryLabel}`
+            : `Biaya bahan: ${inventoryLabel} (stok tidak dikurangi)`
+          : "Tanpa barang persediaan"}
       </Typography>
     );
   };

@@ -100,6 +100,10 @@ export default function useModifierOptionForm(props: OptionFormProps) {
     control,
     name: "inventoryItemId",
   });
+  const trackInventory = useWatch({
+    control,
+    name: "trackInventory",
+  });
 
   const selectedInventoryItemId = selectedInventoryItem?.value || null;
   const hasSelectedInventoryItem = Boolean(selectedInventoryItemId);
@@ -126,6 +130,10 @@ export default function useModifierOptionForm(props: OptionFormProps) {
       shouldDirty: true,
       shouldValidate: false,
     });
+    setValue("trackInventory", false, {
+      shouldDirty: true,
+      shouldValidate: false,
+    });
   };
 
   const isLoading = isSubmitting || createOption.isPending || editOption.isPending;
@@ -142,6 +150,8 @@ export default function useModifierOptionForm(props: OptionFormProps) {
       inventoryQuantity: inventoryItemId
         ? (values.inventoryQuantity ?? null)
         : null,
+      trackInventory: inventoryItemId ? values.trackInventory : false,
+      inventoryPolicy: values.inventoryPolicy,
       isActive: values.isActive,
     };
 
@@ -183,6 +193,7 @@ export default function useModifierOptionForm(props: OptionFormProps) {
     isInventoryItemsEmpty,
     inventoryItemOptions,
     hasSelectedInventoryItem,
+    trackInventory,
     selectedInventoryItemUnit,
     handleInventoryItemChange,
     handleSubmit,

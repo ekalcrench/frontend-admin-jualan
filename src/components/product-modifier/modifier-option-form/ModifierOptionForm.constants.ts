@@ -38,6 +38,8 @@ export const modifierOptionFormSchema = z
       ),
     inventoryItemId: inventoryItemSchema.nullable().optional(),
     inventoryQuantity: z.number().nullable().optional(),
+    trackInventory: z.boolean(),
+    inventoryPolicy: z.enum(["STRICT", "ALLOW_NEGATIVE"]),
     isActive: z.boolean(),
   })
   .superRefine((values, context) => {
@@ -104,6 +106,8 @@ export const emptyModifierOptionFormValues: OptionFormValues = {
   price: 0,
   inventoryItemId: null,
   inventoryQuantity: null,
+  trackInventory: false,
+  inventoryPolicy: "STRICT",
   isActive: true,
 };
 
@@ -123,6 +127,8 @@ export function toModifierOptionFormValues(
         }
       : null,
     inventoryQuantity: option.inventoryQuantity,
+    trackInventory: option.trackInventory,
+    inventoryPolicy: option.inventoryPolicy,
     isActive: option.isActive,
   };
 }

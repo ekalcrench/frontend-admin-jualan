@@ -23,7 +23,9 @@ const orderItemSchema = z.object({
   modifiers: z.array(orderItemModifierSchema).default([]),
 });
 
-export const orderFormSchema = (stockMapping: Record<string, number>) =>
+export const orderFormSchema = (
+  stockMapping: Record<string, number | null>,
+) =>
   z
     .object({
       type: z.enum(["DELIVERY", "TAKEAWAY", "DINE_IN"], {
@@ -150,7 +152,7 @@ export const orderFormSchema = (stockMapping: Record<string, number>) =>
       data.orderItems.forEach((item, index) => {
         const stock = stockMapping[item.productId?.value];
 
-        if (stock !== undefined && item.quantity > stock) {
+        if (stock !== undefined && stock !== null && item.quantity > stock) {
           ctx.addIssue({
             code: "custom",
             path: ["orderItems", index, "quantity"],

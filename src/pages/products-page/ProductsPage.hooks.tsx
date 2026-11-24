@@ -9,12 +9,15 @@ import type { ProductResponse } from "@/types/product";
 import type { ColumnSort, PaginatedData } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { currencyFormatter } from "@/utils/currency";
+import { calculateProductCapitalCost } from "@/utils/product";
 import { formatLocalDate } from "@/utils/dateTime";
 import { Chip } from "@mui/material";
 import { type MRT_ColumnDef } from "material-react-table";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+import { numberFormat } from "@/utils/number";
+import AllInclusiveRoundedIcon from "@mui/icons-material/AllInclusiveRounded";
 
 export default function useProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -114,10 +117,8 @@ export default function useProductsPage() {
         size: 160,
         enableSorting: false,
         Cell: ({ row }) => {
-          const capitalCost = row.original.productIngredients.reduce(
-            (total, ingredient) =>
-              total + ingredient.quantity * ingredient.unitCost,
-            0,
+          const capitalCost = calculateProductCapitalCost(
+            row.original.productIngredients,
           );
 
           return capitalCost ? currencyFormatter.format(capitalCost) : "-";
@@ -134,6 +135,12 @@ export default function useProductsPage() {
         accessorKey: "stock",
         header: "Jumlah Stok",
         size: 140,
+        Cell: ({ cell, row }) =>
+          row.original.stockManagement === "UNTRACKED" ? (
+            <AllInclusiveRoundedIcon fontSize="small" />
+          ) : (
+            numberFormat.format(Number(cell.getValue<number>()))
+          ),
       },
       {
         id: "ingredientCount",

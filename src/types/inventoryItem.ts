@@ -2,6 +2,7 @@ import { BaseApiResponse } from "./api";
 import { DefaultFilter } from "./table";
 
 export type InventoryUnit = "GRAM" | "ML" | "PCS";
+export type InventoryPolicy = "STRICT" | "ALLOW_NEGATIVE";
 
 export interface CreateInventoryItem {
   name: string;

@@ -1,4 +1,14 @@
-import { Button, Divider, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material";
+import { Controller } from "react-hook-form";
 import CustomAutocomplete from "@/components/custom-autocomplete";
 import CustomCheckbox from "@/components/custom-checkbox";
 import CustomInput from "@/components/custom-input";
@@ -17,6 +27,7 @@ export default function ModifierOptionForm(props: OptionFormProps) {
     isInventoryItemsEmpty,
     inventoryItemOptions,
     hasSelectedInventoryItem,
+    trackInventory,
     selectedInventoryItemUnit,
     handleInventoryItemChange,
     handleSubmit,
@@ -92,8 +103,8 @@ export default function ModifierOptionForm(props: OptionFormProps) {
           color="text.secondary"
           sx={{ marginBottom: "16px" }}
         >
-          Tentukan barang persediaan yang berkurang setiap kali pelanggan
-          memilih opsi ini.
+          Hubungkan barang persediaan untuk menghitung biaya bahan. Aktifkan
+          pelacakan untuk otomatis mengurangi stok saat opsi ini dipilih.
         </Typography>
 
         <CustomAutocomplete
@@ -117,25 +128,33 @@ export default function ModifierOptionForm(props: OptionFormProps) {
           }}
         />
 
-        <CustomInputNumber
-          name="inventoryQuantity"
-          control={control}
-          label="Jumlah Persediaan"
-          placeholder={
-            hasSelectedInventoryItem
-              ? "Contoh: 30"
-              : "Pilih barang terlebih dahulu"
-          }
-          allowNegative={false}
-          decimalScale={2}
-          endAdornment={
-            selectedInventoryItemUnit
-              ? inventoryUnitLabels[selectedInventoryItemUnit]
-              : undefined
-          }
-          renderErrorMessage
-          disabled={isLoading || !hasSelectedInventoryItem}
-        />
+        {hasSelectedInventoryItem && (
+          <>
+            <CustomInputNumber
+              name="inventoryQuantity"
+              control={control}
+              label="Jumlah Persediaan"
+              placeholder="Contoh: 30"
+              allowNegative={false}
+              decimalScale={2}
+              endAdornment={
+                selectedInventoryItemUnit
+                  ? inventoryUnitLabels[selectedInventoryItemUnit]
+                  : undefined
+              }
+              renderErrorMessage
+              disabled={isLoading}
+            />
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ marginTop: "4px", marginBottom: "12px" }}
+            >
+              Jumlah ini digunakan untuk menghitung biaya bahan. Stok hanya
+              dikurangi jika pelacakan bahan diaktifkan.
+            </Typography>
+          </>
+        )}
 
         {isInventoryItemsEmpty ? (
           <Typography
@@ -144,18 +163,87 @@ export default function ModifierOptionForm(props: OptionFormProps) {
             sx={{ marginTop: "4px", marginBottom: "20px" }}
           >
             Belum ada barang persediaan aktif. Tambahkan barang persediaan
-            terlebih dahulu jika opsi ini perlu mengurangi stok.
+            terlebih dahulu jika opsi ini menggunakan bahan persediaan.
           </Typography>
-        ) : (
+        ) : !hasSelectedInventoryItem ? (
           <Typography
             variant="body2"
             color="text.secondary"
             sx={{ marginTop: "4px", marginBottom: "20px" }}
           >
-            {hasSelectedInventoryItem
-              ? "Jumlah ini dikurangi dari stok setiap satu opsi dipilih, sesuai satuan barang persediaan."
-              : "Pilih “Tidak memakai persediaan” jika opsi ini tidak mengurangi stok."}
+            Pilih barang persediaan untuk menghitung biaya bahan dan mengatur
+            pengurangan stok opsional.
           </Typography>
+        ) : null}
+
+        {hasSelectedInventoryItem && (
+          <Box
+            sx={{
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 2,
+              padding: 2,
+              marginBottom: 2,
+            }}
+          >
+            <CustomCheckbox
+              name="trackInventory"
+              control={control}
+              label="Aktifkan pelacakan bahan"
+              disabled={isLoading}
+            />
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ marginLeft: "32px", marginBottom: 1 }}
+            >
+              Otomatis kurangi bahan ini dari persediaan saat opsi dipilih.
+            </Typography>
+
+            {trackInventory && (
+              <FormControl component="fieldset" fullWidth>
+                <Typography component="legend" variant="subtitle2">
+                  Kebijakan Stok
+                </Typography>
+                <Controller
+                  name="inventoryPolicy"
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup {...field}>
+                      <FormControlLabel
+                        value="STRICT"
+                        control={<Radio size="small" />}
+                        label={
+                          <Box>
+                            <Typography variant="body2">Strict (ketat)</Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              Cegah penjualan saat stok bahan opsi ini tidak
+                              mencukupi.
+                            </Typography>
+                          </Box>
+                        }
+                      />
+                      <FormControlLabel
+                        value="ALLOW_NEGATIVE"
+                        control={<Radio size="small" />}
+                        label={
+                          <Box>
+                            <Typography variant="body2">
+                              Allow negative (izinkan stok negatif)
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              Izinkan penjualan meski stok bahan opsi ini tidak
+                              mencukupi.
+                            </Typography>
+                          </Box>
+                        }
+                      />
+                    </RadioGroup>
+                  )}
+                />
+              </FormControl>
+            )}
+          </Box>
         )}
 
         <Divider sx={{ marginBottom: "20px" }} />
