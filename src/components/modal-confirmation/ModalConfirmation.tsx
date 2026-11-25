@@ -38,12 +38,11 @@ export default function ModalConfirmation({
       </BoxCenter>
 
       <ActionsDialogWarning>
-        <Button onClick={onConfirm} sx={{ width: "6rem", marginRight: "1rem" }}>
-          {confirmText ?? "Yes"}
-        </Button>
-
         <Button onClick={onCancel} color="error" sx={{ width: "6rem" }}>
           {cancelText ?? "No"}
+        </Button>
+        <Button onClick={onConfirm} sx={{ width: "6rem", marginLeft: "1rem" }}>
+          {confirmText ?? "Yes"}
         </Button>
       </ActionsDialogWarning>
     </Dialog>
