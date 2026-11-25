@@ -15,7 +15,7 @@ import CustomInput from "@/components/custom-input";
 import CustomInputNumber from "@/components/custom-input-number";
 import FormDrawer from "@/components/form-drawer";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
-import { BoxCenter, BoxFlexEnd } from "@/styled/CustomBox";
+import { BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import usePreparationForm from "./PreparationForm.hooks";
 import { PreparationFormProps } from "./PreparationForm.types";
 import CustomCheckbox from "@/components/custom-checkbox";
@@ -26,6 +26,8 @@ export default function PreparationForm(props: PreparationFormProps) {
     emptyPreparationItem,
     fields,
     inventoryItemOptions,
+    outputInventoryItemUnit,
+    preparationItemInventoryUnits,
     isHasNoExpired,
     isLoading,
     isLoadingGetOptions,
@@ -53,154 +55,182 @@ export default function PreparationForm(props: PreparationFormProps) {
           Simpan Produksi
         </Button>
       }
+      size="large"
     >
-        <CustomInput
-          name="name"
-          control={control}
-          label="Nama Produksi"
-          placeholder="Contoh: Adonan roti"
-          renderErrorMessage
-          disabled={isLoading}
-        />
+      <CustomInput
+        name="name"
+        control={control}
+        label="Nama Produksi"
+        placeholder="Contoh: Adonan roti"
+        renderErrorMessage
+        disabled={isLoading}
+      />
 
-        <Grid container columnSpacing={1.5}>
-          <Grid size={{ xs: 12, sm: 9 }}>
-            <CustomAutocomplete
-              control={control}
-              name="outputInventoryItemId"
-              label="Barang Hasil Produksi"
-              placeholder="Pilih barang hasil"
-              renderErrorMessage
-              disabled={isLoading}
-              autocompleteProps={{
-                options: itemOptions,
-                loading: isLoadingGetOptions,
-              }}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, sm: 3 }}>
-            <CustomInputNumber
-              name="outputQuantity"
-              control={control}
-              label="Jumlah"
-              placeholder="500 (gr)"
-              renderErrorMessage
-              disabled={isLoading}
-            />
-          </Grid>
-        </Grid>
-
-        <CustomDateTimePicker
-          control={control}
-          name="preparedAt"
-          label="Tanggal Produksi"
-          renderErrorMessage
-          disabled={isLoading}
-        />
-
-        <Box>
-          <Typography sx={{ marginBottom: "4px" }}>
-            Tanggal Kedaluwarsa
-          </Typography>
-          <CustomCheckbox
+      <Grid container columnSpacing={1.5}>
+        <Grid size={{ xs: 12, sm: 8 }}>
+          <CustomAutocomplete
             control={control}
-            name="isHasNoExpired"
-            label="Tidak memiliki tanggal kedaluwarsa"
+            name="outputInventoryItemId"
+            label="Barang Hasil Produksi"
+            placeholder="Pilih barang hasil"
+            renderErrorMessage
             disabled={isLoading}
-            boxFieldWrapperProps={{
-              sx: {
-                marginBottom: isHasNoExpired ? "16px" : 0,
-              },
+            autocompleteProps={{
+              options: itemOptions,
+              loading: isLoadingGetOptions,
             }}
           />
-          {!isHasNoExpired && (
-            <CustomDateTimePicker
-              control={control}
-              name="expiredAt"
-              renderErrorMessage
-              disabled={isLoading}
-            />
-          )}
-        </Box>
-
-        <CustomInput
-          name="notes"
-          control={control}
-          label="Cara Produksi"
-          placeholder="Step by step produksi (optional)"
-          renderErrorMessage
-          disabled={isLoading}
-          textFieldProps={{ multiline: true, minRows: 2 }}
-        />
-
-        <Typography sx={{ fontWeight: 600, mt: 2, mb: 1 }}>
-          Bahan Produksi
-        </Typography>
-        <Stack spacing={2} divider={<Divider flexItem />}>
-          {fields.map((field, index) => (
-            <Grid container columnSpacing={1.5} rowSpacing={0} key={field.id}>
-              <Grid size={8}>
-                <CustomAutocomplete
-                  control={control}
-                  label={`Bahan ${index + 1}`}
-                  name={`preparationItems.${index}.inventoryItemId`}
-                  placeholder="Pilih bahan persediaan"
-                  renderErrorMessage
-                  disabled={isLoading}
-                  autocompleteProps={{
-                    options: itemOptions,
-                    loading: isLoadingGetOptions,
-                  }}
-                />
-              </Grid>
-              <Grid size={3}>
-                <CustomInputNumber
-                  name={`preparationItems.${index}.quantity`}
-                  control={control}
-                  label="Jumlah"
-                  placeholder="20 gr"
-                  renderErrorMessage
-                  disabled={isLoading}
-                />
-              </Grid>
-              <Grid size={1}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "flex-end",
-                    height: "100%",
-                    paddingBottom: "20px",
-                    boxSizing: "border-box",
-                  }}
-                >
-                  <BoxCenter sx={{ height: "54px" }}>
-                    <IconButton
-                      aria-label={`Hapus bahan ${index + 1}`}
-                      color="error"
-                      disabled={isLoading || fields.length === 1}
-                      onClick={() => handleRemovePreparationItem(index)}
-                      size="small"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </BoxCenter>
-                </Box>
-              </Grid>
-            </Grid>
-          ))}
-        </Stack>
-
-        <BoxFlexEnd>
-          <Button
-            size="small"
-            startIcon={<AddIcon />}
+        </Grid>
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <CustomInputNumber
+            name="outputQuantity"
+            control={control}
+            label="Jumlah"
+            placeholder="Contoh: 30"
+            endAdornment={
+              outputInventoryItemUnit
+                ? inventoryUnitLabels[outputInventoryItemUnit]
+                : undefined
+            }
+            renderErrorMessage
             disabled={isLoading}
-            onClick={() => append({ ...emptyPreparationItem })}
-          >
-            Tambah Bahan
-          </Button>
-        </BoxFlexEnd>
+          />
+        </Grid>
+      </Grid>
 
+      <CustomDateTimePicker
+        control={control}
+        name="preparedAt"
+        label="Tanggal Produksi"
+        renderErrorMessage
+        disabled={isLoading}
+      />
+
+      <Box>
+        <Typography sx={{ marginBottom: "4px" }}>
+          Tanggal Kedaluwarsa
+        </Typography>
+        <CustomCheckbox
+          control={control}
+          name="isHasNoExpired"
+          label="Tidak memiliki tanggal kedaluwarsa"
+          disabled={isLoading}
+          boxFieldWrapperProps={{
+            sx: {
+              marginBottom: isHasNoExpired ? "16px" : 0,
+            },
+          }}
+        />
+        {!isHasNoExpired && (
+          <CustomDateTimePicker
+            control={control}
+            name="expiredAt"
+            renderErrorMessage
+            disabled={isLoading}
+          />
+        )}
+      </Box>
+
+      <CustomInput
+        name="notes"
+        control={control}
+        label="Cara Produksi (Optional)"
+        placeholder="Step by step produksi"
+        renderErrorMessage
+        disabled={isLoading}
+        textFieldProps={{ multiline: true, minRows: 2 }}
+      />
+
+      <Divider sx={{ marginTop: "8px", marginBottom: "24px" }} />
+
+      <Typography sx={{ fontWeight: 600, marginBottom: "4px" }}>
+        Bahan Produksi
+      </Typography>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{ marginBottom: "16px" }}
+      >
+        Atur bahan dengan tepat untuk mengetahui HPP produksi.
+      </Typography>
+      <Stack spacing={2}>
+        {fields.map((field, index) => {
+          const selectedInventoryItemUnit =
+            preparationItemInventoryUnits[index];
+
+          return (
+            <Box
+              key={field.id}
+              sx={{
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: "16px",
+                padding: "12px 16px 4px",
+              }}
+            >
+              <BoxFlexSpaceBetween sx={{ marginBottom: "12px" }}>
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: 600 }}
+                >{`Bahan ke-${index + 1}`}</Typography>
+                <IconButton
+                  aria-label={`Hapus bahan ${index + 1}`}
+                  color="error"
+                  disabled={isLoading || fields.length === 1}
+                  onClick={() => handleRemovePreparationItem(index)}
+                  size="small"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </BoxFlexSpaceBetween>
+
+              <Grid container columnSpacing={1.5}>
+                <Grid size={{ xs: 12, md: 8 }}>
+                  <CustomAutocomplete
+                    label="Nama"
+                    boxFieldWrapperProps={{ sx: { flex: 1 } }}
+                    control={control}
+                    name={`preparationItems.${index}.inventoryItemId`}
+                    placeholder="Ketik untuk mencari barang"
+                    renderErrorMessage
+                    disabled={isLoading}
+                    autocompleteProps={{
+                      options: itemOptions,
+                      loading: isLoadingGetOptions,
+                    }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 4 }}>
+                  <CustomInputNumber
+                    name={`preparationItems.${index}.quantity`}
+                    control={control}
+                    label="Jumlah"
+                    placeholder="Contoh: 30"
+                    endAdornment={
+                      selectedInventoryItemUnit
+                        ? inventoryUnitLabels[selectedInventoryItemUnit]
+                        : undefined
+                    }
+                    renderErrorMessage
+                    disabled={isLoading}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          );
+        })}
+      </Stack>
+
+      <BoxFlexEnd sx={{ marginTop: "16px" }}>
+        <Button
+          size="small"
+          startIcon={<AddIcon />}
+          disabled={isLoading}
+          onClick={() => append({ ...emptyPreparationItem })}
+        >
+          Tambah Bahan
+        </Button>
+      </BoxFlexEnd>
     </FormDrawer>
   );
 }

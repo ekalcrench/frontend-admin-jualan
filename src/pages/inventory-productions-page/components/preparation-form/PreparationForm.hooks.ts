@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
@@ -55,6 +55,10 @@ export default function usePreparationForm(props: PreparationFormProps) {
     name: "preparationItems",
   });
   const watch = useWatch({ control });
+  const outputInventoryItemId = useWatch({
+    control,
+    name: "outputInventoryItemId",
+  });
   const isHasNoExpired = useWatch({
     control,
     name: "isHasNoExpired",
@@ -67,6 +71,45 @@ export default function usePreparationForm(props: PreparationFormProps) {
     control,
     name: "preparationItems",
   });
+  const outputInventoryItemUnit = useMemo((): InventoryUnit | null => {
+    const selectedInventoryItemId = outputInventoryItemId?.value;
+    if (!selectedInventoryItemId) return null;
+
+    const selectedInventoryItem = inventoryItemOptions?.find(
+      (inventoryItem) => inventoryItem.id === selectedInventoryItemId,
+    );
+    if (selectedInventoryItem) return selectedInventoryItem.unit;
+
+    const preparedOutputInventoryItem =
+      preparationQuery.data?.outputInventoryItem;
+    return preparedOutputInventoryItem?.id === selectedInventoryItemId
+      ? preparedOutputInventoryItem.unit
+      : null;
+  }, [
+    inventoryItemOptions,
+    outputInventoryItemId,
+    preparationQuery.data,
+  ]);
+  const preparationItemInventoryUnits = useMemo(
+    () =>
+      (preparationItemsValues ?? []).map((item): InventoryUnit | null => {
+        const selectedInventoryItemId = item.inventoryItemId?.value;
+        if (!selectedInventoryItemId) return null;
+
+        const selectedInventoryItem = inventoryItemOptions?.find(
+          (inventoryItem) => inventoryItem.id === selectedInventoryItemId,
+        );
+        if (selectedInventoryItem) return selectedInventoryItem.unit;
+
+        return (
+          preparationQuery.data?.preparationItems.find(
+            (preparationItem) =>
+              preparationItem.inventoryItem.id === selectedInventoryItemId,
+          )?.inventoryItem.unit ?? null
+        );
+      }),
+    [inventoryItemOptions, preparationItemsValues, preparationQuery.data],
+  );
   const [deletedPreparationItemIds, setDeletedPreparationItemIds] = useState<
     string[]
   >([]);
@@ -234,6 +277,8 @@ export default function usePreparationForm(props: PreparationFormProps) {
     emptyPreparationItem,
     fields,
     preparationItemsValues,
+    outputInventoryItemUnit,
+    preparationItemInventoryUnits,
     inventoryItemOptions,
     isHasNoExpired,
     isLoading,

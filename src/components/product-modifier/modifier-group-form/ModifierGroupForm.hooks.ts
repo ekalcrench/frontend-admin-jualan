@@ -68,7 +68,8 @@ export default function useModifierGroupForm(props: ModifierGroupFormProps) {
     }
 
     const groupId = props.group?.id ?? null;
-    const shouldLoad = !wasOpenRef.current || loadedGroupIdRef.current !== groupId;
+    const shouldLoad =
+      !wasOpenRef.current || loadedGroupIdRef.current !== groupId;
 
     if (!shouldLoad) return;
 
@@ -123,7 +124,9 @@ export default function useModifierGroupForm(props: ModifierGroupFormProps) {
   const onSubmit = async (values: ModifierGroupFormValues) => {
     const payload: CreateProductModifierGroup = {
       name: values.name,
-      description: values.description?.trim() ? values.description.trim() : null,
+      description: values.description?.trim()
+        ? values.description.trim()
+        : null,
       isRequired: values.isRequired,
       isMultiple: values.isMultiple,
       minSelection: values.isMultiple
@@ -166,7 +169,6 @@ export default function useModifierGroupForm(props: ModifierGroupFormProps) {
     control,
     isRequired,
     isMultiple,
-    maxSelection,
     isLoading,
     handleSubmit,
     onSubmit,

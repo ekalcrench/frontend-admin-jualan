@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FieldNamesMarkedBoolean,
   Resolver,
@@ -31,6 +31,7 @@ import {
   purchaseFormSchema,
 } from "./PurchaseForm.constants";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
+import type { InventoryUnit } from "@/types/inventoryItem";
 
 function toCreatePurchaseItem(
   item: PurchaseItemFormValues,
@@ -251,6 +252,27 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     error: errorGetOptions,
   } = useInventoryItemOptionsQuery(props.open ?? false);
 
+  const purchaseItemInventoryUnits = useMemo(
+    () =>
+      (purchaseItemsValues ?? []).map((item): InventoryUnit | null => {
+        const selectedInventoryItemId = item.inventoryItemId?.value;
+        if (!selectedInventoryItemId) return null;
+
+        const selectedInventoryItem = inventoryItemOptions?.find(
+          (inventoryItem) => inventoryItem.id === selectedInventoryItemId,
+        );
+        if (selectedInventoryItem) return selectedInventoryItem.unit;
+
+        return (
+          purchaseQuery.data?.purchaseItems.find(
+            (purchaseItem) =>
+              purchaseItem.inventoryItem.id === selectedInventoryItemId,
+          )?.inventoryItem.unit ?? null
+        );
+      }),
+    [inventoryItemOptions, purchaseItemsValues, purchaseQuery.data],
+  );
+
   useEffect(() => {
     if (isErrorGetOptions && errorGetOptions) apiErrorHandler(errorGetOptions);
   }, [isErrorGetOptions, errorGetOptions]);
@@ -259,6 +281,7 @@ export default function usePurchaseForm(props: PurchaseFormProps) {
     control,
     fields,
     purchaseItemsValues,
+    purchaseItemInventoryUnits,
     inventoryItemOptions,
     isLoading,
     isLoadingGetOptions,

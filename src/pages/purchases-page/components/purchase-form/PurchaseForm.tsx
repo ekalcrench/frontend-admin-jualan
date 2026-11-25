@@ -28,6 +28,7 @@ export default function PurchaseForm(props: PurchaseFormProps) {
     fields,
     inventoryItemOptions,
     purchaseItemsValues,
+    purchaseItemInventoryUnits,
     isLoading,
     isLoadingGetOptions,
     append,
@@ -49,50 +50,54 @@ export default function PurchaseForm(props: PurchaseFormProps) {
           Simpan Pembelian
         </Button>
       }
+      size="large"
     >
-        <CustomInput
-          name="supplierName"
-          control={control}
-          label="Nama Supplier"
-          placeholder="Contoh: Yogya Toserba"
-          renderErrorMessage
-          disabled={isLoading}
-        />
+      <CustomInput
+        name="supplierName"
+        control={control}
+        label="Nama Supplier"
+        placeholder="Contoh: Yogya Toserba"
+        renderErrorMessage
+        disabled={isLoading}
+      />
 
-        <CustomInput
-          name="invoiceNumber"
-          control={control}
-          label="Nomor Invoice"
-          placeholder="Contoh: INV-001"
-          renderErrorMessage
-          disabled={isLoading}
-        />
+      <CustomInput
+        name="invoiceNumber"
+        control={control}
+        label="Nomor Invoice"
+        placeholder="Contoh: INV-001"
+        renderErrorMessage
+        disabled={isLoading}
+      />
 
-        <CustomDateTimePicker
-          control={control}
-          name="purchasedAt"
-          label="Tanggal Pembelian"
-          renderErrorMessage
-          disabled={isLoading}
-        />
+      <CustomDateTimePicker
+        control={control}
+        name="purchasedAt"
+        label="Tanggal Pembelian"
+        renderErrorMessage
+        disabled={isLoading}
+      />
 
-        <Stack
-          direction="row"
-          sx={{
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "16px",
-            marginTop: "8px",
-          }}
-        >
-          <Typography sx={{ fontWeight: 600 }}>Barang Pembelian</Typography>
-        </Stack>
+      <Stack
+        direction="row"
+        sx={{
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "16px",
+          marginTop: "8px",
+        }}
+      >
+        <Typography sx={{ fontWeight: 600 }}>Barang Pembelian</Typography>
+      </Stack>
 
-        <Stack spacing={2} divider={<Divider flexItem />}>
-          {fields.map((field, index) => (
+      <Stack spacing={2} divider={<Divider flexItem />}>
+        {fields.map((field, index) => {
+          const selectedInventoryItemUnit = purchaseItemInventoryUnits[index];
+
+          return (
             <Box key={field.id}>
-              <BoxFlexSpaceBetween>
-                <TypographyInputLabel>{`Barang ${index + 1}`}</TypographyInputLabel>
+              <BoxFlexSpaceBetween sx={{ marginBottom: "8px" }}>
+                <Typography>{`Barang ke-${index + 1}`}</Typography>
                 <IconButton
                   aria-label={`Hapus barang ${index + 1}`}
                   color="error"
@@ -135,7 +140,12 @@ export default function PurchaseForm(props: PurchaseFormProps) {
                     name={`purchaseItems.${index}.packageSize`}
                     control={control}
                     label="Ukuran"
-                    placeholder="500 (Gram (g))"
+                    placeholder="Contoh: 30"
+                    endAdornment={
+                      selectedInventoryItemUnit
+                        ? inventoryUnitLabels[selectedInventoryItemUnit]
+                        : undefined
+                    }
                     renderErrorMessage
                     disabled={isLoading}
                   />
@@ -207,20 +217,20 @@ export default function PurchaseForm(props: PurchaseFormProps) {
                 </Grid>
               </Grid>
             </Box>
-          ))}
-        </Stack>
+          );
+        })}
+      </Stack>
 
-        <BoxFlexEnd>
-          <Button
-            size="small"
-            startIcon={<AddIcon />}
-            disabled={isLoading}
-            onClick={() => append(emptyPurchaseItem)}
-          >
-            Tambah Barang
-          </Button>
-        </BoxFlexEnd>
-
+      <BoxFlexEnd>
+        <Button
+          size="small"
+          startIcon={<AddIcon />}
+          disabled={isLoading}
+          onClick={() => append(emptyPurchaseItem)}
+        >
+          Tambah Barang
+        </Button>
+      </BoxFlexEnd>
     </FormDrawer>
   );
 }
