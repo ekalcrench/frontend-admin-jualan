@@ -169,7 +169,6 @@ export default function InventoryItemsPage() {
           handleChangePage={handleChangePage}
           initialState={{
             columnVisibility: {
-              id: false,
               createdAt: false,
               updatedAt: false,
             },

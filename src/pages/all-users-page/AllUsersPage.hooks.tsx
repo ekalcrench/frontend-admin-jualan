@@ -118,7 +118,6 @@ export default function useAllUsersPage() {
 
   const columns: MRT_ColumnDef<User>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       { accessorKey: "name", header: "Nama", size: 200 },
       {
         accessorKey: "email",

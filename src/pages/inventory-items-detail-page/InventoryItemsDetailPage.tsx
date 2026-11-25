@@ -173,10 +173,6 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
           handleChangePage={handleChangePage}
           initialState={{
             columnVisibility: {
-              id: false,
-              inventoryItemId: false,
-              purchaseItemId: false,
-              preparationOutputId: false,
               invoiceNumber: false,
               createdAt: false,
               updatedAt: false,

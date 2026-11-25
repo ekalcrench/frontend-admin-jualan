@@ -96,7 +96,6 @@ export default function useProductsPage() {
 
   const columns: MRT_ColumnDef<ProductResponse>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       { accessorKey: "name", header: "Nama Produk", size: 240 },
       {
         accessorKey: "isActive",

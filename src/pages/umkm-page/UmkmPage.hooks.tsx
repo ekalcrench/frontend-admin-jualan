@@ -96,7 +96,6 @@ export default function useUmkmPage() {
 
   const columns: MRT_ColumnDef<OrganizationResponse>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       {
         accessorKey: "logoBase64",
         header: "Logo",

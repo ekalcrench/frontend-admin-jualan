@@ -29,7 +29,9 @@ export interface OrganizationUserResponse extends BaseApiResponse {
   status: OrganizationUserStatus;
   approvedAt: string | null;
   approvedById: string | null;
+  approvedBy: string | null;
   updatedById: string | null;
+  updatedBy: string | null;
 }
 
 export interface OrganizationUserFilterPayload extends DefaultFilter {

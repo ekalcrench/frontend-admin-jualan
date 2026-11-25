@@ -48,11 +48,11 @@ export default function useInventoryTransactionsPage() {
 
   const { data, isLoading, isError, error, refetch } =
     useInventoryTransactionsQuery({
-    page,
-    size,
-    sortBy,
-    search,
-  });
+      page,
+      size,
+      sortBy,
+      search,
+    });
 
   const handleChangePage = (value: number) =>
     setSearchParams((previous) => {
@@ -83,14 +83,6 @@ export default function useInventoryTransactionsPage() {
 
   const columns: MRT_ColumnDef<InventoryTransactionResponse>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
-      {
-        accessorKey: "referenceId",
-        header: "Referensi ID",
-        size: 180,
-        Cell: ({ cell }) => cell.getValue<string>() || "-",
-        enableSorting: false,
-      },
       {
         id: "inventoryItemName",
         header: "Nama Barang",

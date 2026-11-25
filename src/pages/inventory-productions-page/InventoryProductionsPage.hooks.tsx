@@ -92,7 +92,6 @@ export default function useInventoryProductionsPage() {
 
   const columns: MRT_ColumnDef<PreparationResponse>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       {
         accessorKey: "status",
         header: "Status",

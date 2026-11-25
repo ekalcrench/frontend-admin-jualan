@@ -1,11 +1,4 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Chip,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, Chip, Stack, Typography } from "@mui/material";
 import CustomTable, {
   createCustomTableEmptyStates,
 } from "@/components/custom-table";
@@ -56,7 +49,9 @@ export default function InventoryTransactionsPage() {
           />
         </Box>
         <Stack spacing={0.75} sx={{ mt: 1.5 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}
+          >
             <Typography variant="body2">Jumlah</Typography>
             <Typography variant="body2" sx={{ fontWeight: 600 }}>
               {inventoryTransactionQuantity(
@@ -76,8 +71,7 @@ export default function InventoryTransactionsPage() {
           )}
           {transaction.unitCost !== undefined && (
             <Typography variant="body2">
-              Harga per satuan:{" "}
-              {currencyFormatter.format(transaction.unitCost)}
+              Harga per satuan: {currencyFormatter.format(transaction.unitCost)}
             </Typography>
           )}
           {transaction.totalCost !== undefined && (
@@ -112,8 +106,6 @@ export default function InventoryTransactionsPage() {
           handleChangePage={handleChangePage}
           initialState={{
             columnVisibility: {
-              id: false,
-              referenceId: false,
               updatedAt: false,
             },
           }}

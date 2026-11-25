@@ -56,11 +56,11 @@ export default function useUsersPage() {
 
   const { data, isLoading, isError, error, refetch } =
     useOrganizationUsersQuery({
-    page,
-    size,
-    sortBy,
-    search,
-  });
+      page,
+      size,
+      sortBy,
+      search,
+    });
 
   const [editingRoleId, setEditingRoleId] = useState<string | null>(null);
   const { control, getValues, reset } = useForm<{
@@ -127,13 +127,6 @@ export default function useUsersPage() {
 
   const columns: MRT_ColumnDef<OrganizationUserResponse>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
-      {
-        accessorKey: "userId",
-        header: "User ID",
-        size: 160,
-        enableSorting: false,
-      },
       { accessorKey: "name", header: "Nama", size: 200 },
       {
         accessorKey: "email",
@@ -202,9 +195,9 @@ export default function useUsersPage() {
         Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
       },
       {
-        accessorKey: "approvedById",
-        header: "Approved by ID",
-        size: 160,
+        accessorKey: "approvedBy",
+        header: "Approved by",
+        size: 180,
         enableSorting: false,
       },
       {
@@ -220,9 +213,9 @@ export default function useUsersPage() {
         Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
       },
       {
-        accessorKey: "updatedById",
-        header: "Updated by ID",
-        size: 160,
+        accessorKey: "updatedBy",
+        header: "Updated by",
+        size: 180,
         enableSorting: false,
       },
     ],

@@ -203,7 +203,9 @@ export default function ProductsPage() {
           <BoxFlexSpaceBetween>
             <Typography sx={{ fontWeight: 700 }}>Total</Typography>
             <Typography>
-              {totalCapital === null ? "-" : currencyFormatter.format(totalCapital)}
+              {totalCapital === null
+                ? "-"
+                : currencyFormatter.format(totalCapital)}
             </Typography>
           </BoxFlexSpaceBetween>
         </Box>
@@ -312,7 +314,6 @@ export default function ProductsPage() {
           handleChangePage={handleChangePage}
           initialState={{
             columnVisibility: {
-              id: false,
               createdAt: false,
               updatedAt: false,
             },

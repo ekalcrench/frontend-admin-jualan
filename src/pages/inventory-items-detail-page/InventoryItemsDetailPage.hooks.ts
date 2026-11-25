@@ -81,25 +81,6 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
 
   const columns: MRT_ColumnDef<InventoryLotResponse>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID Lot", size: 160, enableSorting: false },
-      {
-        accessorKey: "inventoryItemId",
-        header: "ID Inventory",
-        size: 160,
-        enableSorting: false,
-      },
-      {
-        accessorKey: "purchaseItemId",
-        header: "ID Pembelian",
-        size: 180,
-        enableSorting: false,
-      },
-      {
-        accessorKey: "preparationOutputId",
-        header: "ID Production",
-        size: 180,
-        enableSorting: false,
-      },
       {
         accessorKey: "invoiceNumber",
         header: "Nomor Invoice",

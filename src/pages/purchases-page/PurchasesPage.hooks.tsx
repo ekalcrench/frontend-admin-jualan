@@ -102,7 +102,6 @@ export default function usePurchasesPage() {
 
   const columns: MRT_ColumnDef<PurchaseResponse>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       {
         accessorKey: "status",
         header: "Status",

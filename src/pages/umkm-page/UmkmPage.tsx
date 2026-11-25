@@ -158,7 +158,7 @@ export default function UmkmPage() {
           totalPages={data?.pagination?.totalPages}
           handleChangePage={handleChangePage}
           initialState={{
-            columnVisibility: { id: false, createdAt: false, updatedAt: false },
+            columnVisibility: { createdAt: false, updatedAt: false },
           }}
           sortBy={{
             direction: getSortDirection(sortBy),

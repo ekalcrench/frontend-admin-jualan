@@ -49,14 +49,16 @@ export default function useCashFlowsPage() {
     if (changed) setSearchParams(params, { replace: true });
   }, [searchParams, setSearchParams]);
 
-  const { data, isLoading, isError, error, refetch } = useCashTransactionsQuery({
-    page,
-    size,
-    sortBy,
-    search,
-    endDate: endDate?.length ? endDate : undefined,
-    startDate: startDate?.length ? startDate : undefined,
-  });
+  const { data, isLoading, isError, error, refetch } = useCashTransactionsQuery(
+    {
+      page,
+      size,
+      sortBy,
+      search,
+      endDate: endDate?.length ? endDate : undefined,
+      startDate: startDate?.length ? startDate : undefined,
+    },
+  );
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCashTransactionId, setEditingCashTransactionId] =
     useState<string>();
@@ -120,7 +122,6 @@ export default function useCashFlowsPage() {
 
   const columns: MRT_ColumnDef<CashTransactionResponse>[] = useMemo(
     () => [
-      { accessorKey: "id", header: "ID", size: 160, enableSorting: false },
       {
         accessorKey: "type",
         header: "Jenis Transaksi",

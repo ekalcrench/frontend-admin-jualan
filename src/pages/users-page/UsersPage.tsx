@@ -237,13 +237,11 @@ export default function UsersPage() {
           handleChangePage={handleChangePage}
           initialState={{
             columnVisibility: {
-              id: false,
-              userId: false,
               approvedAt: false,
-              approvedById: false,
+              approvedBy: false,
               createdAt: false,
               updatedAt: false,
-              updatedById: false,
+              updatedBy: false,
             },
           }}
           sortBy={{
