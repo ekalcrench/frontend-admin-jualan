@@ -19,6 +19,7 @@ import {
 } from "@/utils/productModifier";
 import { modifierGroupsDefaultParameter } from "./ProductModifiersPage.constants";
 import { BoxFlex } from "@/styled/CustomBox";
+import { formatLocalDate } from "@/utils/dateTime";
 
 export default function useProductModifiersPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -243,6 +244,18 @@ export default function useProductModifiersPage() {
             variant={row.original.isActive ? "filled" : "outlined"}
           />
         ),
+      },
+      {
+        accessorKey: "createdAt",
+        header: "Dibuat Pada",
+        size: 160,
+        Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
+      },
+      {
+        accessorKey: "updatedAt",
+        header: "Diubah Pada",
+        size: 160,
+        Cell: ({ cell }) => formatLocalDate(cell.getValue<string>()),
       },
     ],
     [],

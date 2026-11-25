@@ -4,13 +4,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import {
-  Box,
-  Button,
-  IconButton,
-  Stack,
-  Tooltip,
-} from "@mui/material";
+import { Box, Button, IconButton, Stack, Tooltip } from "@mui/material";
 import type { MRT_Row } from "material-react-table";
 import { useNavigate } from "react-router-dom";
 import CustomTable, {
@@ -185,7 +179,13 @@ export default function ProductModifiersPage() {
           totalRows={data?.pagination.total}
           totalPages={data?.pagination.totalPages}
           handleChangePage={handleChangePage}
-          initialState={{ columnVisibility: { sortOrder: false } }}
+          initialState={{
+            columnVisibility: {
+              sortOrder: false,
+              createdAt: false,
+              updatedAt: false,
+            },
+          }}
           sortBy={{
             direction: getSortDirection(sortBy),
             id: removeSortByDirection(sortBy),

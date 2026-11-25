@@ -23,6 +23,7 @@ import {
 import ModifierEmptyState from "@/components/product-modifier/modifier-empty-state";
 import { BoxFlex, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { currencyFormatter } from "@/utils/currency";
+import { formatLocalDate } from "@/utils/dateTime";
 import { formatInventoryDeduction } from "@/utils/productModifier";
 import type { ModifierOptionsSectionProps } from "./ModifierOptionsSection.types";
 
@@ -140,6 +141,7 @@ export default function ModifierOptionsSection({
             <TableCell>Harga Tambahan</TableCell>
             <TableCell width={110}>Status</TableCell>
             <TableCell width={110}>Urutan</TableCell>
+            <TableCell width={160}>Diubah Pada</TableCell>
             <TableCell width={90}>Aksi</TableCell>
           </TableRow>
         </TableHead>
@@ -202,6 +204,7 @@ export default function ModifierOptionsSection({
                   )}
                 </BoxFlex>
               </TableCell>
+              <TableCell>{formatLocalDate(option.updatedAt)}</TableCell>
               <TableCell align="right">
                 {canManage && (
                   <BoxFlex sx={{ gap: "2px", justifyContent: "flex-end" }}>
@@ -275,6 +278,13 @@ export default function ModifierOptionsSection({
               Urutan {index + 1}
             </Typography>
           </BoxFlexSpaceBetween>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: "block", marginTop: "4px" }}
+          >
+            Diubah pada {formatLocalDate(option.updatedAt)}
+          </Typography>
 
           {canManage && (
             <BoxFlex
