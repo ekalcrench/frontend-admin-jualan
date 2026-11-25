@@ -89,6 +89,36 @@ let theme = createTheme({
   },
   components: {
     mergeClassNameAndStyle: true,
+    MuiCssBaseline: {
+      styleOverrides: {
+        "*::-webkit-scrollbar": {
+          width: "8px",
+          height: "4px",
+        },
+        "*::-webkit-scrollbar-track": {
+          background: "rgba(238, 238, 238, 0.2)",
+        },
+        "*::-webkit-scrollbar-thumb": {
+          border: "1px solid rgba(0, 0, 0, 0)",
+          backgroundClip: "padding-box",
+          borderRadius: "12px",
+          backgroundColor: "#62ad9e90",
+          boxShadow: "inset 0 0 0 1px rgba(0, 0, 0, 0.025)",
+          transition: "background-color 0.3s",
+        },
+        "*::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "#62ad9e",
+        },
+        "*::-webkit-scrollbar-button": {
+          width: 0,
+          height: 0,
+          display: "none",
+        },
+        "*::-webkit-scrollbar-corner": {
+          backgroundColor: "transparent",
+        },
+      },
+    },
     MuiButton: {
       defaultProps: {
         variant: "contained",

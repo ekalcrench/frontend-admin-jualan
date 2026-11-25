@@ -208,8 +208,18 @@ export default function OrderForm(props: OrderFormProps) {
         onOpen={props.onOpen}
         disableCloseOnOutsideInteraction
         title={props.id ? "Edit Penjualan" : "Tambah Penjualan"}
+        formProps={{ onSubmit: handleSubmit(onSubmit) }}
+        footer={
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            loading={isLoading}
+          >
+            Simpan Penjualan
+          </Button>
+        }
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
           <CustomInput
             name="orderNumber"
             control={control}
@@ -425,16 +435,6 @@ export default function OrderForm(props: OrderFormProps) {
             </Typography>
           </BoxFlexSpaceBetween>
 
-          <Button
-            sx={{ mt: "32px" }}
-            type="submit"
-            variant="contained"
-            fullWidth
-            loading={isLoading}
-          >
-            Simpan Penjualan
-          </Button>
-        </form>
       </FormDrawer>
 
       <ModifierSelectionDialog

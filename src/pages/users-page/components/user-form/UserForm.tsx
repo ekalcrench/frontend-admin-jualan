@@ -22,8 +22,13 @@ export default function UserForm(props: UserFormProps) {
       onClose={props.onClose}
       onOpen={props.onOpen}
       title="Tambah User Baru"
+      formProps={{ onSubmit: handleSubmit(onSubmit) }}
+      footer={
+        <Button type="submit" variant="contained" fullWidth loading={isLoading}>
+          Simpan
+        </Button>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
         <CustomAutocomplete
           name="userId"
           control={control}
@@ -55,16 +60,6 @@ export default function UserForm(props: UserFormProps) {
           }}
         />
 
-        <Button
-          sx={{ marginTop: "20px" }}
-          type="submit"
-          variant="contained"
-          fullWidth
-          loading={isLoading}
-        >
-          Simpan
-        </Button>
-      </form>
     </FormDrawer>
   );
 }

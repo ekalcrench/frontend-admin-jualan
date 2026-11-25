@@ -42,8 +42,13 @@ export default function UmkmForm(props: UmkmFormProps) {
       onClose={props.onClose}
       onOpen={props.onOpen}
       title={`${props.id ? "Edit UMKM" : "Buat UMKM Baru"}`}
+      formProps={{ onSubmit: handleSubmit(onSubmit) }}
+      footer={
+        <Button type="submit" variant="contained" fullWidth loading={isLoading}>
+          Simpan
+        </Button>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInput
           name="name"
           control={control}
@@ -195,16 +200,6 @@ export default function UmkmForm(props: UmkmFormProps) {
           </Button>
         </Box>
 
-        <Button
-          sx={{ marginTop: "20px" }}
-          type="submit"
-          variant="contained"
-          fullWidth
-          loading={isLoading}
-        >
-          Simpan
-        </Button>
-      </form>
     </FormDrawer>
   );
 }

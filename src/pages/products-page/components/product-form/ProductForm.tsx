@@ -57,8 +57,13 @@ export default function ProductForm(props: ProductFormProps) {
       onOpen={props.onOpen}
       disableCloseOnOutsideInteraction
       title={props.id ? "Edit Produk" : "Tambah Produk"}
+      formProps={{ onSubmit: handleSubmit(onSubmit) }}
+      footer={
+        <Button type="submit" variant="contained" fullWidth loading={isLoading}>
+          Simpan Produk
+        </Button>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInput
           name="name"
           control={control}
@@ -310,16 +315,6 @@ export default function ProductForm(props: ProductFormProps) {
           disabled={!canManage || isLoading}
         />
 
-        <Button
-          sx={{ mt: "32px" }}
-          type="submit"
-          variant="contained"
-          fullWidth
-          loading={isLoading}
-        >
-          Simpan Produk
-        </Button>
-      </form>
     </FormDrawer>
   );
 }

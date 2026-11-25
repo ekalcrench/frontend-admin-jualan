@@ -47,8 +47,13 @@ export default function PreparationForm(props: PreparationFormProps) {
       onOpen={props.onOpen}
       disableCloseOnOutsideInteraction
       title={props.id ? "Edit Produksi" : "Tambah Produksi"}
+      formProps={{ onSubmit: handleSubmit(onSubmit) }}
+      footer={
+        <Button type="submit" variant="contained" fullWidth loading={isLoading}>
+          Simpan Produksi
+        </Button>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInput
           name="name"
           control={control}
@@ -196,16 +201,6 @@ export default function PreparationForm(props: PreparationFormProps) {
           </Button>
         </BoxFlexEnd>
 
-        <Button
-          sx={{ mt: "32px" }}
-          type="submit"
-          variant="contained"
-          fullWidth
-          loading={isLoading}
-        >
-          Simpan Produksi
-        </Button>
-      </form>
     </FormDrawer>
   );
 }

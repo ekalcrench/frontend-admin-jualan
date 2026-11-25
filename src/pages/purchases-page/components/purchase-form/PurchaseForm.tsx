@@ -43,8 +43,13 @@ export default function PurchaseForm(props: PurchaseFormProps) {
       onOpen={props.onOpen}
       disableCloseOnOutsideInteraction
       title={props.id ? "Edit Pembelian" : "Tambah Pembelian"}
+      formProps={{ onSubmit: handleSubmit(onSubmit) }}
+      footer={
+        <Button type="submit" variant="contained" fullWidth loading={isLoading}>
+          Simpan Pembelian
+        </Button>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInput
           name="supplierName"
           control={control}
@@ -216,16 +221,6 @@ export default function PurchaseForm(props: PurchaseFormProps) {
           </Button>
         </BoxFlexEnd>
 
-        <Button
-          sx={{ mt: "32px" }}
-          type="submit"
-          variant="contained"
-          fullWidth
-          loading={isLoading}
-        >
-          Simpan Pembelian
-        </Button>
-      </form>
     </FormDrawer>
   );
 }

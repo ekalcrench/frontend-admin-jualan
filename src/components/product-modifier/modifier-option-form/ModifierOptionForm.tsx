@@ -41,8 +41,13 @@ export default function ModifierOptionForm(props: OptionFormProps) {
       onOpen={props.onOpen}
       disableCloseOnOutsideInteraction
       title={props.option ? "Edit Opsi Variasi" : "Tambah Opsi Variasi"}
+      formProps={{ onSubmit: handleSubmit(onSubmit), noValidate: true }}
+      footer={
+        <Button type="submit" variant="contained" fullWidth loading={isLoading}>
+          {props.option ? "Simpan Perubahan" : "Simpan Opsi"}
+        </Button>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <CustomInput
           name="name"
           control={control}
@@ -262,15 +267,6 @@ export default function ModifierOptionForm(props: OptionFormProps) {
           Opsi nonaktif tidak akan muncul saat pelanggan memesan produk.
         </Typography>
 
-        <Button
-          type="submit"
-          variant="contained"
-          fullWidth
-          loading={isLoading}
-        >
-          {props.option ? "Simpan Perubahan" : "Simpan Opsi"}
-        </Button>
-      </form>
     </FormDrawer>
   );
 }

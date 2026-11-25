@@ -24,8 +24,13 @@ export default function ModifierGroupForm(props: ModifierGroupFormProps) {
       onOpen={props.onOpen}
       disableCloseOnOutsideInteraction
       title={props.group ? "Edit Grup Variasi" : "Tambah Grup Variasi"}
+      formProps={{ onSubmit: handleSubmit(onSubmit), noValidate: true }}
+      footer={
+        <Button type="submit" variant="contained" fullWidth loading={isLoading}>
+          {props.group ? "Simpan Perubahan" : "Simpan Grup Variasi"}
+        </Button>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <CustomInput
           name="name"
           control={control}
@@ -159,15 +164,6 @@ export default function ModifierGroupForm(props: ModifierGroupFormProps) {
           Grup nonaktif tidak akan muncul saat pelanggan memesan produk.
         </Typography>
 
-        <Button
-          type="submit"
-          variant="contained"
-          fullWidth
-          loading={isLoading}
-        >
-          {props.group ? "Simpan Perubahan" : "Simpan Grup Variasi"}
-        </Button>
-      </form>
     </FormDrawer>
   );
 }

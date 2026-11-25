@@ -23,8 +23,13 @@ export default function InventoryItemForm(props: InventoryItemFormProps) {
       onClose={props.onClose}
       onOpen={props.onOpen}
       title={props.item ? "Edit Barang Persediaan" : "Tambah Barang Persediaan"}
+      formProps={{ onSubmit: handleSubmit(onSubmit) }}
+      footer={
+        <Button type="submit" variant="contained" fullWidth loading={isLoading}>
+          Simpan
+        </Button>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInput
           name="name"
           control={control}
@@ -48,16 +53,6 @@ export default function InventoryItemForm(props: InventoryItemFormProps) {
           }}
         />
 
-        <Button
-          sx={{ marginTop: "20px" }}
-          type="submit"
-          variant="contained"
-          fullWidth
-          loading={isLoading}
-        >
-          Simpan
-        </Button>
-      </form>
     </FormDrawer>
   );
 }

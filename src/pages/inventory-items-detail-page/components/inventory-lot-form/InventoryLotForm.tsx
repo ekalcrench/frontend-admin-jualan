@@ -16,8 +16,13 @@ export default function InventoryLotForm(props: InventoryLotFormProps) {
       onOpen={props.onOpen}
       disableCloseOnOutsideInteraction
       title="Edit Lot Stok"
+      formProps={{ onSubmit: handleSubmit(onSubmit) }}
+      footer={
+        <Button type="submit" variant="contained" fullWidth loading={isLoading}>
+          Simpan Perubahan
+        </Button>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
         <CustomInputNumber
           name="remainingQuantity"
           control={control}
@@ -44,16 +49,6 @@ export default function InventoryLotForm(props: InventoryLotFormProps) {
           dateTimePickerProps={{ slotProps: { field: { clearable: true } } }}
         />
 
-        <Button
-          sx={{ mt: "32px" }}
-          type="submit"
-          variant="contained"
-          fullWidth
-          loading={isLoading}
-        >
-          Simpan Perubahan
-        </Button>
-      </form>
     </FormDrawer>
   );
 }

@@ -1,4 +1,4 @@
-import { IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { FormDrawerProps } from "./FormDrawer.types";
 import { CustomFormDrawer } from "./FormDrawer.styles";
 import CloseIcon from "@mui/icons-material/Close";
@@ -7,26 +7,74 @@ export default function FormDrawer({
   title,
   disableCloseOnOutsideInteraction,
   onClose,
-  ...props
+  children,
+  formProps,
+  footer,
+  ...drawerProps
 }: FormDrawerProps) {
   return (
     <CustomFormDrawer
-      {...props}
+      {...drawerProps}
       anchor="right"
       onClose={disableCloseOnOutsideInteraction ? () => {} : onClose}
     >
-      <Typography variant="h6" sx={{ marginBottom: "32px" }}>
-        {title}
-      </Typography>
-
-      <IconButton
-        sx={{ position: "absolute", top: "16px", right: "16px" }}
-        onClick={(e) => onClose?.(e)}
+      <Box
+        component="form"
+        {...formProps}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+          width: "100%",
+        }}
       >
-        <CloseIcon />
-      </IconButton>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexShrink: 0,
+            paddingX: { xs: "16px", sm: "24px" },
+          }}
+        >
+          <Typography variant="h6">{title}</Typography>
 
-      {props.children}
+          <IconButton
+            type="button"
+            aria-label="Close drawer"
+            onClick={(e) => onClose?.(e)}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+
+        <Box
+          sx={{
+            flex: 1,
+            minHeight: 0,
+            overflowY: "auto",
+            padding: { xs: "16px", sm: "24px" },
+          }}
+        >
+          {children}
+        </Box>
+
+        {footer && (
+          <Box
+            sx={{
+              flexShrink: 0,
+              paddingTop: "16px",
+              borderTop: 1,
+              borderColor: "divider",
+              backgroundColor: "background.default",
+              paddingX: { xs: "16px", sm: "24px" },
+            }}
+          >
+            {footer}
+          </Box>
+        )}
+      </Box>
     </CustomFormDrawer>
   );
 }

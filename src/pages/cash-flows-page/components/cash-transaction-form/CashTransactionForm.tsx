@@ -32,8 +32,19 @@ export default function CashTransactionForm(props: CashTransactionFormProps) {
       onOpen={props.onOpen}
       disableCloseOnOutsideInteraction
       title={props.id ? "Edit Arus Kas" : "Tambah Arus Kas"}
+      formProps={{ onSubmit: handleSubmit(onSubmit) }}
+      footer={
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          loading={isLoading}
+          disabled={!canEditTransaction}
+        >
+          Simpan Arus Kas
+        </Button>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
         <CustomAutocomplete
           control={control}
           name="type"
@@ -75,17 +86,6 @@ export default function CashTransactionForm(props: CashTransactionFormProps) {
           disabled={isLoading || !canEditTransaction}
         />
 
-        <Button
-          sx={{ mt: "32px" }}
-          type="submit"
-          variant="contained"
-          fullWidth
-          loading={isLoading}
-          disabled={!canEditTransaction}
-        >
-          Simpan Arus Kas
-        </Button>
-      </form>
     </FormDrawer>
   );
 }
