@@ -143,11 +143,12 @@ export default function useProductsPage() {
           ),
       },
       {
-        id: "ingredientCount",
+        accessorKey: "ingredientCount",
         header: "Total Bahan",
         size: 140,
         enableSorting: false,
-        accessorFn: (row) => row.productIngredients?.length ?? 0,
+        Cell: ({ cell }) =>
+          `${numberFormat.format(Number(cell.getValue<number>()))} bahan`,
       },
       {
         accessorKey: "createdAt",
