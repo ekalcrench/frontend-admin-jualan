@@ -24,6 +24,11 @@ import {
 } from "@/constants/user";
 import useAuthStore from "@/store/auth-store/authStore";
 import PageTitle from "@/components/page-title";
+import BlockIcon from "@mui/icons-material/Block";
+import SwapHorizontalCircleOutlinedIcon from "@mui/icons-material/SwapHorizontalCircleOutlined";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import SaveIcon from "@mui/icons-material/Save";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function AllUsersPage() {
   const {
@@ -61,23 +66,13 @@ export default function AllUsersPage() {
 
   const renderRowActions = (user: User) => (
     <BoxFlexEnd sx={{ gap: "4px" }}>
-      {user.status === userStatus.ACTIVE &&
-        userState?.role === userRole.SUPER_ADMIN && (
-          <Button
-            size="small"
-            color="error"
-            onClick={() => handleClickSuspend(user.id)}
-            loading={suspendUser.isPending && suspendUser.variables === user.id}
-          >
-            Blokir
-          </Button>
-        )}
       {user.status === userStatus.SUSPENDED &&
         (userState?.role === userRole.SUPER_ADMIN ||
           userState?.role === userRole.ADMIN) && (
           <Button
             size="small"
             color="success"
+            startIcon={<PlayArrowIcon />}
             onClick={() => handleClickActivate(user.id)}
             loading={
               activateUser.isPending && activateUser.variables === user.id
@@ -90,9 +85,22 @@ export default function AllUsersPage() {
         userState?.role === userRole.SUPER_ADMIN && (
           <Button
             size="small"
+            startIcon={<SwapHorizontalCircleOutlinedIcon />}
             onClick={() => handleClickChangeRole(user.id, user.role)}
           >
             Ganti Role
+          </Button>
+        )}
+      {user.status === userStatus.ACTIVE &&
+        userState?.role === userRole.SUPER_ADMIN && (
+          <Button
+            size="small"
+            color="error"
+            startIcon={<BlockIcon />}
+            onClick={() => handleClickSuspend(user.id)}
+            loading={suspendUser.isPending && suspendUser.variables === user.id}
+          >
+            Blokir
           </Button>
         )}
     </BoxFlexEnd>
@@ -104,6 +112,7 @@ export default function AllUsersPage() {
         size="small"
         variant="contained"
         color="success"
+        startIcon={<SaveIcon />}
         onClick={() => onSaveChangeRole(user.id, getValues("role"))}
         loading={editUser.isPending && editUser.variables?.id === user.id}
       >
@@ -113,6 +122,7 @@ export default function AllUsersPage() {
         size="small"
         variant="contained"
         color="error"
+        startIcon={<CloseIcon />}
         onClick={() => setEditingRoleId(null)}
       >
         Batal
@@ -195,7 +205,7 @@ export default function AllUsersPage() {
           search={search}
           handleSearch={handleChangeSearch}
           columnRowActionsSize={
-            userState?.role === userRole.SUPER_ADMIN ? 220 : 110
+            userState?.role === userRole.SUPER_ADMIN ? 250 : 140
           }
           enableRowActions
           renderRowActions={({ row }) =>

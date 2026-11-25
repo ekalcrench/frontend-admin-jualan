@@ -18,6 +18,7 @@ import { ColumnSort, PaginatedData } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate } from "@/utils/dateTime";
+import { numberFormat } from "@/utils/number";
 import { buildReceipt } from "@/utils/print";
 import { Chip } from "@mui/material";
 import { type MRT_ColumnDef } from "material-react-table";
@@ -157,7 +158,12 @@ export default function useSalesPage() {
         Cell: ({ cell }) =>
           currencyFormatter.format(Number(cell.getValue<number>())),
       },
-      { accessorKey: "totalQuantity", header: "Jumlah Barang", size: 140 },
+      {
+        accessorKey: "totalQuantity",
+        header: "Jumlah Produk",
+        size: 140,
+        Cell: ({ cell }) => numberFormat.format(cell.getValue<number>()),
+      },
       {
         accessorKey: "createdAt",
         header: "Tanggal Penjualan",

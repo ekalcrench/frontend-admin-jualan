@@ -45,7 +45,7 @@ export default function ProductModifierSection({
         <Box
           sx={{
             border: "1px solid",
-            borderColor: "error.light",
+            borderColor: "error.main",
             borderRadius: "12px",
             padding: "16px",
           }}

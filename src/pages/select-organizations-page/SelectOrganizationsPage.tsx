@@ -28,7 +28,9 @@ export default function SelectOrganizationsPage() {
   return (
     <SelectOrganizationsPageContainer>
       <Box sx={{ marginBottom: "56px" }}>
-        <BoxFlexEnd sx={{ width: "100%", marginBottom: "8px" }}>
+        <Box
+          sx={{ marginBottom: "8px", marginLeft: { xs: "-8px", sm: "-10px" } }}
+        >
           <Button
             startIcon={<NavigateBeforeIcon />}
             onClick={handleClickBack}
@@ -36,7 +38,7 @@ export default function SelectOrganizationsPage() {
           >
             Kembali
           </Button>
-        </BoxFlexEnd>
+        </Box>
         <Card elevation={2} sx={{ width: "440px", maxWidth: "90vw" }}>
           <CardContent>
             <TypographyCenter variant="h4">Pilih UMKM</TypographyCenter>

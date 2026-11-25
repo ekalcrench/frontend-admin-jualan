@@ -169,7 +169,7 @@ export default function UmkmPage() {
           search={search}
           handleSearch={handleChangeSearch}
           columnRowActionsSize={
-            userState?.role === userRole.SUPER_ADMIN ? 110 : 80
+            userState?.role === userRole.SUPER_ADMIN ? 120 : 80
           }
           enableRowActions={userState?.role === userRole.USER ? false : true}
           renderRowActions={({ row }) => renderRowActions(row.original.id)}

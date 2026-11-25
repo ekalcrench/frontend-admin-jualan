@@ -80,9 +80,9 @@ export default function SalesOverview(props: SalesOverviewProps) {
                     marginTop: "4px",
                     color:
                       amountPercentage! > 0
-                        ? "success.light"
+                        ? "success.main"
                         : amountPercentage! < 0
-                          ? "error.light"
+                          ? "error.main"
                           : "inherit",
                   }}
                 >
@@ -135,9 +135,9 @@ export default function SalesOverview(props: SalesOverviewProps) {
                     marginTop: "4px",
                     color:
                       grossProfitPercentage! > 0
-                        ? "success.light"
+                        ? "success.main"
                         : grossProfitPercentage! < 0
-                          ? "error.light"
+                          ? "error.main"
                           : "inherit",
                   }}
                 >
@@ -190,9 +190,9 @@ export default function SalesOverview(props: SalesOverviewProps) {
                     marginTop: "4px",
                     color:
                       quantityPercentage! > 0
-                        ? "success.light"
+                        ? "success.main"
                         : quantityPercentage! < 0
-                          ? "error.light"
+                          ? "error.main"
                           : "inherit",
                   }}
                 >

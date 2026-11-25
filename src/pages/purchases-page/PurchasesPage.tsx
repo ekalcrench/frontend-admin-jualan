@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
@@ -88,6 +89,7 @@ export default function PurchasesPage() {
           <Button
             color="success"
             size="small"
+            startIcon={<CheckCircleIcon />}
             sx={{ marginRight: "4px" }}
             onClick={() => handleClickFinalize(purchase.id)}
             loading={
@@ -316,7 +318,7 @@ export default function PurchasesPage() {
           search={search}
           handleSearch={handleChangeSearch}
           enableRowActions
-          columnRowActionsSize={190}
+          columnRowActionsSize={220}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
           searchPlaceholder="Cari berdasarkan supplier atau nomor invoice"

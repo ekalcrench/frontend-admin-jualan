@@ -28,6 +28,12 @@ import AddIcon from "@mui/icons-material/Add";
 import UserForm from "./components/user-form";
 import PageTitle from "@/components/page-title";
 import { OrganizationUserResponse } from "@/types/organizationUser";
+import BlockIcon from "@mui/icons-material/Block";
+import SwapHorizontalCircleOutlinedIcon from "@mui/icons-material/SwapHorizontalCircleOutlined";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import SaveIcon from "@mui/icons-material/Save";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function UsersPage() {
   const {
@@ -75,6 +81,7 @@ export default function UsersPage() {
           <Button
             size="small"
             color="success"
+            startIcon={<CheckCircleIcon />}
             onClick={() => handleClickApprove(user.id)}
             loading={
               approveOrganizationUser.isPending &&
@@ -84,27 +91,13 @@ export default function UsersPage() {
             Approve
           </Button>
         )}
-      {user.status === userOrganizationStatus.APPROVED &&
-        (organization?.role === userOrganizationRole.OWNER ||
-          organization?.role === userOrganizationRole.ADMIN) && (
-          <Button
-            size="small"
-            color="error"
-            onClick={() => handleClickSuspend(user.id)}
-            loading={
-              suspendOrganizationUser.isPending &&
-              suspendOrganizationUser.variables === user.id
-            }
-          >
-            Blokir
-          </Button>
-        )}
       {user.status === userOrganizationStatus.SUSPENDED &&
         (organization?.role === userOrganizationRole.OWNER ||
           organization?.role === userOrganizationRole.ADMIN) && (
           <Button
             size="small"
             color="success"
+            startIcon={<PlayArrowIcon />}
             onClick={() => handleClickActivate(user.id)}
             loading={
               activateOrganizationUser.isPending &&
@@ -118,9 +111,26 @@ export default function UsersPage() {
         userState?.role === userRole.SUPER_ADMIN && (
           <Button
             size="small"
+            startIcon={<SwapHorizontalCircleOutlinedIcon />}
             onClick={() => handleClickChangeRole(user.id, user.role)}
           >
             Ganti Role
+          </Button>
+        )}
+      {user.status === userOrganizationStatus.APPROVED &&
+        (organization?.role === userOrganizationRole.OWNER ||
+          organization?.role === userOrganizationRole.ADMIN) && (
+          <Button
+            size="small"
+            color="error"
+            startIcon={<BlockIcon />}
+            onClick={() => handleClickSuspend(user.id)}
+            loading={
+              suspendOrganizationUser.isPending &&
+              suspendOrganizationUser.variables === user.id
+            }
+          >
+            Blokir
           </Button>
         )}
     </BoxFlex>
@@ -132,6 +142,7 @@ export default function UsersPage() {
         size="small"
         variant="contained"
         color="success"
+        startIcon={<SaveIcon />}
         onClick={() => onSaveChangeRole(user.id, getValues("role"))}
         loading={
           editOrganizationUser.isPending &&
@@ -144,6 +155,7 @@ export default function UsersPage() {
         size="small"
         variant="contained"
         color="error"
+        startIcon={<CloseIcon />}
         onClick={() => setEditingRoleId(null)}
       >
         Batal
@@ -253,7 +265,7 @@ export default function UsersPage() {
           search={search}
           handleSearch={handleChangeSearch}
           columnRowActionsSize={
-            userState?.role === userRole.SUPER_ADMIN ? 220 : 110
+            userState?.role === userRole.SUPER_ADMIN ? 240 : 120
           }
           enableRowActions={
             organization?.role === userOrganizationRole.MEMBER ? false : true

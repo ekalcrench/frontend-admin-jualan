@@ -37,6 +37,7 @@ import SalesOverview from "./components/sales-overview";
 import PageTitle from "@/components/page-title";
 import PrintIcon from "@mui/icons-material/Print";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import PaidIcon from "@mui/icons-material/Paid";
 
 export default function SalesPage() {
   const {
@@ -99,6 +100,7 @@ export default function SalesPage() {
           <Button
             color="success"
             size="small"
+            startIcon={<PaidIcon />}
             sx={{ marginRight: "4px" }}
             onClick={() => handleClickMarkPaid(order.id)}
             loading={
@@ -393,7 +395,7 @@ export default function SalesPage() {
           search={search}
           handleSearch={handleChangeSearch}
           enableRowActions
-          columnRowActionsSize={192}
+          columnRowActionsSize={220}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
           searchPlaceholder="Cari berdasarkan nomor penjualan atau produk"

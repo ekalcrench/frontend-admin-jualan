@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
@@ -82,6 +83,7 @@ export default function InventoryProductionsPage() {
           <Button
             color="success"
             size="small"
+            startIcon={<CheckCircleIcon />}
             sx={{ marginRight: "4px" }}
             onClick={() => handleClickComplete(preparation.id)}
             loading={
@@ -89,7 +91,7 @@ export default function InventoryProductionsPage() {
               completePreparation.variables === preparation.id
             }
           >
-            Complete
+            Selesai
           </Button>
           <IconButton
             aria-label={`Edit produksi ${preparation.name ?? preparation.id}`}
@@ -321,7 +323,7 @@ export default function InventoryProductionsPage() {
           search={search}
           handleSearch={handleChangeSearch}
           enableRowActions
-          columnRowActionsSize={200}
+          columnRowActionsSize={220}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
           searchPlaceholder="Cari berdasarkan nama produksi atau barang"

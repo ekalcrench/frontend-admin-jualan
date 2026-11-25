@@ -176,6 +176,7 @@ export default function CustomTable<TData extends MRT_RowData>({
         {...tableOptions}
         localization={{
           ...tableOptions.localization,
+          actions: "Aksi",
           sortByColumnAsc: "",
           sortByColumnDesc: "",
           sortedByColumnAsc: "",

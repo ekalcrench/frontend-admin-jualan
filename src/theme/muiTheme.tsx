@@ -1,38 +1,37 @@
 import { createTheme, type PaletteColor } from "@mui/material/styles";
 import { boxShadowDialog, borderRadiusCard } from "@/constants/styled";
-// import type {} from "@mui/x-date-pickers/themeAugmentation";
 
 let theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#1DCBE2",
-      light: "#65DCEC",
-      dark: "#1596A8",
+      main: "#2563A6",
+      light: "#80AED8",
+      dark: "#1D4F82",
       contrastText: "#FFFFFF",
     },
     secondary: {
-      main: "#E2341D",
-      light: "#F07868",
-      dark: "#AD2818",
+      main: "#A66825",
+      light: "#D6A66F",
+      dark: "#754719",
       contrastText: "#FFFFFF",
     },
     success: {
-      main: "#23EE3B",
-      light: "#75F583",
-      dark: "#16A829",
-      contrastText: "#18181B",
+      main: "#19BD7B",
+      light: "#75DDB1",
+      dark: "#108957",
+      contrastText: "#FFFFFF",
     },
     warning: {
-      main: "#EFE52B",
-      light: "#F6EF75",
-      dark: "#B8AD16",
-      contrastText: "#18181B",
+      main: "#D99A21",
+      light: "#FEF3C7",
+      dark: "#A66B0B",
+      contrastText: "#FFFFFF",
     },
     error: {
-      main: "#FA0000",
-      light: "#FF6666",
-      dark: "#C00000",
+      main: "#DC4545",
+      light: "#ff7272",
+      dark: "#B42323",
       contrastText: "#FFFFFF",
     },
     info: {
@@ -102,12 +101,12 @@ let theme = createTheme({
           border: "1px solid rgba(0, 0, 0, 0)",
           backgroundClip: "padding-box",
           borderRadius: "12px",
-          backgroundColor: "#62ad9e90",
+          backgroundColor: "#80AED8",
           boxShadow: "inset 0 0 0 1px rgba(0, 0, 0, 0.025)",
           transition: "background-color 0.3s",
         },
         "*::-webkit-scrollbar-thumb:hover": {
-          backgroundColor: "#62ad9e",
+          backgroundColor: "#2563A6",
         },
         "*::-webkit-scrollbar-button": {
           width: 0,
@@ -503,21 +502,21 @@ theme = createTheme(theme, {
   palette: {
     border: {
       main: "#E2E8F0",
-      sidebar: "rgba(255, 255, 255, 0.08)",
+      sidebar: "rgba(255, 255, 255, 0.1)",
     },
     background: {
       card: "#FFFFFF",
-      sidebar: "#3F3F46",
-      sidebarActive: "#52525B",
-      disabled: "#F1F1F3",
+      sidebar: "#1f2e40",
+      sidebarActive: "#2563A6",
+      disabled: "#F1F5F9",
     },
     text: {
-      placeholder: "#A1A1AA",
-      sidebar: "#A1A1AA",
-      sidebarActive: "#F4F4F5",
+      placeholder: "#94A3B8",
+      sidebar: "#B8C7D8",
+      sidebarActive: "#FFFFFF",
     },
     icon: {
-      sidebar: "#D4D4D8",
+      sidebar: "#B8C7D8",
     },
   },
 });

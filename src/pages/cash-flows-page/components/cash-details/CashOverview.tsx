@@ -101,9 +101,9 @@ export default function CashOverview(props: CashOverviewProps) {
                   marginTop: "4px",
                   color:
                     cashInPercentage! > 0
-                      ? "success.light"
+                      ? "success.main"
                       : cashInPercentage! < 0
-                        ? "error.light"
+                        ? "error.main"
                         : "inherit",
                 }}
               >
@@ -157,9 +157,9 @@ export default function CashOverview(props: CashOverviewProps) {
                   marginTop: "4px",
                   color:
                     cashOutPercentage! > 0
-                      ? "success.light"
+                      ? "success.main"
                       : cashOutPercentage! < 0
-                        ? "error.light"
+                        ? "error.main"
                         : "inherit",
                 }}
               >
