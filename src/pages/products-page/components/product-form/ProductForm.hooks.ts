@@ -27,6 +27,7 @@ import type {
   EditProduct,
   EditProductIngredients,
 } from "@/services/products/products.types";
+import type { InventoryUnit } from "@/types/inventoryItem";
 import { apiErrorHandler } from "@/utils/api";
 import { areSameIds } from "@/utils/productModifier";
 import {
@@ -38,7 +39,7 @@ import type {
   ProductFormValues,
   ProductIngredientFormValues,
 } from "./ProductForm.types";
-import type { ProductModifierGroupOption } from "./components/product-modifier-section/ProductModifierSection.types";
+import type { ProductModifierGroupOption } from "../product-modifier-section/ProductModifierSection.types";
 
 function toCreateProduct(values: ProductFormValues): CreateProduct {
   return {
@@ -166,8 +167,7 @@ export default function useProductForm(props: ProductFormProps) {
       isActive: product.isActive,
       stockManagement: product.stockManagement,
       inventoryPolicy: product.inventoryPolicy,
-      stock:
-        product.stockManagement === "MANUAL" ? product.stock : null,
+      stock: product.stockManagement === "MANUAL" ? product.stock : null,
       productIngredients: product.productIngredients.map((ingredient) => ({
         id: ingredient.id,
         inventoryItemId: {
@@ -196,10 +196,9 @@ export default function useProductForm(props: ProductFormProps) {
     if (!productModifierGroupsQuery.data) return;
     if (modifierAssignmentLoadedRef.current === props.id) return;
 
-    const assignedIds =
-      productModifierGroupsQuery.data.modifierGroups.map(
-        (group) => group.id,
-      );
+    const assignedIds = productModifierGroupsQuery.data.modifierGroups.map(
+      (group) => group.id,
+    );
 
     setSelectedModifierGroupIds(assignedIds);
     setInitialModifierGroupIds(assignedIds);
@@ -222,20 +221,18 @@ export default function useProductForm(props: ProductFormProps) {
       });
     });
 
-    (productModifierGroupsQuery.data?.modifierGroups ?? []).forEach(
-      (group) => {
-        options.set(group.id, {
-          id: group.id,
-          name: group.name,
-          isRequired: group.isRequired,
-          isMultiple: group.isMultiple,
-          minSelection: group.minSelection,
-          maxSelection: group.maxSelection,
-          isActive: group.isActive,
-          optionsCount: group.options.length,
-        });
-      },
-    );
+    (productModifierGroupsQuery.data?.modifierGroups ?? []).forEach((group) => {
+      options.set(group.id, {
+        id: group.id,
+        name: group.name,
+        isRequired: group.isRequired,
+        isMultiple: group.isMultiple,
+        minSelection: group.minSelection,
+        maxSelection: group.maxSelection,
+        isActive: group.isActive,
+        optionsCount: group.options.length,
+      });
+    });
 
     return Array.from(options.values());
   }, [modifierGroupsQuery.data, productModifierGroupsQuery.data]);
@@ -295,8 +292,7 @@ export default function useProductForm(props: ProductFormProps) {
 
   const onSubmit = async (values: ProductFormValues) => {
     const hasProductChanges = Object.keys(dirtyFields).length > 0;
-    const isAssignmentReady =
-      !props.id || productModifierGroupsQuery.isSuccess;
+    const isAssignmentReady = !props.id || productModifierGroupsQuery.isSuccess;
     const hasAssignmentChanges =
       canManage &&
       isAssignmentReady &&
@@ -415,10 +411,7 @@ export default function useProductForm(props: ProductFormProps) {
     ) {
       apiErrorHandler(productModifierGroupsQuery.error);
     }
-  }, [
-    productModifierGroupsQuery.isError,
-    productModifierGroupsQuery.error,
-  ]);
+  }, [productModifierGroupsQuery.isError, productModifierGroupsQuery.error]);
 
   const {
     data: inventoryItemOptions,
@@ -426,6 +419,28 @@ export default function useProductForm(props: ProductFormProps) {
     isError: isErrorGetOptions,
     error: errorGetOptions,
   } = useInventoryItemOptionsQuery(props.open ?? false);
+
+  const productIngredientInventoryUnits = useMemo(
+    () =>
+      (productIngredientsValues ?? []).map(
+        (ingredient): InventoryUnit | null => {
+          const selectedInventoryItemId = ingredient.inventoryItemId?.value;
+          if (!selectedInventoryItemId) return null;
+
+          const selectedInventoryItem = inventoryItemOptions?.find(
+            (item) => item.id === selectedInventoryItemId,
+          );
+          if (selectedInventoryItem) return selectedInventoryItem.unit;
+
+          return (
+            productQuery.data?.productIngredients.find(
+              (item) => item.inventoryItem.id === selectedInventoryItemId,
+            )?.inventoryItem.unit ?? null
+          );
+        },
+      ),
+    [inventoryItemOptions, productIngredientsValues, productQuery.data],
+  );
 
   useEffect(() => {
     if (isErrorGetOptions && errorGetOptions) {
@@ -439,6 +454,7 @@ export default function useProductForm(props: ProductFormProps) {
     stockManagement,
     handleStockManagementChange,
     inventoryItemOptions,
+    productIngredientInventoryUnits,
     isLoading,
     isLoadingGetOptions,
     modifierGroupOptions,

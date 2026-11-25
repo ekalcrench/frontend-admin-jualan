@@ -8,7 +8,10 @@ import {
   Typography,
 } from "@mui/material";
 import { BoxFlex } from "@/styled/CustomBox";
-import { formatSelectionMode, formatSelectionRule } from "@/utils/productModifier";
+import {
+  formatSelectionMode,
+  formatSelectionRule,
+} from "@/utils/productModifier";
 import type { ProductModifierSectionProps } from "./ProductModifierSection.types";
 
 export default function ProductModifierSection({
@@ -34,8 +37,8 @@ export default function ProductModifierSection({
         color="text.secondary"
         sx={{ marginBottom: "16px" }}
       >
-        Tambahkan pilihan tambahan atau variasi yang dapat dipilih pelanggan
-        saat memesan produk.
+        Tambahkan pilihan variasi atau add-on yang dapat dipilih pelanggan saat
+        memesan
       </Typography>
 
       {isError ? (
@@ -64,6 +67,7 @@ export default function ProductModifierSection({
           <Autocomplete
             multiple
             disableCloseOnSelect
+            disableClearable
             options={options}
             value={selectedOptions}
             onChange={(_event, value) =>
@@ -158,7 +162,7 @@ export default function ProductModifierSection({
               "& .MuiOutlinedInput-root": {
                 height: "auto !important",
                 minHeight: "54px",
-                padding: "6px 8px !important",
+                padding: "6px 40px 6px 8px !important",
                 alignItems: "center",
               },
               "& .MuiAutocomplete-input": {
@@ -170,16 +174,6 @@ export default function ProductModifierSection({
               },
             }}
           />
-
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ marginTop: "8px" }}
-          >
-            {disabled
-              ? "Anda tidak memiliki izin untuk mengubah variasi pada produk."
-              : "Pilih satu atau beberapa grup. Grup wajib dan aturan pilihan ditampilkan pada daftar dan label."}
-          </Typography>
         </>
       )}
     </Box>

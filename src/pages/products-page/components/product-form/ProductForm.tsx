@@ -25,7 +25,7 @@ import { TypographyInputLabel } from "@/styled/CustomTypography";
 import useProductForm from "./ProductForm.hooks";
 import type { ProductFormProps } from "./ProductForm.types";
 import { emptyProductIngredient } from "./ProductForm.constants";
-import ProductModifierSection from "./components/product-modifier-section";
+import ProductModifierSection from "../product-modifier-section";
 
 export default function ProductForm(props: ProductFormProps) {
   const {
@@ -34,6 +34,7 @@ export default function ProductForm(props: ProductFormProps) {
     stockManagement,
     handleStockManagementChange,
     inventoryItemOptions,
+    productIngredientInventoryUnits,
     isLoading,
     isLoadingGetOptions,
     modifierGroupOptions,
@@ -88,89 +89,63 @@ export default function ProductForm(props: ProductFormProps) {
           color="text.secondary"
           sx={{ marginLeft: "32px", marginBottom: "20px" }}
         >
-          Produk nonaktif tidak akan muncul saat membuat pesanan baru. Riwayat
-          transaksi yang sudah ada tetap tersedia.
+          Produk nonaktif tidak akan muncul saat membuat pesanan baru
         </Typography>
 
         <Box
           sx={{
             border: "1px solid",
             borderColor: "divider",
-            borderRadius: 2,
-            padding: 2,
-            marginBottom: 2,
+            borderRadius: "16px",
+            padding: "16px",
+            marginBottom: "20px",
           }}
         >
           <Typography sx={{ fontWeight: 600, marginBottom: "4px" }}>
-            Manajemen Persediaan
+            Manajemen Stok
           </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ marginBottom: 1 }}
+            sx={{ marginBottom: "8px" }}
           >
-            Pilih bagaimana stok produk dikelola. Konfigurasi bahan tetap
-            tersedia untuk perhitungan HPP, terlepas dari pilihan ini.
+            Pilih bagaimana stok produk dikelola
           </Typography>
           <FormControl component="fieldset" fullWidth>
-            <Typography component="legend" variant="subtitle2">
-              Manajemen Stok
-            </Typography>
             <Controller
               name="stockManagement"
               control={control}
               render={({ field }) => (
                 <RadioGroup
                   {...field}
-                  onChange={(event, value) => {
+                  onChange={(_event, value) => {
                     field.onChange(value);
                     handleStockManagementChange(value);
                   }}
                 >
-                    <FormControlLabel
-                      value="UNTRACKED"
-                      control={<Radio size="small" />}
-                      label={
-                        <Box>
-                          <Typography variant="body2">
-                            Tidak dilacak (stok tidak terbatas)
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Stok produk tidak dibatasi dan tidak dikurangi dari
-                            bahan persediaan.
-                          </Typography>
-                        </Box>
-                      }
-                    />
-                    <FormControlLabel
-                      value="MANUAL"
-                      control={<Radio size="small" />}
-                      label={
-                        <Box>
-                          <Typography variant="body2">
-                            Stok manual
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Atur jumlah stok produk sendiri.
-                          </Typography>
-                        </Box>
-                      }
-                    />
-                    <FormControlLabel
-                      value="INVENTORY"
-                      control={<Radio size="small" />}
-                      label={
-                        <Box>
-                          <Typography variant="body2">
-                            Berdasarkan bahan persediaan
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Stok produk dihitung dari jumlah bahan yang
-                            tersedia.
-                          </Typography>
-                        </Box>
-                      }
-                    />
+                  <FormControlLabel
+                    value="UNTRACKED"
+                    control={<Radio size="small" />}
+                    label={
+                      <Typography variant="body2">Selalu tersedia</Typography>
+                    }
+                  />
+                  <FormControlLabel
+                    value="MANUAL"
+                    control={<Radio size="small" />}
+                    label={
+                      <Typography variant="body2">Atur sendiri</Typography>
+                    }
+                  />
+                  <FormControlLabel
+                    value="INVENTORY"
+                    control={<Radio size="small" />}
+                    label={
+                      <Typography variant="body2">
+                        Diatur berdasarkan jumlah bahan
+                      </Typography>
+                    }
+                  />
                 </RadioGroup>
               )}
             />
@@ -185,27 +160,37 @@ export default function ProductForm(props: ProductFormProps) {
               decimalScale={0}
               renderErrorMessage
               disabled={isLoading}
+              boxFieldWrapperProps={{ sx: { marginTop: "8px" } }}
             />
           )}
 
           {stockManagement === "INVENTORY" && (
-            <FormControl component="fieldset" fullWidth sx={{ mt: 1 }}>
-              <Typography component="legend" variant="subtitle2">
-                Kebijakan Stok
+            <FormControl
+              component="fieldset"
+              fullWidth
+              sx={{ marginTop: "12px" }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: 600, marginBottom: "12px" }}
+              >
+                Pengaturan:
               </Typography>
               <Controller
                 name="inventoryPolicy"
                 control={control}
                 render={({ field }) => (
-                  <RadioGroup {...field}>
+                  <RadioGroup {...field} sx={{ gap: "8px" }}>
                     <FormControlLabel
                       value="STRICT"
                       control={<Radio size="small" />}
                       label={
                         <Box>
-                          <Typography variant="body2">Strict (ketat)</Typography>
+                          <Typography variant="body2" sx={{ lineHeight: 1.3 }}>
+                            Ketat
+                          </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            Cegah penjualan saat stok bahan tidak mencukupi.
+                            Cegah penjualan saat stok bahan tidak mencukupi
                           </Typography>
                         </Box>
                       }
@@ -215,12 +200,11 @@ export default function ProductForm(props: ProductFormProps) {
                       control={<Radio size="small" />}
                       label={
                         <Box>
-                          <Typography variant="body2">
-                            Allow negative (izinkan stok negatif)
+                          <Typography variant="body2" sx={{ lineHeight: 1.3 }}>
+                            Longgar
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            Izinkan penjualan meski stok bahan tidak
-                            mencukupi.
+                            Izinkan penjualan meski stok bahan tidak mencukupi
                           </Typography>
                         </Box>
                       }
@@ -232,76 +216,75 @@ export default function ProductForm(props: ProductFormProps) {
           )}
         </Box>
 
-        <Stack
-          direction="row"
-          sx={{
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "16px",
-            marginTop: "8px",
-          }}
-        >
-          <Typography sx={{ fontWeight: 600 }}>Bahan Produk</Typography>
-        </Stack>
+        <Typography sx={{ fontWeight: 600, marginBottom: "4px" }}>
+          Bahan Produk
+        </Typography>
         <Typography
           variant="body2"
           color="text.secondary"
           sx={{ marginBottom: 2 }}
         >
-          Atur bahan untuk perhitungan HPP. Bahan tetap dapat digunakan untuk
-          menghitung biaya tanpa mengaktifkan pengurangan stok otomatis.
+          Atur bahan untuk perhitungan HPP. Jika manajemen stok diatur
+          berdasarkan jumlah bahan, maka stok bahan akan berkurang secara
+          otomatis.
         </Typography>
 
         <Stack spacing={2} divider={<Divider flexItem />}>
-          {fields.map((field, index) => (
-            <Box key={field.id}>
-              <BoxFlexSpaceBetween>
-                <TypographyInputLabel>{`Bahan ${index + 1}`}</TypographyInputLabel>
-                <IconButton
-                  aria-label={`Hapus bahan ${index + 1}`}
-                  color="error"
-                  disabled={isLoading}
-                  onClick={() => handleRemoveProductIngredient(index)}
-                  size="small"
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </BoxFlexSpaceBetween>
+          {fields.map((field, index) => {
+            const selectedInventoryItemUnit =
+              productIngredientInventoryUnits[index];
 
-              <CustomAutocomplete
-                boxFieldWrapperProps={{ sx: { flex: 1 } }}
-                control={control}
-                name={`productIngredients.${index}.inventoryItemId`}
-                placeholder="Ketik untuk mencari barang"
-                renderErrorMessage
-                disabled={isLoading}
-                autocompleteProps={{
-                  options: (inventoryItemOptions ?? []).map((item) => ({
-                    label: `${item.name} (${inventoryUnitLabels[item.unit]})`,
-                    value: item.id,
-                  })),
-                  // onInputChange: (_, value, reason) => {
-                  //   if (reason === "input") setPrefix(value);
-                  // },
-                  loading: isLoadingGetOptions,
-                }}
-              />
-
-              <Grid container columnSpacing={1.5}>
-                <Grid size={{ xs: 12 }}>
-                  <CustomInputNumber
-                    name={`productIngredients.${index}.quantity`}
-                    control={control}
-                    label="Jumlah"
-                    placeholder="100 (Gram (g))"
-                    // endAdornment={''}
-                    renderErrorMessage
+            return (
+              <Box key={field.id}>
+                <BoxFlexSpaceBetween>
+                  <TypographyInputLabel>{`Bahan ${index + 1}`}</TypographyInputLabel>
+                  <IconButton
+                    aria-label={`Hapus bahan ${index + 1}`}
+                    color="error"
                     disabled={isLoading}
-                  />
+                    onClick={() => handleRemoveProductIngredient(index)}
+                    size="small"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </BoxFlexSpaceBetween>
+
+                <CustomAutocomplete
+                  boxFieldWrapperProps={{ sx: { flex: 1 } }}
+                  control={control}
+                  name={`productIngredients.${index}.inventoryItemId`}
+                  placeholder="Ketik untuk mencari barang"
+                  renderErrorMessage
+                  disabled={isLoading}
+                  autocompleteProps={{
+                    options: (inventoryItemOptions ?? []).map((item) => ({
+                      label: `${item.name} (${inventoryUnitLabels[item.unit]})`,
+                      value: item.id,
+                    })),
+                    loading: isLoadingGetOptions,
+                  }}
+                />
+
+                <Grid container columnSpacing={1.5}>
+                  <Grid size={{ xs: 12 }}>
+                    <CustomInputNumber
+                      name={`productIngredients.${index}.quantity`}
+                      control={control}
+                      label="Jumlah Bahan"
+                      placeholder="Contoh: 30"
+                      endAdornment={
+                        selectedInventoryItemUnit
+                          ? inventoryUnitLabels[selectedInventoryItemUnit]
+                          : undefined
+                      }
+                      renderErrorMessage
+                      disabled={isLoading}
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Box>
-          ))}
+              </Box>
+            );
+          })}
         </Stack>
 
         <BoxFlexEnd>
