@@ -39,9 +39,8 @@ export default function AssignedProductsSection({
         }}
       >
         <Box>
-          <Typography variant="h6">Produk yang menggunakan grup ini</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Produk-produk ini menampilkan grup variasi saat pelanggan memesan.
+          <Typography variant="h6">
+            Produk yang menggunakan variasi ini
           </Typography>
         </Box>
 
@@ -112,9 +111,9 @@ export default function AssignedProductsSection({
               </Box>
 
               {canManage && (
-                <Tooltip title="Hapus penugasan produk">
+                <Tooltip title="Hapus link produk">
                   <IconButton
-                    aria-label={`Hapus penugasan ${product.name}`}
+                    aria-label={`Hapus link ${product.name}`}
                     color="error"
                     loading={removingProductId === product.id}
                     onClick={() => onRemove(product)}

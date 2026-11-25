@@ -200,7 +200,7 @@ function ModifierGroupDetail({ modifierGroupId }: { modifierGroupId: string }) {
                 />
               </BoxFlex>
             }
-            subTitle={group.description || "Belum ada deskripsi untuk grup ini"}
+            subTitle={group.description || "Belum ada deskripsi"}
             enableBackButton
             addButton={
               canManage && (
@@ -216,7 +216,7 @@ function ModifierGroupDetail({ modifierGroupId }: { modifierGroupId: string }) {
             }
           />
 
-          <BoxFlex sx={{ flexWrap: "wrap", gap: "8px" }}>
+          <BoxFlex sx={{ flexWrap: "wrap", gap: "4px" }}>
             <Chip
               label={`${options.length} opsi`}
               size="small"

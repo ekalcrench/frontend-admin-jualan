@@ -50,9 +50,6 @@ export default function ModifierOptionsSection({
     >
       <Box>
         <Typography variant="h6">Opsi Variasi</Typography>
-        <Typography variant="body2" color="text.secondary">
-          Daftar pilihan yang dapat dipilih pelanggan dari grup ini.
-        </Typography>
       </Box>
 
       {canManage && (
@@ -120,9 +117,7 @@ export default function ModifierOptionsSection({
         }}
       >
         {inventoryLabel
-          ? option.trackInventory
-            ? `Pengurangan stok: ${inventoryLabel}`
-            : `Biaya bahan: ${inventoryLabel} (stok tidak dikurangi)`
+          ? `Bahan: ${inventoryLabel} ${option.trackInventory ? `(stok berkurang otomatis)` : `(stok tidak dikurangi)`}`
           : "Tanpa barang persediaan"}
       </Typography>
     );
@@ -145,9 +140,7 @@ export default function ModifierOptionsSection({
             <TableCell>Harga Tambahan</TableCell>
             <TableCell width={110}>Status</TableCell>
             <TableCell width={110}>Urutan</TableCell>
-            <TableCell width={120} align="right">
-              Aksi
-            </TableCell>
+            <TableCell width={90}>Aksi</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -155,9 +148,11 @@ export default function ModifierOptionsSection({
             <TableRow key={option.id} hover>
               <TableCell>
                 <Typography sx={{ fontWeight: 600 }}>{option.name}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {option.description || "Tanpa deskripsi"}
-                </Typography>
+                {option.description && (
+                  <Typography variant="body2" color="text.secondary">
+                    {option.description}
+                  </Typography>
+                )}
                 {renderInventoryInfo(option)}
               </TableCell>
               <TableCell>
