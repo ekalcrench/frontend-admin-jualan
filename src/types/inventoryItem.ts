@@ -25,6 +25,7 @@ export interface InventoryItemResponse extends BaseApiResponse {
 
 export interface InventoryItemFilterPayload extends DefaultFilter {
   search?: string;
+  unit?: InventoryUnit;
 }
 
 export interface InventoryItemOptions {

@@ -12,6 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import CustomTable, {
   createCustomTableEmptyStates,
+  CustomFilterChip,
 } from "@/components/custom-table";
 import { BoxFlex } from "@/styled/CustomBox";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
@@ -20,13 +21,16 @@ import InventoryItemForm from "./components/inventory-item-form";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useAuthStore from "@/store/auth-store/authStore";
 import { userOrganizationRole } from "@/constants/user";
-import { InventoryItemResponse } from "@/types/inventoryItem";
+import { InventoryItemResponse, InventoryUnit } from "@/types/inventoryItem";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate } from "react-router-dom";
 import { paths } from "@/constants/path";
 import PageTitle from "@/components/page-title";
 import InventoryItemOverview from "./components/inventory-item-overview";
-import { inventoryUnitLabels } from "@/constants/inventoryItem";
+import {
+  inventoryUnitLabels,
+  inventoryUnitOptions,
+} from "@/constants/inventoryItem";
 import { currencyFormatter } from "@/utils/currency";
 
 export default function InventoryItemsPage() {
@@ -39,9 +43,11 @@ export default function InventoryItemsPage() {
     isError,
     refetch,
     search,
+    unit,
     sortBy,
     handleChangePage,
     handleChangeSearch,
+    handleChangeUnit,
     handleChangeSort,
     handleClickAddForm,
     handleClickDelete,
@@ -160,6 +166,23 @@ export default function InventoryItemsPage() {
           {...tableEmptyStates}
           renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
+          filterComponents={
+            <BoxFlex>
+              <CustomFilterChip<InventoryUnit>
+                label="Satuan"
+                value={unit}
+                options={[
+                  { label: "Semua" },
+                  ...inventoryUnitOptions.map((value) => ({
+                    label: inventoryUnitLabels[value],
+                    value,
+                  })),
+                ]}
+                onChange={handleChangeUnit}
+              />
+            </BoxFlex>
+          }
+          hasActiveFilters={Boolean(search.trim() || unit)}
           isLoading={isLoading}
           isError={isError}
           page={data?.pagination?.page}

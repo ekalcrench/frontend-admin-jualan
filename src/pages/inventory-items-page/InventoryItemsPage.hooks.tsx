@@ -1,4 +1,7 @@
-import { inventoryUnitLabels } from "@/constants/inventoryItem";
+import {
+  inventoryUnitLabels,
+  inventoryUnitOptions,
+} from "@/constants/inventoryItem";
 import { defaultParameter } from "@/constants/table";
 import { useDeleteInventoryItemMutation } from "@/services/inventory-items/inventoryItems.mutation";
 import { useInventoryItemsQuery } from "@/services/inventory-items/inventoryItems.query";
@@ -19,6 +22,9 @@ export default function useInventoryItemsPage() {
   const size = Number(searchParams.get("size") ?? defaultParameter.size);
   const sortBy = searchParams.get("sortBy") ?? defaultParameter.sortBy;
   const search = searchParams.get("search") ?? undefined;
+  const unit = inventoryUnitOptions.find(
+    (option) => option === searchParams.get("unit"),
+  );
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -45,6 +51,7 @@ export default function useInventoryItemsPage() {
     size,
     sortBy,
     search,
+    unit,
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<
@@ -68,6 +75,15 @@ export default function useInventoryItemsPage() {
   const handleResetFilter = () =>
     setSearchParams((prev) => {
       prev.delete("search");
+      prev.delete("unit");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+
+  const handleChangeUnit = (value?: InventoryUnit) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("unit", value);
+      else prev.delete("unit");
       prev.set("page", String(defaultParameter.page));
       return prev;
     });
@@ -172,9 +188,11 @@ export default function useInventoryItemsPage() {
     isError,
     refetch,
     search: search ?? "",
+    unit,
     sortBy,
     handleChangePage,
     handleChangeSearch,
+    handleChangeUnit,
     handleChangeSort,
     handleClickAddForm,
     handleClickDelete,
