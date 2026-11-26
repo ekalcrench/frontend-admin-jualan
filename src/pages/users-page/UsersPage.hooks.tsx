@@ -15,6 +15,7 @@ import {
   userOrganizationRoleOptions,
   userOrganizationStatusColorMapping,
   userOrganizationStatusMapping,
+  userOrganizationStatusOptions,
 } from "@/constants/user";
 import { useOrganizationUsersQuery } from "@/services/organization-users/organizationUsers.query";
 import {
@@ -35,6 +36,14 @@ export default function useUsersPage() {
   const size = Number(searchParams.get("size") ?? defaultParameter.size);
   const sortBy = searchParams.get("sortBy") ?? defaultParameter.sortBy;
   const search = searchParams.get("search") ?? undefined;
+  const roleParam = searchParams.get("role");
+  const role = userOrganizationRoleOptions.find(
+    (option) => option.value === roleParam,
+  )?.value;
+  const statusParam = searchParams.get("status");
+  const status = userOrganizationStatusOptions.find(
+    (option) => option.value === statusParam,
+  )?.value;
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -60,6 +69,8 @@ export default function useUsersPage() {
       size,
       sortBy,
       search,
+      role,
+      status,
     });
 
   const [editingRoleId, setEditingRoleId] = useState<string | null>(null);
@@ -90,6 +101,24 @@ export default function useUsersPage() {
   const handleResetFilter = () =>
     setSearchParams((prev) => {
       prev.delete("search");
+      prev.delete("role");
+      prev.delete("status");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+
+  const handleChangeRoleFilter = (value?: OrganizationUserRole) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("role", value);
+      else prev.delete("role");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+
+  const handleChangeStatusFilter = (value?: OrganizationUserStatus) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("status", value);
+      else prev.delete("status");
       prev.set("page", String(defaultParameter.page));
       return prev;
     });
@@ -304,12 +333,16 @@ export default function useUsersPage() {
     refetch,
     isFormOpen,
     search: search ?? "",
+    role,
     sortBy,
+    status,
     suspendOrganizationUser,
     getValues,
     handleChangePage,
+    handleChangeRoleFilter,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeStatusFilter,
     handleClickActivate,
     handleClickApprove,
     handleClickChangeRole,

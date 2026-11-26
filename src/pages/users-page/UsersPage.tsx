@@ -10,6 +10,7 @@ import {
 import CustomAutocomplete from "@/components/custom-autocomplete";
 import useUsersPage from "./UsersPage.hooks";
 import CustomTable, {
+  CustomFilterChip,
   createCustomTableEmptyStates,
 } from "@/components/custom-table";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
@@ -21,6 +22,7 @@ import {
   userOrganizationStatus,
   userOrganizationStatusColorMapping,
   userOrganizationStatusMapping,
+  userOrganizationStatusOptions,
   userRole,
 } from "@/constants/user";
 import useAuthStore from "@/store/auth-store";
@@ -48,13 +50,17 @@ export default function UsersPage() {
     isError,
     refetch,
     isFormOpen,
+    role,
     search,
     sortBy,
+    status,
     suspendOrganizationUser,
     getValues,
     handleChangePage,
+    handleChangeRoleFilter,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeStatusFilter,
     handleClickActivate,
     handleClickApprove,
     handleClickChangeRole,
@@ -240,6 +246,35 @@ export default function UsersPage() {
           {...tableEmptyStates}
           renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
+          filterComponents={
+            <BoxFlex sx={{ gap: 1 }}>
+              <CustomFilterChip
+                label="Role"
+                value={role}
+                options={[
+                  { label: "Semua" },
+                  ...userOrganizationRoleOptions.map((option) => ({
+                    label: userOrganizationRoleMapping[option.value],
+                    value: option.value,
+                  })),
+                ]}
+                onChange={handleChangeRoleFilter}
+              />
+              <CustomFilterChip
+                label="Status"
+                value={status}
+                options={[
+                  { label: "Semua" },
+                  ...userOrganizationStatusOptions.map((option) => ({
+                    label: userOrganizationStatusMapping[option.value],
+                    value: option.value,
+                  })),
+                ]}
+                onChange={handleChangeStatusFilter}
+              />
+            </BoxFlex>
+          }
+          hasActiveFilters={Boolean(search.trim() || role || status)}
           isLoading={isLoading}
           isError={isError}
           page={data?.pagination?.page}

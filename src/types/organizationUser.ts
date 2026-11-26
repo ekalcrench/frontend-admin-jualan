@@ -36,4 +36,6 @@ export interface OrganizationUserResponse extends BaseApiResponse {
 
 export interface OrganizationUserFilterPayload extends DefaultFilter {
   search?: string;
+  role?: OrganizationUserRole;
+  status?: OrganizationUserStatus;
 }
