@@ -1,5 +1,6 @@
-import { defaultParameter, defaultParameterDate } from "@/constants/table";
+import { defaultParameter } from "@/constants/table";
 import {
+  cashTransactionType,
   cashTransactionTypeColorMapping,
   cashTransactionTypeLabels,
   isEditableCashTransactionType,
@@ -7,7 +8,10 @@ import {
 import { useDeleteCashTransactionMutation } from "@/services/cash-transactions/cashTransactions.mutation";
 import { useCashTransactionsQuery } from "@/services/cash-transactions/cashTransactions.query";
 import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
-import { CashTransactionResponse } from "@/types/cashTransaction";
+import {
+  CashTransactionResponse,
+  CashTransactionType,
+} from "@/types/cashTransaction";
 import { ColumnSort } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { currencyFormatter } from "@/utils/currency";
@@ -28,6 +32,10 @@ export default function useCashFlowsPage() {
   const search = searchParams.get("search") ?? undefined;
   const startDate = searchParams.get("startDate") ?? undefined;
   const endDate = searchParams.get("endDate") ?? undefined;
+  const typeParam = searchParams.get("type");
+  const type = Object.values(cashTransactionType).find(
+    (option) => option === typeParam,
+  );
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -57,6 +65,7 @@ export default function useCashFlowsPage() {
       search,
       endDate: endDate?.length ? endDate : undefined,
       startDate: startDate?.length ? startDate : undefined,
+      type,
     },
   );
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -98,8 +107,15 @@ export default function useCashFlowsPage() {
   const handleResetFilter = () =>
     setSearchParams((previous) => {
       previous.delete("search");
-      previous.set("startDate", defaultParameterDate);
-      previous.set("endDate", defaultParameterDate);
+      previous.delete("type");
+      previous.set("page", String(defaultParameter.page));
+      return previous;
+    });
+
+  const handleChangeType = (value?: CashTransactionType) =>
+    setSearchParams((previous) => {
+      if (value) previous.set("type", value);
+      else previous.delete("type");
       previous.set("page", String(defaultParameter.page));
       return previous;
     });
@@ -218,9 +234,11 @@ export default function useCashFlowsPage() {
     search: search ?? "",
     sortBy,
     startDate,
+    type,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeType,
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,

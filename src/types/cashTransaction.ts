@@ -5,6 +5,7 @@ export interface CashTransactionFilterPayload extends DefaultFilter {
   search?: string;
   startDate?: string;
   endDate?: string;
+  type?: CashTransactionType;
 }
 
 export type CashTransactionType =

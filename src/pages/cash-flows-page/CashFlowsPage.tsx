@@ -14,10 +14,13 @@ import {
 } from "@mui/material";
 import CustomTable, {
   createCustomTableEmptyStates,
+  CustomFilterChip,
 } from "@/components/custom-table";
 import { defaultParameter } from "@/constants/table";
-import { isEditableCashTransactionType } from "@/constants/cashTransaction";
-import { CashTransactionResponse } from "@/types/cashTransaction";
+import {
+  CashTransactionResponse,
+  CashTransactionType,
+} from "@/types/cashTransaction";
 import { MRT_Row } from "material-react-table";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import CashTransactionForm from "./components/cash-transaction-form";
@@ -26,12 +29,15 @@ import CashDetails from "./components/cash-details";
 import ReportDate from "@/components/report-date";
 import PageTitle from "@/components/page-title";
 import {
+  cashTransactionType,
+  isEditableCashTransactionType,
   cashTransactionTypeColorMapping,
   cashTransactionTypeLabels,
+  cashTransactionTypeOptions,
 } from "@/constants/cashTransaction";
 import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate } from "@/utils/dateTime";
-import { BoxFlexEnd } from "@/styled/CustomBox";
+import { BoxFlex, BoxFlexEnd } from "@/styled/CustomBox";
 
 export default function CashFlowsPage() {
   const {
@@ -47,9 +53,11 @@ export default function CashFlowsPage() {
     search,
     sortBy,
     startDate,
+    type,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeType,
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
@@ -184,6 +192,23 @@ export default function CashFlowsPage() {
           {...tableEmptyStates}
           renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
+          filterComponents={
+            <BoxFlex>
+              <CustomFilterChip<CashTransactionType>
+                label="Jenis Transaksi"
+                value={type}
+                options={[
+                  { label: "Semua" },
+                  ...cashTransactionTypeOptions.map((value) => ({
+                    label: cashTransactionTypeLabels[value],
+                    value,
+                  })),
+                ]}
+                onChange={handleChangeType}
+              />
+            </BoxFlex>
+          }
+          hasActiveFilters={Boolean(search.trim() || type)}
           isLoading={isLoading}
           isError={isError}
           page={data?.pagination?.page ?? defaultParameter.page}
@@ -205,7 +230,7 @@ export default function CashFlowsPage() {
           enableRowActions
           columnRowActionsSize={100}
           renderRowActions={({ row }) => renderRowActions(row)}
-          searchPlaceholder="Cari berdasarkan deskripsi atau jenis transaksi"
+          searchPlaceholder="Cari berdasarkan deskripsi"
         />
       </Stack>
     </Box>

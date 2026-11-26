@@ -2,7 +2,6 @@ import {
   CashTransactionType,
   EditableCashTransactionType,
 } from "@/types/cashTransaction";
-import { LabelValue } from "@/types/generalTypes";
 import { ChipProps } from "@mui/material";
 
 export const cashTransactionType: Record<
@@ -29,6 +28,13 @@ export const cashTransactionTypeLabels: Record<CashTransactionType, string> = {
   INVESTMENT: "Investasi",
   PROFIT_SHARING: "Bagi Hasil",
 };
+
+export const cashTransactionTypeOptions: CashTransactionType[] = [
+  cashTransactionType.SALE,
+  cashTransactionType.PURCHASE,
+  cashTransactionType.INVESTMENT,
+  cashTransactionType.PROFIT_SHARING,
+];
 
 export const cashTransactionTypeColorMapping: Record<
   CashTransactionType,
