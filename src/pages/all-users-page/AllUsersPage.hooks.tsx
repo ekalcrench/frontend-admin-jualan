@@ -20,8 +20,9 @@ import { toast } from "sonner";
 import {
   userRole,
   userRoleMapping,
+  userStatus,
   userStatusColorMapping,
-  userStatusMapping,
+  userStatusLabels,
 } from "@/constants/user";
 
 export default function useAllUsersPage() {
@@ -30,6 +31,12 @@ export default function useAllUsersPage() {
   const size = Number(searchParams.get("size") ?? defaultParameter.size);
   const sortBy = searchParams.get("sortBy") ?? defaultParameter.sortBy;
   const search = searchParams.get("search") ?? undefined;
+  const roleParam = searchParams.get("role");
+  const role = Object.values(userRole).find((value) => value === roleParam);
+  const statusParam = searchParams.get("status");
+  const status = Object.values(userStatus).find(
+    (value) => value === statusParam,
+  );
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -54,6 +61,8 @@ export default function useAllUsersPage() {
     size,
     sortBy,
     search,
+    role,
+    status,
   });
 
   const [editingRoleId, setEditingRoleId] = useState<string | null>(null);
@@ -81,6 +90,24 @@ export default function useAllUsersPage() {
   const handleResetFilter = () =>
     setSearchParams((prev) => {
       prev.delete("search");
+      prev.delete("role");
+      prev.delete("status");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+
+  const handleChangeRoleFilter = (value?: UserRole) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("role", value);
+      else prev.delete("role");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+
+  const handleChangeStatusFilter = (value?: UserStatus) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("status", value);
+      else prev.delete("status");
       prev.set("page", String(defaultParameter.page));
       return prev;
     });
@@ -155,7 +182,7 @@ export default function useAllUsersPage() {
         size: 150,
         Cell: ({ cell }) => (
           <Chip
-            label={userStatusMapping[cell.getValue<UserStatus>()]}
+            label={userStatusLabels[cell.getValue<UserStatus>()]}
             size="small"
             color={userStatusColorMapping[cell.getValue<UserStatus>()]}
           />
@@ -230,12 +257,16 @@ export default function useAllUsersPage() {
     isError,
     refetch,
     search: search ?? "",
+    role,
     sortBy,
+    status,
     suspendUser,
     getValues,
     handleChangePage,
+    handleChangeRoleFilter,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeStatusFilter,
     handleClickActivate,
     handleClickChangeRole,
     handleClickSuspend,

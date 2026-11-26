@@ -10,6 +10,7 @@ import {
 import CustomAutocomplete from "@/components/custom-autocomplete";
 import useAllUsersPage from "./AllUsersPage.hooks";
 import CustomTable, {
+  CustomFilterChip,
   createCustomTableEmptyStates,
 } from "@/components/custom-table";
 import { User } from "@/types/user";
@@ -20,7 +21,8 @@ import {
   userRoleMapping,
   userStatus,
   userStatusColorMapping,
-  userStatusMapping,
+  userStatusLabels,
+  userStatusOptions,
 } from "@/constants/user";
 import useAuthStore from "@/store/auth-store/authStore";
 import PageTitle from "@/components/page-title";
@@ -41,13 +43,17 @@ export default function AllUsersPage() {
     isLoading,
     isError,
     refetch,
+    role,
     search,
     sortBy,
+    status,
     suspendUser,
     getValues,
     handleChangePage,
+    handleChangeRoleFilter,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeStatusFilter,
     handleClickActivate,
     handleClickChangeRole,
     handleClickSuspend,
@@ -141,7 +147,7 @@ export default function AllUsersPage() {
             </Typography>
           </Box>
           <Chip
-            label={userStatusMapping[user.status]}
+            label={userStatusLabels[user.status]}
             color={userStatusColorMapping[user.status]}
             size="small"
           />
@@ -186,6 +192,35 @@ export default function AllUsersPage() {
           {...tableEmptyStates}
           renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
+          filterComponents={
+            <BoxFlex sx={{ gap: 1 }}>
+              <CustomFilterChip<User["role"]>
+                label="Role"
+                value={role}
+                options={[
+                  { label: "Semua" },
+                  ...Object.values(userRole).map((value) => ({
+                    label: userRoleMapping[value],
+                    value,
+                  })),
+                ]}
+                onChange={handleChangeRoleFilter}
+              />
+              <CustomFilterChip<User["status"]>
+                label="Status"
+                value={status}
+                options={[
+                  { label: "Semua" },
+                  ...userStatusOptions.map((value) => ({
+                    label: userStatusLabels[value],
+                    value,
+                  })),
+                ]}
+                onChange={handleChangeStatusFilter}
+              />
+            </BoxFlex>
+          }
+          hasActiveFilters={Boolean(search.trim() || role || status)}
           isLoading={isLoading}
           isError={isError}
           page={data?.pagination?.page}

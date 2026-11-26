@@ -43,18 +43,24 @@ export const userRoleMapping: Record<UserRole, string> = {
   USER: "User",
 };
 
-export const userOrganizationRoleMapping: Record<OrganizationUserRole, string> =
+export const userOrganizationRoleLabels: Record<OrganizationUserRole, string> =
   {
     ADMIN: "Admin",
     MEMBER: "User",
     OWNER: "Pemilik Usaha",
   };
 
-export const userStatusMapping: Record<UserStatus, string> = {
+export const userStatusLabels: Record<UserStatus, string> = {
   PENDING_EMAIL: "Pending Email",
   ACTIVE: "Active",
   SUSPENDED: "Suspended",
 };
+
+export const userStatusOptions: UserStatus[] = [
+  userStatus.ACTIVE,
+  userStatus.PENDING_EMAIL,
+  userStatus.SUSPENDED,
+];
 
 export const userStatusColorMapping: Record<UserStatus, ChipProps["color"]> = {
   PENDING_EMAIL: "warning",

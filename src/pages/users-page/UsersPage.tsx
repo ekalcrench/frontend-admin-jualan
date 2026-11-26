@@ -17,7 +17,7 @@ import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex } from "@/styled/CustomBox";
 import {
   userOrganizationRole,
-  userOrganizationRoleMapping,
+  userOrganizationRoleLabels,
   userOrganizationRoleOptions,
   userOrganizationStatus,
   userOrganizationStatusColorMapping,
@@ -203,7 +203,7 @@ export default function UsersPage() {
             />
           ) : (
             <Typography variant="body2">
-              Role: {userOrganizationRoleMapping[user.role]}
+              Role: {userOrganizationRoleLabels[user.role]}
             </Typography>
           )}
         </Box>
@@ -254,7 +254,7 @@ export default function UsersPage() {
                 options={[
                   { label: "Semua" },
                   ...userOrganizationRoleOptions.map((option) => ({
-                    label: userOrganizationRoleMapping[option.value],
+                    label: userOrganizationRoleLabels[option.value],
                     value: option.value,
                   })),
                 ]}
@@ -300,7 +300,7 @@ export default function UsersPage() {
           search={search}
           handleSearch={handleChangeSearch}
           columnRowActionsSize={
-            userState?.role === userRole.SUPER_ADMIN ? 240 : 120
+            userState?.role === userRole.SUPER_ADMIN ? 250 : 140
           }
           enableRowActions={
             organization?.role === userOrganizationRole.MEMBER ? false : true

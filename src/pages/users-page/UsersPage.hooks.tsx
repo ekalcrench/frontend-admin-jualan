@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import {
-  userOrganizationRoleMapping,
+  userOrganizationRoleLabels,
   userOrganizationRoleOptions,
   userOrganizationStatusColorMapping,
   userOrganizationStatusMapping,
@@ -189,7 +189,7 @@ export default function useUsersPage() {
           ) : (
             <Chip
               label={
-                userOrganizationRoleMapping[
+                userOrganizationRoleLabels[
                   cell.getValue<OrganizationUserRole>()
                 ]
               }

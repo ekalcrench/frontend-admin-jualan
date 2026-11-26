@@ -19,6 +19,8 @@ export interface User extends BaseApiResponse {
 
 export interface UserFilterPayload extends DefaultFilter {
   search?: string;
+  role?: UserRole;
+  status?: UserStatus;
 }
 export interface UserOptions {
   id: string;
