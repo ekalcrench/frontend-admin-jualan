@@ -1,5 +1,5 @@
 import { CreateOrder, EditOrder, OrderResponse } from "@/types/order";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { ordersKeys } from "./orders.constants";
 import {
   createOrder,
@@ -13,11 +13,33 @@ import { inventoryLotKeys } from "../inventory-lots/inventoryLots.constants";
 import { inventoryTransactionKeys } from "../inventory-transactions/inventoryTransactions.constants";
 import { cashTransactionsKeys } from "../cash-transactions/cashTransactions.constants";
 
+function invalidateOrderMutationQueries(client?: QueryClient) {
+  const queryKeys = [
+    ...(client
+      ? [ordersKeys.lists, ordersKeys.overviews, ordersKeys.overviewItems]
+      : [ordersKeys.all]),
+    productsKeys.lists,
+    inventoryItemKeys.lists,
+    inventoryLotKeys.lists,
+    inventoryTransactionKeys.lists,
+  ] as const;
+
+  if (!client) return;
+
+  queryKeys.forEach((queryKey) => client.invalidateQueries({ queryKey }));
+}
+
+function invalidateCashTransactionQueries(client: QueryClient) {
+  [cashTransactionsKeys.lists, cashTransactionsKeys.balances].forEach(
+    (queryKey) => client.invalidateQueries({ queryKey }),
+  );
+}
+
 export function useCreateOrderMutation() {
   return useMutation<OrderResponse, Error, CreateOrder>({
     mutationFn: createOrder,
     onSuccess: (result, _payload, _onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: ordersKeys.lists });
+      invalidateOrderMutationQueries(context.client);
       context.client.setQueryData(ordersKeys.detail(result.id), result);
     },
   });
@@ -27,7 +49,7 @@ export function useEditOrderMutation() {
   return useMutation<OrderResponse, Error, EditOrder>({
     mutationFn: editOrder,
     onSuccess: (result, _payload, _onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: ordersKeys.lists });
+      invalidateOrderMutationQueries(context.client);
       context.client.setQueryData(ordersKeys.detail(result.id), result);
     },
   });
@@ -37,7 +59,7 @@ export function useDeleteOrderMutation() {
   return useMutation<boolean, Error, string>({
     mutationFn: deleteOrder,
     onSuccess: (_result, _payload, _onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: ordersKeys.all });
+      invalidateOrderMutationQueries();
     },
   });
 }
@@ -45,22 +67,9 @@ export function useDeleteOrderMutation() {
 export function useMarkPaidOrderMutation() {
   return useMutation<OrderResponse, Error, string>({
     mutationFn: markPaidOrder,
-    onSuccess: (result, payload, onMutateResult, context) => {
+    onSuccess: (result, _payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: ordersKeys.lists });
-      context.client.invalidateQueries({ queryKey: ordersKeys.overviews });
-      context.client.invalidateQueries({ queryKey: ordersKeys.overviewItems });
-      context.client.invalidateQueries({ queryKey: productsKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
-      context.client.invalidateQueries({
-        queryKey: inventoryTransactionKeys.lists,
-      });
-      context.client.invalidateQueries({
-        queryKey: cashTransactionsKeys.lists,
-      });
-      context.client.invalidateQueries({
-        queryKey: cashTransactionsKeys.balances,
-      });
+      invalidateCashTransactionQueries(context.client);
       context.client.setQueryData(ordersKeys.detail(result.id), result);
     },
   });
