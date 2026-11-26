@@ -27,4 +27,6 @@ export interface InventoryLotResponse extends BaseApiResponse {
 export interface InventoryLotFilterPayload extends DefaultFilter {
   inventoryItemId: string;
   search?: string;
+  startDate?: string;
+  endDate?: string;
 }

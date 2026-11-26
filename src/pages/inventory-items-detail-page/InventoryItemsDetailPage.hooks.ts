@@ -22,6 +22,8 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
   const sortBy =
     searchParams.get("sortBy") ?? inventoryLotsDefaultParameter.sortBy;
   const search = searchParams.get("search") ?? undefined;
+  const startDate = searchParams.get("startDate") ?? undefined;
+  const endDate = searchParams.get("endDate") ?? undefined;
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -49,6 +51,8 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
     size,
     sortBy,
     search,
+    startDate: startDate?.length ? startDate : undefined,
+    endDate: endDate?.length ? endDate : undefined,
   });
   const inventoryItemQuery = useInventoryItemByIdQuery(inventoryItemId);
 
@@ -62,6 +66,22 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
     setSearchParams((prev) => {
       if (value.trim()) prev.set("search", value);
       else prev.delete("search");
+      prev.set("page", String(inventoryLotsDefaultParameter.page));
+      return prev;
+    });
+
+  const setStartDate = (value: string | undefined) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("startDate", value);
+      else prev.delete("startDate");
+      prev.set("page", String(inventoryLotsDefaultParameter.page));
+      return prev;
+    });
+
+  const setEndDate = (value: string | undefined) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("endDate", value);
+      else prev.delete("endDate");
       prev.set("page", String(inventoryLotsDefaultParameter.page));
       return prev;
     });
@@ -180,13 +200,17 @@ export default function useInventoryItemsDetailPage(inventoryItemId: string) {
     refetch,
     isFormOpen,
     isLoading,
+    endDate,
     search: search ?? "",
     sortBy,
+    startDate,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
     handleClickEditForm,
     handleResetFilter,
+    setEndDate,
     setIsFormOpen,
+    setStartDate,
   };
 }

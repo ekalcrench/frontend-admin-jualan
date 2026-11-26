@@ -24,6 +24,7 @@ import PageTitle from "@/components/page-title";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
 import { currencyFormatter } from "@/utils/currency";
 import { formatLocalDate, formatLocalDateOnly } from "@/utils/dateTime";
+import ReportDate from "@/components/report-date";
 
 export default function InventoryItemsDetailPage() {
   const { inventoryItemId } = useParams<{ inventoryItemId: string }>();
@@ -40,6 +41,7 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
     columns,
     data,
     editingLot,
+    endDate,
     inventoryItemQuery,
     isError,
     isFormOpen,
@@ -47,12 +49,15 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
     refetch,
     search,
     sortBy,
+    startDate,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
     handleClickEditForm,
     handleResetFilter,
+    setEndDate,
     setIsFormOpen,
+    setStartDate,
   } = useInventoryItemsDetailPage(inventoryItemId);
 
   const tableEmptyStates = createCustomTableEmptyStates({
@@ -142,22 +147,31 @@ function InventoryLots({ inventoryItemId }: { inventoryItemId: string }) {
         />
       )}
       <Stack spacing={4}>
-        <PageTitle
-          title="Detail Inventory Item"
-          subTitle={`Lot stok untuk barang ${
-            inventoryItemQuery.isLoading ? (
-              <Skeleton
-                component="span"
-                variant="text"
-                width={160}
-                sx={{ display: "inline-block", verticalAlign: "middle" }}
-              />
-            ) : (
-              (inventoryItemQuery.data?.name ?? "-")
-            )
-          }`}
-          enableBackButton
-        />
+        <Stack spacing={3}>
+          <PageTitle
+            title="Detail Inventory Item"
+            subTitle={`Lot stok untuk barang ${
+              inventoryItemQuery.isLoading ? (
+                <Skeleton
+                  component="span"
+                  variant="text"
+                  width={160}
+                  sx={{ display: "inline-block", verticalAlign: "middle" }}
+                />
+              ) : (
+                (inventoryItemQuery.data?.name ?? "-")
+              )
+            }`}
+            navigateTo={`${paths.inventoryItems}?page=1&size=20&sortBy=name`}
+          />
+
+          <ReportDate
+            endDate={endDate}
+            startDate={startDate}
+            setEndDate={setEndDate}
+            setStartDate={setStartDate}
+          />
+        </Stack>
 
         <CustomTable<InventoryLotResponse>
           columns={columns}

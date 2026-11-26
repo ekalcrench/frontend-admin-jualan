@@ -8,18 +8,22 @@ export default function PageTitle({
   title,
   subTitle,
   addButton,
+  navigateTo,
   enableBackButton,
 }: PageTitleProps) {
   const navigate = useNavigate();
   return (
     <Stack spacing={1}>
-      {enableBackButton && (
+      {(enableBackButton || navigateTo) && (
         <Box>
           <Button
             variant="text"
             size="small"
             startIcon={<ArrowBackIcon />}
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              if (navigateTo) navigate(navigateTo);
+              else navigate(-1);
+            }}
             sx={{ marginTop: { xs: "12px", md: "0px" }, marginLeft: "-8px" }}
           >
             Kembali
