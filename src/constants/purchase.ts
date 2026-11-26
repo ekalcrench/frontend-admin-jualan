@@ -6,7 +6,7 @@ export const purchaseStatus: Record<PurchaseStatus, PurchaseStatus> = {
   FINALIZED: "FINALIZED",
 };
 
-export const purchaseStatusMapping: Record<PurchaseStatus, string> = {
+export const purchaseStatusLabels: Record<PurchaseStatus, string> = {
   DRAFT: "Draft",
   FINALIZED: "Final",
 };
@@ -18,3 +18,8 @@ export const purchaseStatusColorMapping: Record<
   DRAFT: "default",
   FINALIZED: "success",
 };
+
+export const purchaseStatusOptions: PurchaseStatus[] = [
+  purchaseStatus.DRAFT,
+  purchaseStatus.FINALIZED,
+];

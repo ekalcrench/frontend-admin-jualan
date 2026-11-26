@@ -102,8 +102,6 @@ export default function useSalesPage() {
       prev.delete("search");
       prev.delete("status");
       prev.delete("type");
-      prev.delete("startDate");
-      prev.delete("endDate");
       prev.set("page", String(defaultParameter.page));
       return prev;
     });

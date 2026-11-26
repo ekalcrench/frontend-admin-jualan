@@ -41,7 +41,7 @@ export const sidebarList: SidebarListItem[] = [
   {
     title: "Belanja",
     url: paths.purchases,
-    params: "page=1&size=20&sortBy=-createdAt",
+    params: `page=1&size=20&sortBy=-createdAt&startDate=${defaultParameterDate}&endDate=${defaultParameterDate}`,
     icon: <ShoppingBasketIcon />,
     organizationRoleAccess: [
       organizationRole.ADMIN,

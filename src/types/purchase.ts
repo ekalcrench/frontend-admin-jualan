@@ -4,6 +4,9 @@ import { DefaultFilter } from "./table";
 
 export interface PurchaseFilterPayload extends DefaultFilter {
   search?: string;
+  startDate?: string;
+  endDate?: string;
+  status?: PurchaseStatus;
 }
 
 interface InventoryLot {

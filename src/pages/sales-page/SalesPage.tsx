@@ -413,9 +413,7 @@ export default function SalesPage() {
           renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
           filterComponents={renderFilters()}
-          hasActiveFilters={Boolean(
-            search.trim() || startDate || endDate || status || type,
-          )}
+          hasActiveFilters={Boolean(search.trim() || status || type)}
           isLoading={isLoading}
           isError={isError}
           page={data?.pagination?.page}
@@ -438,7 +436,7 @@ export default function SalesPage() {
           columnRowActionsSize={220}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
-          searchPlaceholder="Cari berdasarkan nomor penjualan atau produk"
+          searchPlaceholder="Cari berdasarkan nomor penjualan atau produk yang terjual"
         />
       </Stack>
     </Box>

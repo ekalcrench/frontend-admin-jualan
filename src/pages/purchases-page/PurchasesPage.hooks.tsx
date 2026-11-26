@@ -1,6 +1,7 @@
 import {
+  purchaseStatus,
   purchaseStatusColorMapping,
-  purchaseStatusMapping,
+  purchaseStatusLabels,
 } from "@/constants/purchase";
 import { defaultParameter } from "@/constants/table";
 import {
@@ -26,6 +27,14 @@ export default function usePurchasesPage() {
   const size = Number(searchParams.get("size") ?? defaultParameter.size);
   const sortBy = searchParams.get("sortBy") ?? defaultParameter.sortBy;
   const search = searchParams.get("search") ?? undefined;
+  const startDate = searchParams.get("startDate") ?? undefined;
+  const endDate = searchParams.get("endDate") ?? undefined;
+  const statusParam = searchParams.get("status");
+  const status: PurchaseStatus | undefined =
+    statusParam === purchaseStatus.DRAFT ||
+    statusParam === purchaseStatus.FINALIZED
+      ? statusParam
+      : undefined;
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -58,6 +67,9 @@ export default function usePurchasesPage() {
     size,
     sortBy,
     search,
+    startDate: startDate?.length ? startDate : undefined,
+    endDate: endDate?.length ? endDate : undefined,
+    status,
   });
   const data = response as PaginatedData<PurchaseResponse> | undefined;
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -80,6 +92,31 @@ export default function usePurchasesPage() {
   const handleResetFilter = () =>
     setSearchParams((prev) => {
       prev.delete("search");
+      prev.delete("status");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+
+  const setStartDate = (value: string | undefined) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("startDate", value);
+      else prev.delete("startDate");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+
+  const setEndDate = (value: string | undefined) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("endDate", value);
+      else prev.delete("endDate");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+
+  const handleChangeStatus = (value?: PurchaseStatus) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("status", value);
+      else prev.delete("status");
       prev.set("page", String(defaultParameter.page));
       return prev;
     });
@@ -108,7 +145,7 @@ export default function usePurchasesPage() {
         size: 100,
         Cell: ({ cell }) => (
           <Chip
-            label={purchaseStatusMapping[cell.getValue<PurchaseStatus>()]}
+            label={purchaseStatusLabels[cell.getValue<PurchaseStatus>()]}
             size="small"
             color={purchaseStatusColorMapping[cell.getValue<PurchaseStatus>()]}
           />
@@ -223,16 +260,22 @@ export default function usePurchasesPage() {
     isLoading,
     isError,
     refetch,
+    endDate,
     search: search ?? "",
+    status,
     sortBy,
+    startDate,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeStatus,
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
     handleClickFinalize,
     handleResetFilter,
+    setEndDate,
     setIsFormOpen,
+    setStartDate,
   };
 }

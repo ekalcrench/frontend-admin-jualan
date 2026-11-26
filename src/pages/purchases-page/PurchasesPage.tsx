@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import CustomTable, {
   createCustomTableEmptyStates,
+  CustomFilterChip,
 } from "@/components/custom-table";
 import { BoxFlex, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
@@ -31,11 +32,13 @@ import { currencyFormatter } from "@/utils/currency";
 import {
   purchaseStatus,
   purchaseStatusColorMapping,
-  purchaseStatusMapping,
+  purchaseStatusLabels,
+  purchaseStatusOptions,
 } from "@/constants/purchase";
 import useAuthStore from "@/store/auth-store";
 import { userOrganizationRole } from "@/constants/user";
 import PageTitle from "@/components/page-title";
+import ReportDate from "@/components/report-date";
 
 export default function PurchasesPage() {
   const {
@@ -43,22 +46,28 @@ export default function PurchasesPage() {
     data,
     deletePurchase,
     editingPurchaseId,
+    endDate,
     finalizePurchase,
     isFormOpen,
     isLoading,
     isError,
     refetch,
     search,
+    status,
     sortBy,
+    startDate,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeStatus,
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
     handleClickFinalize,
     handleResetFilter,
+    setEndDate,
     setIsFormOpen,
+    setStartDate,
   } = usePurchasesPage();
 
   const organization = useAuthStore((state) => state.organization);
@@ -229,7 +238,7 @@ export default function PurchasesPage() {
               </Typography>
             </Box>
             <Chip
-              label={purchaseStatusMapping[purchase.status]}
+              label={purchaseStatusLabels[purchase.status]}
               size="small"
               color={purchaseStatusColorMapping[purchase.status]}
             />
@@ -288,17 +297,43 @@ export default function PurchasesPage() {
       />
 
       <Stack spacing={4}>
-        <PageTitle
-          title="Belanja"
-          subTitle="Mengelola seluruh pembelian stok inventory"
-          addButton={renderAddButton()}
-        />
+        <Stack spacing={3}>
+          <PageTitle
+            title="Belanja"
+            subTitle="Mengelola seluruh pembelian stok inventory"
+            addButton={renderAddButton()}
+          />
+
+          <ReportDate
+            endDate={endDate}
+            startDate={startDate}
+            setEndDate={setEndDate}
+            setStartDate={setStartDate}
+          />
+        </Stack>
 
         <CustomTable
           columns={columns}
           {...tableEmptyStates}
           renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
+          filterComponents={
+            <BoxFlex>
+              <CustomFilterChip
+                label="Status"
+                value={status}
+                options={[
+                  { label: "Semua" },
+                  ...purchaseStatusOptions.map((value) => ({
+                    label: purchaseStatusLabels[value],
+                    value,
+                  })),
+                ]}
+                onChange={handleChangeStatus}
+              />
+            </BoxFlex>
+          }
+          hasActiveFilters={Boolean(search.trim() || status)}
           isLoading={isLoading}
           isError={isError}
           page={data?.pagination?.page}
@@ -321,7 +356,7 @@ export default function PurchasesPage() {
           columnRowActionsSize={220}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
-          searchPlaceholder="Cari berdasarkan supplier atau nomor invoice"
+          searchPlaceholder="Cari berdasarkan supplier, nomor invoice, atau barang yang dibeli"
         />
       </Stack>
     </Box>
