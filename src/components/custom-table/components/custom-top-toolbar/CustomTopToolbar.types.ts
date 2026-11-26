@@ -14,6 +14,7 @@ export interface CustomTopToolbarProps<
 
   // Reset
   handleResetFilter: () => void;
+  showResetFilter?: boolean;
   isMobile?: boolean;
 
   // Columns

@@ -37,6 +37,7 @@ export default function CustomTable<TData extends MRT_RowData>({
   renderEmptyState,
   renderSearchEmptyContent,
   renderErrorState,
+  hasActiveFilters,
   onRowSelectionChange,
   filterComponents,
   enableRowActions,
@@ -86,6 +87,7 @@ export default function CustomTable<TData extends MRT_RowData>({
 
   // Filters
   const hasFilters = filterComponents !== undefined;
+  const showResetFilter = hasActiveFilters ?? Boolean(search?.trim());
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const handleClickFilters = () => {
     setShowFilters((prev) => !prev);
@@ -111,6 +113,7 @@ export default function CustomTable<TData extends MRT_RowData>({
       <CustomTopToolbar<TData>
         handleClickFilters={hasFilters ? handleClickFilters : undefined}
         handleResetFilter={handleReset}
+        showResetFilter={showResetFilter}
         search={search}
         searchPlaceholder={searchPlaceholder}
         handleSearch={handleSearch}
