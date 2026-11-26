@@ -17,20 +17,23 @@ import {
 import type { MRT_Row } from "material-react-table";
 import CustomTable, {
   createCustomTableEmptyStates,
+  CustomFilterChip,
 } from "@/components/custom-table";
 import { getSortDirection, removeSortByDirection } from "@/utils/table";
 import { BoxFlex, BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
 import { formatLocalDate } from "@/utils/dateTime";
 import { currencyFormatter } from "@/utils/currency";
-import { OrderResponse } from "@/types/order";
+import { OrderResponse, OrderStatus, OrderType } from "@/types/order";
 import OrderForm from "./components/order-form";
 import useSalesPage from "./SalesPage.hooks";
 import { StackDetailPanel } from "./SalesPage.styles";
 import {
   orderStatus,
   orderStatusColorMapping,
-  orderStatusMapping,
+  orderStatusLabels,
+  orderTypeOptions,
   orderTypeLabels,
+  orderStatusOptions,
 } from "@/constants/order";
 import ReportDate from "@/components/report-date";
 import SalesOverview from "./components/sales-overview";
@@ -55,11 +58,15 @@ export default function SalesPage() {
     markPaidOrder,
     refetch,
     search,
+    status,
     sortBy,
     startDate,
+    type,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeStatus,
+    handleChangeType,
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
@@ -290,7 +297,7 @@ export default function SalesPage() {
             </Typography>
           </Box>
           <Chip
-            label={orderStatusMapping[order.status]}
+            label={orderStatusLabels[order.status]}
             color={orderStatusColorMapping[order.status]}
             size="small"
           />
@@ -343,6 +350,35 @@ export default function SalesPage() {
     </Card>
   );
 
+  const renderFilters = () => (
+    <BoxFlex sx={{ flexWrap: "wrap", gap: "8px" }}>
+      <CustomFilterChip<OrderStatus>
+        label="Status"
+        value={status}
+        options={[
+          { label: "Semua" },
+          ...orderStatusOptions.map((value) => ({
+            label: orderStatusLabels[value],
+            value,
+          })),
+        ]}
+        onChange={handleChangeStatus}
+      />
+      <CustomFilterChip<OrderType>
+        label="Jenis Pesanan"
+        value={type}
+        options={[
+          { label: "Semua" },
+          ...orderTypeOptions.map((value) => ({
+            label: orderTypeLabels[value],
+            value,
+          })),
+        ]}
+        onChange={handleChangeType}
+      />
+    </BoxFlex>
+  );
+
   return (
     <Box>
       <OrderForm
@@ -376,6 +412,10 @@ export default function SalesPage() {
           {...tableEmptyStates}
           renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
+          filterComponents={renderFilters()}
+          hasActiveFilters={Boolean(
+            search.trim() || startDate || endDate || status || type,
+          )}
           isLoading={isLoading}
           isError={isError}
           page={data?.pagination?.page}

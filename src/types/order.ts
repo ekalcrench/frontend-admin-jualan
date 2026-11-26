@@ -9,6 +9,8 @@ export interface OrderFilterPayload extends DefaultFilter {
   search?: string;
   startDate?: string;
   endDate?: string;
+  status?: OrderStatus;
+  type?: OrderType;
 }
 
 export interface CreateDeliveryOrder {

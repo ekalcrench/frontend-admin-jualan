@@ -7,10 +7,15 @@ export const orderStatus: Record<OrderStatus, OrderStatus> = {
   UNPAID: "UNPAID",
 };
 
-export const orderStatusMapping: Record<OrderStatus, string> = {
+export const orderStatusLabels: Record<OrderStatus, string> = {
   PAID: "Dibayar",
   UNPAID: "Belum Dibayar",
 };
+
+export const orderStatusOptions: OrderStatus[] = [
+  orderStatus.PAID,
+  orderStatus.UNPAID,
+];
 
 export const orderStatusColorMapping: Record<OrderStatus, ChipProps["color"]> =
   {

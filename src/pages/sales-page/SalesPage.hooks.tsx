@@ -1,9 +1,10 @@
 import {
   orderStatusColorMapping,
-  orderStatusMapping,
+  orderStatusLabels,
+  orderTypeOptions,
   orderTypeLabels,
 } from "@/constants/order";
-import { defaultParameter, defaultParameterDate } from "@/constants/table";
+import { defaultParameter } from "@/constants/table";
 import { useThermalPrinter } from "@/hooks/useThermalPrinter";
 import {
   useDeleteOrderMutation,
@@ -34,6 +35,13 @@ export default function useSalesPage() {
   const search = searchParams.get("search") ?? undefined;
   const startDate = searchParams.get("startDate") ?? undefined;
   const endDate = searchParams.get("endDate") ?? undefined;
+  const statusParam = searchParams.get("status");
+  const status: OrderStatus | undefined =
+    statusParam === "PAID" || statusParam === "UNPAID"
+      ? statusParam
+      : undefined;
+  const typeParam = searchParams.get("type");
+  const type = orderTypeOptions.find((option) => option === typeParam);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -68,6 +76,8 @@ export default function useSalesPage() {
     search,
     endDate: endDate?.length ? endDate : undefined,
     startDate: startDate?.length ? startDate : undefined,
+    status,
+    type,
   });
   const data = response as PaginatedData<OrderResponse> | undefined;
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -90,8 +100,26 @@ export default function useSalesPage() {
   const handleResetFilter = () =>
     setSearchParams((prev) => {
       prev.delete("search");
-      prev.set("startDate", defaultParameterDate);
-      prev.set("endDate", defaultParameterDate);
+      prev.delete("status");
+      prev.delete("type");
+      prev.delete("startDate");
+      prev.delete("endDate");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+
+  const handleChangeStatus = (value?: OrderStatus) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("status", value);
+      else prev.delete("status");
+      prev.set("page", String(defaultParameter.page));
+      return prev;
+    });
+
+  const handleChangeType = (value?: OrderType) =>
+    setSearchParams((prev) => {
+      if (value) prev.set("type", value);
+      else prev.delete("type");
       prev.set("page", String(defaultParameter.page));
       return prev;
     });
@@ -138,7 +166,7 @@ export default function useSalesPage() {
         size: 140,
         Cell: ({ cell }) => (
           <Chip
-            label={orderStatusMapping[cell.getValue<OrderStatus>()]}
+            label={orderStatusLabels[cell.getValue<OrderStatus>()]}
             size="small"
             color={orderStatusColorMapping[cell.getValue<OrderStatus>()]}
           />
@@ -273,11 +301,15 @@ export default function useSalesPage() {
     isPrinting,
     markPaidOrder,
     search: search ?? "",
+    status,
     sortBy,
     startDate,
+    type,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeStatus,
+    handleChangeType,
     handleClickAddForm,
     handleClickDelete,
     handleClickEditForm,
