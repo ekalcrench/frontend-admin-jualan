@@ -10,7 +10,10 @@ import {
 import { usePreparationQuery } from "@/services/preparations/preparations.query";
 import useConfirmationStore from "@/store/confirmation-store/confirmationStore";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
-import { PreparationResponse } from "@/types/preparations";
+import {
+  PreparationResponse,
+  PreparationStatus,
+} from "@/types/preparations";
 import { ColumnSort } from "@/types/table";
 import { apiErrorHandler } from "@/utils/api";
 import { currencyFormatter } from "@/utils/currency";
@@ -23,6 +26,13 @@ export default function useInventoryProductionsPage() {
   const size = Number(searchParams.get("size") ?? defaultParameter.size);
   const sortBy = searchParams.get("sortBy") ?? defaultParameter.sortBy;
   const search = searchParams.get("search") ?? undefined;
+  const startDate = searchParams.get("startDate") ?? undefined;
+  const endDate = searchParams.get("endDate") ?? undefined;
+  const statusParam = searchParams.get("status");
+  const status: PreparationStatus | undefined =
+    statusParam === "DRAFT" || statusParam === "COMPLETED"
+      ? statusParam
+      : undefined;
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -48,7 +58,15 @@ export default function useInventoryProductionsPage() {
     isError,
     error,
     refetch,
-  } = usePreparationQuery({ page, size, sortBy, search });
+  } = usePreparationQuery({
+    page,
+    size,
+    sortBy,
+    search,
+    startDate: startDate?.length ? startDate : undefined,
+    endDate: endDate?.length ? endDate : undefined,
+    status,
+  });
   const data = response;
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingPreparationId, setEditingPreparationId] = useState<string>();
@@ -70,6 +88,31 @@ export default function useInventoryProductionsPage() {
   const handleResetFilter = () =>
     setSearchParams((previous) => {
       previous.delete("search");
+      previous.delete("status");
+      previous.set("page", String(defaultParameter.page));
+      return previous;
+    });
+
+  const setStartDate = (value: string | undefined) =>
+    setSearchParams((previous) => {
+      if (value) previous.set("startDate", value);
+      else previous.delete("startDate");
+      previous.set("page", String(defaultParameter.page));
+      return previous;
+    });
+
+  const setEndDate = (value: string | undefined) =>
+    setSearchParams((previous) => {
+      if (value) previous.set("endDate", value);
+      else previous.delete("endDate");
+      previous.set("page", String(defaultParameter.page));
+      return previous;
+    });
+
+  const handleChangeStatus = (value?: PreparationStatus) =>
+    setSearchParams((previous) => {
+      if (value) previous.set("status", value);
+      else previous.delete("status");
       previous.set("page", String(defaultParameter.page));
       return previous;
     });
@@ -220,18 +263,24 @@ export default function useInventoryProductionsPage() {
     editingPreparationId,
     isFormOpen,
     isLoading,
+    endDate,
     isError,
     refetch,
     search: search ?? "",
     sortBy,
+    startDate,
+    status,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeStatus,
     handleClickAddForm,
     handleClickComplete,
     handleClickDelete,
     handleClickEditForm,
     handleResetFilter,
+    setEndDate,
     setIsFormOpen,
+    setStartDate,
   };
 }

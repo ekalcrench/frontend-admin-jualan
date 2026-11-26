@@ -4,6 +4,9 @@ import { DefaultFilter } from "./table";
 
 export interface PreparationFilterPayload extends DefaultFilter {
   search?: string;
+  startDate?: string;
+  endDate?: string;
+  status?: PreparationStatus;
 }
 
 export type PreparationStatus = "DRAFT" | "COMPLETED";

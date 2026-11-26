@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import type { MRT_Row } from "material-react-table";
 import CustomTable, {
+  CustomFilterChip,
   createCustomTableEmptyStates,
 } from "@/components/custom-table";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
@@ -26,10 +27,15 @@ import { formatLocalDate } from "@/utils/dateTime";
 import { currencyFormatter } from "@/utils/currency";
 import PreparationForm from "./components/preparation-form";
 import useInventoryProductionsPage from "./InventoryProductionsPage.hooks";
-import { preparationStatus } from "@/constants/production";
+import {
+  preparationStatus,
+  preparationStatusLabels,
+  preparationStatusOptions,
+} from "@/constants/production";
 import useAuthStore from "@/store/auth-store";
 import { userOrganizationRole } from "@/constants/user";
 import PageTitle from "@/components/page-title";
+import ReportDate from "@/components/report-date";
 
 export default function InventoryProductionsPage() {
   const {
@@ -37,6 +43,7 @@ export default function InventoryProductionsPage() {
     completePreparation,
     data,
     deletePreparation,
+    endDate,
     editingPreparationId,
     isFormOpen,
     isLoading,
@@ -44,15 +51,20 @@ export default function InventoryProductionsPage() {
     refetch,
     search,
     sortBy,
+    startDate,
+    status,
     handleChangePage,
     handleChangeSearch,
     handleChangeSort,
+    handleChangeStatus,
     handleClickAddForm,
     handleClickComplete,
     handleClickDelete,
     handleClickEditForm,
     handleResetFilter,
+    setEndDate,
     setIsFormOpen,
+    setStartDate,
   } = useInventoryProductionsPage();
 
   const organization = useAuthStore((state) => state.organization);
@@ -289,17 +301,43 @@ export default function InventoryProductionsPage() {
       />
 
       <Stack spacing={4}>
-        <PageTitle
-          title="Produksi Inventaris"
-          subTitle="Mengatur barang yang sudah melalui proses produksi dan siap dijual"
-          addButton={renderAddButton()}
-        />
+        <Stack spacing={3}>
+          <PageTitle
+            title="Produksi Inventaris"
+            subTitle="Mengatur barang yang sudah melalui proses produksi dan siap dijual"
+            addButton={renderAddButton()}
+          />
+
+          <ReportDate
+            endDate={endDate}
+            startDate={startDate}
+            setEndDate={setEndDate}
+            setStartDate={setStartDate}
+          />
+        </Stack>
 
         <CustomTable<PreparationResponse>
           columns={columns}
           {...tableEmptyStates}
           renderMobileCard={renderMobileCard}
           data={data?.items ?? []}
+          filterComponents={
+            <BoxFlex>
+              <CustomFilterChip
+                label="Status"
+                value={status}
+                options={[
+                  { label: "Semua" },
+                  ...preparationStatusOptions.map((value) => ({
+                    label: preparationStatusLabels[value],
+                    value,
+                  })),
+                ]}
+                onChange={handleChangeStatus}
+              />
+            </BoxFlex>
+          }
+          hasActiveFilters={Boolean(search.trim() || status)}
           isLoading={isLoading}
           isError={isError}
           page={data?.pagination?.page}
@@ -326,7 +364,7 @@ export default function InventoryProductionsPage() {
           columnRowActionsSize={220}
           renderRowActions={({ row }) => renderRowActions(row)}
           renderDetailPanel={({ row }) => renderDetailPanel(row)}
-          searchPlaceholder="Cari berdasarkan nama produksi atau barang"
+          searchPlaceholder="Cari berdasarkan nama produksi, barang terpakai, atau barang hasilnya"
         />
       </Stack>
     </Box>
