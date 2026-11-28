@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { purchasesKeys } from "./purchases.constants";
 import { CreatePurchase, EditPurchase } from "./purchases.types";
 import {
@@ -13,6 +13,22 @@ import { inventoryTransactionKeys } from "../inventory-transactions/inventoryTra
 import { inventoryLotKeys } from "../inventory-lots/inventoryLots.constants";
 import { cashTransactionsKeys } from "../cash-transactions/cashTransactions.constants";
 import { productsKeys } from "../products/products.constants";
+
+function invalidatePurchaseMutationQueries(client: QueryClient) {
+  const queryKeys = [
+    inventoryTransactionKeys.lists,
+    inventoryItemKeys.lists,
+    inventoryItemKeys.optionsWithStock,
+    inventoryLotKeys.lists,
+    purchasesKeys.lists,
+    cashTransactionsKeys.lists,
+    cashTransactionsKeys.balances,
+    productsKeys.lists,
+    productsKeys.lowestStocks,
+  ] as const;
+
+  queryKeys.forEach((queryKey) => client.invalidateQueries({ queryKey }));
+}
 
 export function useCreatePurchaseMutation() {
   return useMutation<PurchaseResponse, Error, CreatePurchase>({
@@ -38,17 +54,7 @@ export function useDeletePurchaseMutation() {
   return useMutation<boolean, Error, string>({
     mutationFn: deletePurchase,
     onSuccess: (result, payload, _onMutateResult, context) => {
-      context.client.invalidateQueries({
-        queryKey: inventoryTransactionKeys.lists,
-      });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
-      context.client.invalidateQueries({
-        queryKey: cashTransactionsKeys.lists,
-      });
-      context.client.invalidateQueries({
-        queryKey: cashTransactionsKeys.balances,
-      });
+      invalidatePurchaseMutationQueries(context.client);
       context.client.invalidateQueries({ queryKey: purchasesKeys.all });
     },
   });
@@ -58,19 +64,7 @@ export function useFinalizePurchaseMutation() {
   return useMutation<PurchaseResponse, Error, string>({
     mutationFn: finalizePurchase,
     onSuccess: (result, payload, onMutateResult, context) => {
-      context.client.invalidateQueries({
-        queryKey: inventoryTransactionKeys.lists,
-      });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
-      context.client.invalidateQueries({ queryKey: purchasesKeys.lists });
-      context.client.invalidateQueries({
-        queryKey: cashTransactionsKeys.lists,
-      });
-      context.client.invalidateQueries({
-        queryKey: cashTransactionsKeys.balances,
-      });
-      context.client.invalidateQueries({ queryKey: productsKeys.lists });
+      invalidatePurchaseMutationQueries(context.client);
       context.client.setQueryData(purchasesKeys.detail(result.id), result);
     },
   });

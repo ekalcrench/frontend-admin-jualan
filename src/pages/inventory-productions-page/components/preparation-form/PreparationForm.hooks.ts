@@ -4,7 +4,7 @@ import { Resolver, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
 import { InventoryUnit } from "@/types/inventoryItem";
-import { useInventoryItemOptionsQuery } from "@/services/inventory-items/inventoryItems.query";
+import { useInventoryItemOptionsWithStockQuery } from "@/services/inventory-items/inventoryItems.query";
 import {
   useCreatePreparationMutation,
   useEditPreparationMutation,
@@ -35,7 +35,7 @@ export default function usePreparationForm(props: PreparationFormProps) {
     isLoading: isLoadingGetOptions,
     isError: isErrorGetOptions,
     error: errorGetOptions,
-  } = useInventoryItemOptionsQuery(props.open);
+  } = useInventoryItemOptionsWithStockQuery(props.open);
 
   const {
     control,
@@ -54,7 +54,6 @@ export default function usePreparationForm(props: PreparationFormProps) {
     control,
     name: "preparationItems",
   });
-  const watch = useWatch({ control });
   const outputInventoryItemId = useWatch({
     control,
     name: "outputInventoryItemId",
@@ -85,11 +84,7 @@ export default function usePreparationForm(props: PreparationFormProps) {
     return preparedOutputInventoryItem?.id === selectedInventoryItemId
       ? preparedOutputInventoryItem.unit
       : null;
-  }, [
-    inventoryItemOptions,
-    outputInventoryItemId,
-    preparationQuery.data,
-  ]);
+  }, [inventoryItemOptions, outputInventoryItemId, preparationQuery.data]);
   const preparationItemInventoryUnits = useMemo(
     () =>
       (preparationItemsValues ?? []).map((item): InventoryUnit | null => {
@@ -113,10 +108,6 @@ export default function usePreparationForm(props: PreparationFormProps) {
   const [deletedPreparationItemIds, setDeletedPreparationItemIds] = useState<
     string[]
   >([]);
-
-  useEffect(() => {
-    console.log(">>> watch : ", watch);
-  }, [watch]);
 
   useEffect(() => {
     if (isHasNoExpired && expiredAt != null) {

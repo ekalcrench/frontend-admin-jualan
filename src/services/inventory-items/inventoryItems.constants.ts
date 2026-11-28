@@ -12,5 +12,7 @@ export const inventoryItemKeys = {
 
   options: ["inventory_items", "options"] as const,
 
+  optionsWithStock: ["inventory_items", "options_with_stock"] as const,
+
   assets: ["inventory_items", "assets"] as const,
 };

@@ -11,6 +11,9 @@ export function useEditInventoryLotMutation() {
     mutationFn: editInventoryLot,
     onSuccess: (result, payload, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
+      context.client.invalidateQueries({
+        queryKey: inventoryItemKeys.optionsWithStock,
+      });
       context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
       context.client.invalidateQueries({
         queryKey: inventoryTransactionKeys.lists,

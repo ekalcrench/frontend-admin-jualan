@@ -13,18 +13,17 @@ import { inventoryLotKeys } from "../inventory-lots/inventoryLots.constants";
 import { inventoryTransactionKeys } from "../inventory-transactions/inventoryTransactions.constants";
 import { cashTransactionsKeys } from "../cash-transactions/cashTransactions.constants";
 
-function invalidateOrderMutationQueries(client?: QueryClient) {
+function invalidateOrderMutationQueries(client: QueryClient) {
   const queryKeys = [
     ...(client
       ? [ordersKeys.lists, ordersKeys.overviews, ordersKeys.overviewItems]
       : [ordersKeys.all]),
     productsKeys.lists,
     inventoryItemKeys.lists,
+    inventoryItemKeys.optionsWithStock,
     inventoryLotKeys.lists,
     inventoryTransactionKeys.lists,
   ] as const;
-
-  if (!client) return;
 
   queryKeys.forEach((queryKey) => client.invalidateQueries({ queryKey }));
 }
@@ -59,7 +58,7 @@ export function useDeleteOrderMutation() {
   return useMutation<boolean, Error, string>({
     mutationFn: deleteOrder,
     onSuccess: (_result, _payload, _onMutateResult, context) => {
-      invalidateOrderMutationQueries();
+      invalidateOrderMutationQueries(context.client);
     },
   });
 }

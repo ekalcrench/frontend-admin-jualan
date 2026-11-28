@@ -16,6 +16,7 @@ import CustomInputNumber from "@/components/custom-input-number";
 import FormDrawer from "@/components/form-drawer";
 import { inventoryUnitLabels } from "@/constants/inventoryItem";
 import { BoxFlexEnd, BoxFlexSpaceBetween } from "@/styled/CustomBox";
+import { numberFormat } from "@/utils/number";
 import usePreparationForm from "./PreparationForm.hooks";
 import { PreparationFormProps } from "./PreparationForm.types";
 import CustomCheckbox from "@/components/custom-checkbox";
@@ -26,6 +27,7 @@ export default function PreparationForm(props: PreparationFormProps) {
     emptyPreparationItem,
     fields,
     inventoryItemOptions,
+    preparationItemsValues,
     outputInventoryItemUnit,
     preparationItemInventoryUnits,
     isHasNoExpired,
@@ -52,7 +54,7 @@ export default function PreparationForm(props: PreparationFormProps) {
       formProps={{ onSubmit: handleSubmit(onSubmit) }}
       footer={
         <Button type="submit" variant="contained" fullWidth loading={isLoading}>
-          Simpan Produksi
+          Simpan Draft
         </Button>
       }
       size="large"
@@ -157,15 +159,25 @@ export default function PreparationForm(props: PreparationFormProps) {
         {fields.map((field, index) => {
           const selectedInventoryItemUnit =
             preparationItemInventoryUnits[index];
+          const selectedInventoryItemId =
+            preparationItemsValues?.[index]?.inventoryItemId?.value;
+          const selectedInventoryItem = inventoryItemOptions?.find(
+            (item) => item.id === selectedInventoryItemId,
+          );
+          const selectedQuantity = preparationItemsValues?.[index]?.quantity;
+          const hasInsufficientStock =
+            selectedInventoryItem &&
+            typeof selectedQuantity === "number" &&
+            selectedQuantity > selectedInventoryItem.stock;
 
           return (
             <Box
               key={field.id}
               sx={{
                 border: "1px solid",
-                borderColor: "divider",
+                borderColor: hasInsufficientStock ? "error.main" : "divider",
                 borderRadius: "16px",
-                padding: "12px 16px 4px",
+                padding: "12px 16px",
               }}
             >
               <BoxFlexSpaceBetween sx={{ marginBottom: "12px" }}>
@@ -214,6 +226,20 @@ export default function PreparationForm(props: PreparationFormProps) {
                     renderErrorMessage
                     disabled={isLoading}
                   />
+                </Grid>
+                <Grid size={12}>
+                  <BoxFlexSpaceBetween>
+                    <Typography variant="body2">Stok Bahan</Typography>
+                    <Typography variant="body2">
+                      {selectedInventoryItem
+                        ? `${numberFormat.format(selectedInventoryItem.stock)}${
+                            selectedInventoryItemUnit
+                              ? ` ${inventoryUnitLabels[selectedInventoryItemUnit]}`
+                              : ""
+                          }`
+                        : "-"}
+                    </Typography>
+                  </BoxFlexSpaceBetween>
                 </Grid>
               </Grid>
             </Box>

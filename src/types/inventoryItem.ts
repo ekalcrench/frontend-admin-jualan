@@ -34,6 +34,10 @@ export interface InventoryItemOptions {
   unit: InventoryUnit;
 }
 
+export interface InventoryItemOptionsWithStock extends InventoryItemOptions {
+  stock: number;
+}
+
 export interface InventoryItemAssets {
   totalAssets: number;
 }

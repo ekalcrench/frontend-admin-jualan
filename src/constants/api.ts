@@ -30,6 +30,7 @@ export const api = {
     base: "/inventory-items",
     byId: (id: string) => `/inventory-items/${id}`,
     options: "/inventory-items/options",
+    optionsWithStock: "/inventory-items/options/with-stock",
     assets: "/inventory-items/assets",
   },
   inventoryLots: {
@@ -66,8 +67,7 @@ export const api = {
     status: (id: string) => `/product-modifier-options/${id}/status`,
   },
   productModifierAssignments: {
-    base: (productId: string) =>
-      `/products/${productId}/modifier-groups`,
+    base: (productId: string) => `/products/${productId}/modifier-groups`,
     byId: (productId: string, modifierGroupId: string) =>
       `/products/${productId}/modifier-groups/${modifierGroupId}`,
     reorder: (productId: string) =>

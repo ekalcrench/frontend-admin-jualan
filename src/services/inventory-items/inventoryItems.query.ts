@@ -5,6 +5,7 @@ import {
   fetchInventoryItemAssets,
   fetchInventoryItemById,
   fetchInventoryItemOptions,
+  fetchInventoryItemOptionsWithStock,
   fetchInventoryItems,
 } from "./inventoryItems.api";
 import { inventoryItemKeys } from "./inventoryItems.constants";
@@ -12,6 +13,7 @@ import {
   InventoryItemAssets,
   InventoryItemFilterPayload,
   InventoryItemOptions,
+  InventoryItemOptionsWithStock,
   InventoryItemResponse,
 } from "@/types/inventoryItem";
 
@@ -30,6 +32,15 @@ export function useInventoryItemOptionsQuery(enabled: boolean) {
   return useQuery<InventoryItemOptions[]>({
     queryKey: inventoryItemKeys.options,
     queryFn: () => fetchInventoryItemOptions(),
+    staleTime: fiveMinutes,
+    enabled,
+  });
+}
+
+export function useInventoryItemOptionsWithStockQuery(enabled: boolean) {
+  return useQuery<InventoryItemOptionsWithStock[]>({
+    queryKey: inventoryItemKeys.optionsWithStock,
+    queryFn: () => fetchInventoryItemOptionsWithStock(),
     staleTime: fiveMinutes,
     enabled,
   });

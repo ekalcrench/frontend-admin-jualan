@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { CreatePreparation, EditPreparation } from "./preparations.types";
 import { preparationsKeys } from "./preparations.constants";
 import {
@@ -13,6 +13,20 @@ import { inventoryItemKeys } from "../inventory-items/inventoryItems.constants";
 import { inventoryLotKeys } from "../inventory-lots/inventoryLots.constants";
 import { productsKeys } from "../products/products.constants";
 import { ordersKeys } from "../orders/orders.constants";
+
+function invalidatePreparationMutationQueries(client: QueryClient) {
+  const queryKeys = [
+    inventoryTransactionKeys.lists,
+    inventoryItemKeys.lists,
+    inventoryItemKeys.optionsWithStock,
+    inventoryLotKeys.lists,
+    preparationsKeys.lists,
+    productsKeys.lists,
+    ordersKeys.lists,
+  ] as const;
+
+  queryKeys.forEach((queryKey) => client.invalidateQueries({ queryKey }));
+}
 
 export function useCreatePreparationMutation() {
   return useMutation<PreparationResponse, Error, CreatePreparation>({
@@ -38,14 +52,7 @@ export function useDeletePreparationMutation() {
   return useMutation<boolean, Error, string>({
     mutationFn: deletePreparation,
     onSuccess: (_result, _payload, _onMutateResult, context) => {
-      context.client.invalidateQueries({
-        queryKey: inventoryTransactionKeys.lists,
-      });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
-      context.client.invalidateQueries({ queryKey: preparationsKeys.all });
-      context.client.invalidateQueries({ queryKey: productsKeys.lists });
-      context.client.invalidateQueries({ queryKey: ordersKeys.lists });
+      invalidatePreparationMutationQueries(context.client);
     },
   });
 }
@@ -54,14 +61,7 @@ export function useCompletePreparationMutation() {
   return useMutation<PreparationResponse, Error, string>({
     mutationFn: completePreparation,
     onSuccess: (result, payload, onMutateResult, context) => {
-      context.client.invalidateQueries({
-        queryKey: inventoryTransactionKeys.lists,
-      });
-      context.client.invalidateQueries({ queryKey: inventoryItemKeys.lists });
-      context.client.invalidateQueries({ queryKey: inventoryLotKeys.lists });
-      context.client.invalidateQueries({ queryKey: preparationsKeys.lists });
-      context.client.invalidateQueries({ queryKey: productsKeys.lists });
-      context.client.invalidateQueries({ queryKey: ordersKeys.lists });
+      invalidatePreparationMutationQueries(context.client);
       context.client.setQueryData(preparationsKeys.detail(result.id), result);
     },
   });

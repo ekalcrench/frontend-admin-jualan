@@ -7,6 +7,7 @@ import {
   InventoryItemAssets,
   InventoryItemFilterPayload,
   InventoryItemOptions,
+  InventoryItemOptionsWithStock,
   InventoryItemResponse,
 } from "@/types/inventoryItem";
 
@@ -27,6 +28,15 @@ export async function fetchInventoryItemOptions(): Promise<
 > {
   const response = await apiClient.get<InventoryItemOptions[]>(
     api.inventoryItems.options,
+  );
+  return response.data;
+}
+
+export async function fetchInventoryItemOptionsWithStock(): Promise<
+  InventoryItemOptionsWithStock[]
+> {
+  const response = await apiClient.get<InventoryItemOptionsWithStock[]>(
+    api.inventoryItems.optionsWithStock,
   );
   return response.data;
 }
