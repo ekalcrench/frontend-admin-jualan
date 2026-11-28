@@ -100,7 +100,7 @@ export const sidebarList: SidebarListItem[] = [
       {
         title: "Produksi",
         url: paths.inventoryProductions,
-        params: "page=1&size=20&sortBy=-createdAt",
+        params: `page=1&size=20&sortBy=-createdAt&startDate=${defaultParameterDate}&endDate=${defaultParameterDate}`,
         organizationRoleAccess: [
           organizationRole.ADMIN,
           organizationRole.OWNER,
